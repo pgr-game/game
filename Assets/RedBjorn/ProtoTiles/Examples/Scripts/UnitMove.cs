@@ -19,21 +19,30 @@ namespace RedBjorn.ProtoTiles.Example
         PathDrawer Path;
         Coroutine MovingCoroutine;
 
+        private bool active = false;
+        private bool justActivated = false;
+
         void Update()
         {
-            if (MyInput.GetOnWorldUp(Map.Settings.Plane()))
-            {
-                HandleWorldClick();
+            if(active && !justActivated) {
+                if (MyInput.GetOnWorldUp(Map.Settings.Plane()))
+                {
+                    HandleWorldClick();
+                }
+                PathUpdate();
+            }   
+            if(active && justActivated) {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    justActivated = false;
+                }
             }
-            PathUpdate();
         }
 
         public void Init(MapEntity map)
         {
             Map = map;
             Area = Spawner.Spawn(AreaPrefab, Vector3.zero, Quaternion.identity);
-            AreaShow();
-            PathCreate();
         }
 
         void HandleWorldClick()
@@ -149,6 +158,22 @@ namespace RedBjorn.ProtoTiles.Example
                     Area.InactiveState();
                 }
             }
+        }
+
+        public void Activate() 
+        {
+            active = true;
+            justActivated = true;
+            AreaShow();
+            PathCreate();
+        }
+
+        public void Deactivate() 
+        {
+            active = false;
+            justActivated = false;
+            AreaHide();
+            PathHide();
         }
     }
 }
