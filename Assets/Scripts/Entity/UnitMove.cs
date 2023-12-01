@@ -19,7 +19,7 @@ using RedBjorn.ProtoTiles.Example;
         //MapEntity mapManager.MapEntity;
 
         public MapManager mapManager;
-        private AreaOutline Area;
+        public AreaOutline Area;
         PathDrawer Path;
         Coroutine MovingCoroutine;
 
@@ -47,6 +47,8 @@ using RedBjorn.ProtoTiles.Example;
         {
             this.mapManager = mapManager;
             Area = Spawner.Spawn(AreaPrefab, Vector3.zero, Quaternion.identity);
+            Debug.Log("Initialize UnitMove");
+            AreaHide();
         }
 
         void HandleWorldClick()
@@ -122,6 +124,9 @@ using RedBjorn.ProtoTiles.Example;
 
         void AreaHide()
         {
+            if(AreaPrefab != null) {
+                Debug.Log("AreaPrefab is not null");
+            }
             Area.Hide();
         }
 

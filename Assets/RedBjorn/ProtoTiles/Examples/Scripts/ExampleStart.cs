@@ -7,7 +7,6 @@ namespace RedBjorn.ProtoTiles.Example
         public MapSettings Map;
         public KeyCode GridToggle = KeyCode.G;
         public MapView MapView;
-        public UnitMove Unit;
 
         public MapEntity MapEntity { get; private set; }
 
@@ -25,19 +24,6 @@ namespace RedBjorn.ProtoTiles.Example
             else
             {
                 Log.E("Can't find MapView. Random errors can occur");
-            }
-
-            if (!Unit)
-            {
-                Unit = GameObject.FindObjectOfType<UnitMove>();
-            }
-            if (Unit)
-            {
-                Unit.Init(MapEntity);
-            }
-            else
-            {
-                Log.E("Can't find any Unit. Example level start incorrect");
             }
         }
 

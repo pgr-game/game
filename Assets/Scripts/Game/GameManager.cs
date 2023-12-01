@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("Wrong initial data. Stopping game now!");
             return;
         }
+        mapManager.Init();
         InstantiatePlayers(numberOfPlayers, playerPositions);
     }
 

@@ -11,6 +11,7 @@ public class UnitController : MonoBehaviour
     public void Init(PlayerManager playerManager, MapManager mapManager) {
         this.owner = playerManager;
         this.mapManager = mapManager;
+        unitMove.Init(mapManager);
     }
 
     public void Activate() 

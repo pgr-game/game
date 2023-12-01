@@ -58,9 +58,10 @@ public class PlayerManager : MonoBehaviour
                 UnitController unit = hit.transform.GetComponent<UnitController>();
                 if(unit == null) {
                     return null;
-                } else if(unit.owner == this)
-                Debug.Log("Selected: " + hit.transform.name);
-                return hit.transform.gameObject;
+                } else if(unit.owner == this) {
+                    Debug.Log("Selected: " + hit.transform.name);
+                    return hit.transform.gameObject;
+                }
             }  
         }  
         return null;
@@ -79,9 +80,9 @@ public class PlayerManager : MonoBehaviour
         units = new List<UnitController>();
         foreach(UnitController unit in StartingResources.units) {
             Debug.Log("Adding starting unit");
-            units.Add(unit);
-            unit.Init(this.GetComponent<PlayerManager>(), mapManager);
-            //unit.gameObject.GetComponent<UnitController>().owner = player;
+            UnitController newUnit = Instantiate(unit, transform.position, Quaternion.identity).GetComponent<UnitController>();
+            units.Add(newUnit);
+            newUnit.Init(this, mapManager);
         }
     }
 

@@ -43,6 +43,7 @@ namespace RedBjorn.ProtoTiles.Example
         {
             Map = map;
             Area = Spawner.Spawn(AreaPrefab, Vector3.zero, Quaternion.identity);
+            AreaHide();
         }
 
         void HandleWorldClick()

@@ -11,7 +11,7 @@ public class MapManager : MonoBehaviour
 
     public MapEntity MapEntity { get; private set; }
 
-    void Start()
+    public void Init()
     {
         if (!MapView)
         {
@@ -26,6 +26,7 @@ public class MapManager : MonoBehaviour
         {
             Debug.Log("Can't find MapView. Random errors can occur");
         }
+        Debug.Log("Map manager initiated");
     }
 
 
