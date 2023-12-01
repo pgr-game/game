@@ -259,9 +259,9 @@ GameObject:
   - component: {fileID: 8704757387222393610}
   - component: {fileID: 7710905725897240262}
   - component: {fileID: 2614559487303137429}
-  - component: {fileID: 595646219677249660}
+  - component: {fileID: 3768227895164267785}
   m_Layer: 0
-  m_Name: Unit
+  m_Name: Unit 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -324,7 +324,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &595646219677249660
+--- !u!114 &3768227895164267785
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -336,4 +336,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92a260e60d14c2348afa6280bbf52c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: {fileID: 1103193670675193110, guid: fc465c688f229884f8ff3059db648158, type: 3}
+  owner: {fileID: 1103193670675193110, guid: 208a3b41e0a3e9c429b99c7903e81c5d, type: 3}

@@ -5,44 +5,59 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    //these should only be used for instantiation and will be imported from game launcher later on
+    public int InNumberOfPlayers = 3;
+    public Vector3[] InPlayerPositions;
+    public StartingResources[] startingResources;
+    //end of game launcher variables
+
+    public MapManager mapManager;
+    public GameObject playerPrefab;
+
     public int turnNumber = 1;
-
+    
     public int activePlayerIndex = 0;
-    public Player[] players;
-
-
-    public Player activePlayer;
+    public PlayerManager activePlayer;
     private int numberOfPlayers;
+    private PlayerManager[] players;
 
-    public GameObject PlayerControlPrefab;
-    private PlayerControl[] playerControl;
-    // Start is called before the first frame update
     void Start()
     {
-        numberOfPlayers = players.Length;
-        activePlayer = players[activePlayerIndex];
-        InstantiatePlayerControls();
+        //this should later be called directly from game creator and not the Start function
+        StartGame(InNumberOfPlayers, InPlayerPositions);
     }
 
-    private void InstantiatePlayerControls()
+    public void StartGame(int numberOfPlayers, Vector3[] playerPositions) {
+        if(!IsInitialDataCorrect(numberOfPlayers, playerPositions)) {
+            Debug.Log("Wrong initial data. Stopping game now!");
+            return;
+        }
+        InstantiatePlayers(numberOfPlayers, playerPositions);
+    }
+
+    private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions)
     {
-        Debug.Log("Instantiating player controls");
-        playerControl = new PlayerControl[numberOfPlayers];
+        Debug.Log("Instantiating players");
+        this.numberOfPlayers = numberOfPlayers;
+        players = new PlayerManager[numberOfPlayers];
         for(int i = 0; i < numberOfPlayers; i++) {
-            playerControl[i] = Instantiate(PlayerControlPrefab, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<PlayerControl>();
-            playerControl[i].player = players[i];
+            players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
+            players[i].mapManager = mapManager;
+            players[i].StartingResources = startingResources[i];
             if(i == activePlayerIndex) {
-                playerControl[i].gameObject.SetActive(true);
+                players[i].gameObject.SetActive(true);
             }
             else {
-                playerControl[i].gameObject.SetActive(false);
+                players[i].gameObject.SetActive(false);
             }
+            players[i].Init();
         }
+        activePlayer = players[activePlayerIndex];
     }
 
     public void NextPlayer()
     {
-        playerControl[activePlayerIndex].gameObject.SetActive(false);
+        players[activePlayerIndex].gameObject.SetActive(false);
         if(activePlayerIndex + 1 == numberOfPlayers) {
             activePlayerIndex = 0;
         }
@@ -50,7 +65,21 @@ public class GameManager : MonoBehaviour
             activePlayerIndex++;
         }
         activePlayer = players[activePlayerIndex];
-        playerControl[activePlayerIndex].gameObject.SetActive(true);
+        players[activePlayerIndex].gameObject.SetActive(true);
         Debug.Log("Player " + activePlayerIndex + " turn");
+    }
+
+    private bool IsInitialDataCorrect(int numberOfPlayers, Vector3[] playerPositions) 
+    {
+        if(startingResources.Length != numberOfPlayers) {
+            Debug.Log("Wrong number of player starting resources!");
+            return false;
+        }
+        if(playerPositions.Length != numberOfPlayers) {
+            Debug.Log("Wrong number of player starting positions!");
+            return false;
+        }
+        //should also check if positions in bounds or sth
+        return true;
     }
 }
