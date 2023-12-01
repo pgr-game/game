@@ -8,7 +8,7 @@ public class PlayerManager : MonoBehaviour
 {
     //assigned by game manager
     public MapManager mapManager;
-    public StartingResources StartingResources;
+    public StartingResources startingResources;
     public bool isComputer;
     public Color color;
 
@@ -73,12 +73,12 @@ public class PlayerManager : MonoBehaviour
     }
 
     void InitUnits() {
-        if(StartingResources == null) {
+        if(startingResources == null) {
             Debug.Log("No starting resources for player!");
             return;
         } 
         units = new List<UnitController>();
-        foreach(UnitController unit in StartingResources.units) {
+        foreach(UnitController unit in startingResources.units) {
             Debug.Log("Adding starting unit");
             UnitController newUnit = Instantiate(unit, transform.position, Quaternion.identity).GetComponent<UnitController>();
             units.Add(newUnit);

@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
     //these should only be used for instantiation and will be imported from game launcher later on
     public int InNumberOfPlayers = 3;
     public Vector3[] InPlayerPositions;
-    public StartingResources[] startingResources;
+    public StartingResources[] InStartingResources;
+    public Color[] InPlayerColors;
     //end of game launcher variables
 
     public MapManager mapManager;
@@ -24,19 +25,19 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         //this should later be called directly from game creator and not the Start function
-        StartGame(InNumberOfPlayers, InPlayerPositions);
+        StartGame(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors);
     }
 
-    public void StartGame(int numberOfPlayers, Vector3[] playerPositions) {
-        if(!IsInitialDataCorrect(numberOfPlayers, playerPositions)) {
+    public void StartGame(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color[] playerColors) {
+        if(!IsInitialDataCorrect(numberOfPlayers, playerPositions, startingResources, playerColors)) {
             Debug.Log("Wrong initial data. Stopping game now!");
             return;
         }
         mapManager.Init();
-        InstantiatePlayers(numberOfPlayers, playerPositions);
+        InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors);
     }
 
-    private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions)
+    private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color[] playerColors)
     {
         Debug.Log("Instantiating players");
         this.numberOfPlayers = numberOfPlayers;
@@ -44,7 +45,8 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < numberOfPlayers; i++) {
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
             players[i].mapManager = mapManager;
-            players[i].StartingResources = startingResources[i];
+            players[i].startingResources = InStartingResources[i];
+            players[i].color = playerColors[i];
             if(i == activePlayerIndex) {
                 players[i].gameObject.SetActive(true);
             }
@@ -70,7 +72,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Player " + activePlayerIndex + " turn");
     }
 
-    private bool IsInitialDataCorrect(int numberOfPlayers, Vector3[] playerPositions) 
+    private bool IsInitialDataCorrect(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color[] playerColors) 
     {
         if(startingResources.Length != numberOfPlayers) {
             Debug.Log("Wrong number of player starting resources!");
@@ -78,6 +80,10 @@ public class GameManager : MonoBehaviour
         }
         if(playerPositions.Length != numberOfPlayers) {
             Debug.Log("Wrong number of player starting positions!");
+            return false;
+        }
+        if(playerColors.Length != numberOfPlayers) {
+            Debug.Log("Wrong number of playercolors!");
             return false;
         }
         //should also check if positions in bounds or sth

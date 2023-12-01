@@ -11,6 +11,7 @@ public class UnitController : MonoBehaviour
     public void Init(PlayerManager playerManager, MapManager mapManager) {
         this.owner = playerManager;
         this.mapManager = mapManager;
+        ApplyColor();
         unitMove.Init(mapManager);
     }
 
@@ -22,5 +23,16 @@ public class UnitController : MonoBehaviour
     public void Deactivate() 
     {
         unitMove.Deactivate();
+    }
+
+    private void ApplyColor()
+    {
+        GameObject body = transform.Find("RotationNode/Body").gameObject;
+        if(body == null) {
+            Debug.Log("Unit body not found, likely the prefab structure was changed!");
+            return;
+        }
+        Debug.Log("Setting unit color");
+        body.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", owner.color);
     }
 }
