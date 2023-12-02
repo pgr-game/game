@@ -1,11 +1,13 @@
-﻿using RedBjorn.Utils;
+using RedBjorn.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RedBjorn.ProtoTiles;
+using RedBjorn.ProtoTiles.Example;
 
-namespace RedBjorn.ProtoTiles.Example
-{
+//namespace RedBjorn.ProtoTiles.Example
+//{
     public class UnitMove : MonoBehaviour
     {
         public float Speed = 5;
@@ -14,8 +16,10 @@ namespace RedBjorn.ProtoTiles.Example
         public AreaOutline AreaPrefab;
         public PathDrawer PathPrefab;
 
-        MapEntity Map;
-        AreaOutline Area;
+        //MapEntity mapManager.MapEntity;
+
+        public MapManager mapManager;
+        public AreaOutline Area;
         PathDrawer Path;
         Coroutine MovingCoroutine;
 
@@ -25,7 +29,7 @@ namespace RedBjorn.ProtoTiles.Example
         void Update()
         {
             if(active && !justActivated) {
-                if (MyInput.GetOnWorldUp(Map.Settings.Plane()))
+                if (MyInput.GetOnWorldUp(mapManager.MapEntity.Settings.Plane()))
                 {
                     HandleWorldClick();
                 }
@@ -39,23 +43,24 @@ namespace RedBjorn.ProtoTiles.Example
             }
         }
 
-        public void Init(MapEntity map)
+        public void Init(MapManager mapManager)
         {
-            Map = map;
+            this.mapManager = mapManager;
             Area = Spawner.Spawn(AreaPrefab, Vector3.zero, Quaternion.identity);
+            Debug.Log("Initialize UnitMove");
             AreaHide();
         }
 
         void HandleWorldClick()
         {
-            var clickPos = MyInput.GroundPosition(Map.Settings.Plane());
-            var tile = Map.Tile(clickPos);
+            var clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
+            var tile = mapManager.MapEntity.Tile(clickPos);
             if (tile != null && tile.Vacant)
             {
                 AreaHide();
                 Path.IsEnabled = false;
                 PathHide();
-                var path = Map.PathTiles(transform.position, clickPos, Range);
+                var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, Range);
                 Move(path, () =>
                 {
                     Path.IsEnabled = true;
@@ -83,19 +88,19 @@ namespace RedBjorn.ProtoTiles.Example
         IEnumerator Moving(List<TileEntity> path, Action onCompleted)
         {
             var nextIndex = 0;
-            transform.position = Map.Settings.Projection(transform.position);
+            transform.position = mapManager.MapEntity.Settings.Projection(transform.position);
 
             while (nextIndex < path.Count)
             {
-                var targetPoint = Map.WorldPosition(path[nextIndex]);
+                var targetPoint = mapManager.MapEntity.WorldPosition(path[nextIndex]);
                 var stepDir = (targetPoint - transform.position) * Speed;
-                if (Map.RotationType == RotationType.LookAt)
+                if (mapManager.MapEntity.RotationType == RotationType.LookAt)
                 {
                     RotationNode.rotation = Quaternion.LookRotation(stepDir, Vector3.up);
                 }
-                else if(Map.RotationType == RotationType.Flip)
+                else if(mapManager.MapEntity.RotationType == RotationType.Flip)
                 {
-                    RotationNode.rotation = Map.Settings.Flip(stepDir);
+                    RotationNode.rotation = mapManager.MapEntity.Settings.Flip(stepDir);
                 }
                 var reached = stepDir.sqrMagnitude < 0.01f;
                 while (!reached)
@@ -114,11 +119,14 @@ namespace RedBjorn.ProtoTiles.Example
         void AreaShow()
         {
             AreaHide();
-            Area.Show(Map.WalkableBorder(transform.position, Range), Map);
+            Area.Show(mapManager.MapEntity.WalkableBorder(transform.position, Range), mapManager.MapEntity);
         }
 
         void AreaHide()
         {
+            if(AreaPrefab != null) {
+                Debug.Log("AreaPrefab is not null");
+            }
             Area.Hide();
         }
 
@@ -127,7 +135,7 @@ namespace RedBjorn.ProtoTiles.Example
             if (!Path)
             {
                 Path = Spawner.Spawn(PathPrefab, Vector3.zero, Quaternion.identity);
-                Path.Show(new List<Vector3>() { }, Map);
+                Path.Show(new List<Vector3>() { }, mapManager.MapEntity);
                 Path.InactiveState();
                 Path.IsEnabled = true;
             }
@@ -145,11 +153,11 @@ namespace RedBjorn.ProtoTiles.Example
         {
             if (Path && Path.IsEnabled)
             {
-                var tile = Map.Tile(MyInput.GroundPosition(Map.Settings.Plane()));
+                var tile = mapManager.MapEntity.Tile(MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane()));
                 if (tile != null && tile.Vacant)
                 {
-                    var path = Map.PathPoints(transform.position, Map.WorldPosition(tile.Position), Range);
-                    Path.Show(path, Map);
+                    var path = mapManager.MapEntity.PathPoints(transform.position, mapManager.MapEntity.WorldPosition(tile.Position), Range);
+                    Path.Show(path, mapManager.MapEntity);
                     Path.ActiveState();
                     Area.ActiveState();
                 }
@@ -177,4 +185,4 @@ namespace RedBjorn.ProtoTiles.Example
             PathHide();
         }
     }
-}
+//}
