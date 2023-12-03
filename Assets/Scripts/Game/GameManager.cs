@@ -15,6 +15,7 @@ public enum UnitTypes {
 
 public class GameManager : MonoBehaviour
 {
+    //public static GameManager Instance;
     //these should only be used for instantiation and will be imported from game launcher later on
     public int InNumberOfPlayers = 3;
     public Vector3[] InPlayerPositions;
@@ -36,6 +37,18 @@ public class GameManager : MonoBehaviour
     // Unit types
     private const int amountOfUnitTypes = 7;
     public GameObject[] unitPrefabs = new GameObject[7];
+    public GameObject unitTypeText;
+
+
+    // void Awake() {
+    //     if(Instance == null) {
+    //         DontDestroyOnLoad(gameObject);
+    //         Instance = this;
+    //     }
+    //     else {
+    //         Destroy(gameObject);
+    //     }
+    // }
 
     void Start()
     {
@@ -68,7 +81,7 @@ public class GameManager : MonoBehaviour
             else {
                 players[i].gameObject.SetActive(false);
             }
-            players[i].Init();
+            players[i].Init(this);
         }
         activePlayer = players[activePlayerIndex];
     }
@@ -107,5 +120,9 @@ public class GameManager : MonoBehaviour
         }
         //should also check if positions in bounds or sth
         return true;
+    }
+
+    public void setUnitTypeText(string unitType) {
+        unitTypeText.GetComponent<TMPro.TextMeshProUGUI>().text = unitType;
     }
 }
