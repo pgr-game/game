@@ -18,6 +18,7 @@ public class UnitController : MonoBehaviour
         ApplyColor();
         unitMove.Init(mapManager);
         this.gameManager = gameManager;
+        currentHealth = maxHealth;
     }
 
     public void Activate() 

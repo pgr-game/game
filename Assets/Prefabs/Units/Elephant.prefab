@@ -44,6 +44,10 @@ PrefabInstance:
       propertyPath: unitType
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: maxHealth
+      value: 70
+      objectReference: {fileID: 0}
     - target: {fileID: 7233426354256217250, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: m_Sprite
       value: 

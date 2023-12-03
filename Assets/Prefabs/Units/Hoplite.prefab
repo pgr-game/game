@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: unitType
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 4276940642390929518, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: maxHealth
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 4903564716414562287, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: Range
       value: 2
