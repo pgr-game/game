@@ -3,6 +3,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum UnitTypes {
+    Archer,
+    Catapult,
+    Chariot,
+    Elephant,
+    Hoplite,
+    LightInfantry,
+    Skirmisher
+}
+
 public class GameManager : MonoBehaviour
 {
     //these should only be used for instantiation and will be imported from game launcher later on
@@ -16,11 +26,17 @@ public class GameManager : MonoBehaviour
     public GameObject playerPrefab;
 
     public int turnNumber = 1;
+    public GameObject turnText;
     
     public int activePlayerIndex = 0;
     public PlayerManager activePlayer;
     private int numberOfPlayers;
     private PlayerManager[] players;
+
+    // Unit types
+    private const int amountOfUnitTypes = 7;
+    public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
+    public GameObject unitTypeText;
 
     void Start()
     {
@@ -53,7 +69,7 @@ public class GameManager : MonoBehaviour
             else {
                 players[i].gameObject.SetActive(false);
             }
-            players[i].Init();
+            players[i].Init(this);
         }
         activePlayer = players[activePlayerIndex];
     }
@@ -69,6 +85,10 @@ public class GameManager : MonoBehaviour
         }
         activePlayer = players[activePlayerIndex];
         players[activePlayerIndex].gameObject.SetActive(true);
+        if(activePlayerIndex == 0) {
+            turnNumber++;
+            turnText.GetComponent<TMPro.TextMeshProUGUI>().text = turnNumber.ToString();
+        }
         Debug.Log("Player " + activePlayerIndex + " turn");
     }
 
@@ -88,5 +108,23 @@ public class GameManager : MonoBehaviour
         }
         //should also check if positions in bounds or sth
         return true;
+    }
+
+
+    public void setUnitTypeText(string unitType) {
+        unitTypeText.GetComponent<TMPro.TextMeshProUGUI>().text = unitType;
+    }
+
+    public GameObject getUnitPrefabByName(String unitType) {
+        if(Enum.IsDefined(typeof(UnitTypes), unitType)) {
+            return unitPrefabs[(int)Enum.Parse(typeof(UnitTypes), unitType)];
+        } else {
+            Debug.Log("Invalid unit type");
+            return null;
+        }
+    }
+
+    public GameObject getUnitPrefab(UnitTypes unitType) {
+        return unitPrefabs[(int)unitType];
     }
 }

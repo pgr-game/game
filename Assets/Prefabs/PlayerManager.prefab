@@ -45,6 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapManager: {fileID: 0}
-  StartingResources: {fileID: 0}
+  startingResources: {fileID: 0}
   isComputer: 0
   color: {r: 0, g: 0, b: 0, a: 0}
