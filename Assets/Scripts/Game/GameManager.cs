@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public GameObject playerPrefab;
 
     public int turnNumber = 1;
+    public GameObject turnText;
     
     public int activePlayerIndex = 0;
     public PlayerManager activePlayer;
@@ -69,6 +70,10 @@ public class GameManager : MonoBehaviour
         }
         activePlayer = players[activePlayerIndex];
         players[activePlayerIndex].gameObject.SetActive(true);
+        if(activePlayerIndex == 0) {
+            turnNumber++;
+            turnText.GetComponent<TMPro.TextMeshProUGUI>().text = turnNumber.ToString();
+        }
         Debug.Log("Player " + activePlayerIndex + " turn");
     }
 
