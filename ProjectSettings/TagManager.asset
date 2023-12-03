@@ -11,7 +11,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Mountains
   - 
   - 
   - 
@@ -40,4 +40,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Mountains
+    uniqueID: 1859745311
+    locked: 0
+  - name: Water
+    uniqueID: 588427703
     locked: 0
