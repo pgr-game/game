@@ -30,22 +30,25 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        newSelected = SelectObject();
-        if(newSelected) {
-            UnitController currentUnit = newSelected.GetComponent<UnitController>();
-            if(currentUnit && newSelected == selected) {
-                //unselect
-                Debug.Log("Deactivating unit");
-                selected = null;
-                newSelected = null;
-                currentUnit.Deactivate();
-            }
-            else if(currentUnit && !selected) {
-                //select if nothing else is selected
-                Debug.Log("Activating unit");
-                selected = newSelected;
-                currentUnit.Activate();
-                HandleSelected();
+        if (!PauseMenu.isPaused) 
+        { 
+            newSelected = SelectObject();
+            if(newSelected) {
+                UnitController currentUnit = newSelected.GetComponent<UnitController>();
+                if(currentUnit && newSelected == selected) {
+                    //unselect
+                    Debug.Log("Deactivating unit");
+                    selected = null;
+                    newSelected = null;
+                    currentUnit.Deactivate();
+                }
+                else if(currentUnit && !selected) {
+                    //select if nothing else is selected
+                    Debug.Log("Activating unit");
+                    selected = newSelected;
+                    currentUnit.Activate();
+                    HandleSelected();
+                }
             }
         }
     }
