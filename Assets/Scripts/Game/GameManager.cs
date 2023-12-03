@@ -3,6 +3,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum UnitTypes {
+    Archer,
+    Catapult,
+    Chariot,
+    Elephant,
+    Hoplite,
+    LightInfantry,
+    Skirmisher
+}
+
 public class GameManager : MonoBehaviour
 {
     //these should only be used for instantiation and will be imported from game launcher later on
@@ -22,6 +32,10 @@ public class GameManager : MonoBehaviour
     public PlayerManager activePlayer;
     private int numberOfPlayers;
     private PlayerManager[] players;
+
+    // Unit types
+    private const int amountOfUnitTypes = 7;
+    public GameObject[] unitPrefabs = new GameObject[7];
 
     void Start()
     {

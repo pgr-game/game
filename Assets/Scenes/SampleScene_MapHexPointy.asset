@@ -1048,3 +1048,33 @@ MonoBehaviour:
     - 0
     - 0
     - 0
+  - TilePos: {x: 5, y: -2, z: -3}
+    Id: ff66aecec0171c641aa5b88a1565be3e
+    MovableArea: 0
+    SideHeight:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+  - TilePos: {x: 6, y: -3, z: -3}
+    Id: ff66aecec0171c641aa5b88a1565be3e
+    MovableArea: 0
+    SideHeight:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+  - TilePos: {x: 7, y: -3, z: -4}
+    Id: ff66aecec0171c641aa5b88a1565be3e
+    MovableArea: 0
+    SideHeight:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0

@@ -52,9 +52,53 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4276940642390929518, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: unitType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4903564716414562287, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: Range
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4903564716414562287, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: Speed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.053
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.543
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182180520385955251, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: Range
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182180520385955251, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: Speed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5969487377251852545, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_Name
-      value: Hoplite Variant
+      value: Hoplite
+      objectReference: {fileID: 0}
+    - target: {fileID: 6127514921344172424, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: m_Height
+      value: 2.09915
+      objectReference: {fileID: 0}
+    - target: {fileID: 6127514921344172424, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: m_Radius
+      value: 0.63220036
+      objectReference: {fileID: 0}
+    - target: {fileID: 6127514921344172424, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: m_Center.x
+      value: 0.13220036
+      objectReference: {fileID: 0}
+    - target: {fileID: 6127514921344172424, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: m_Center.y
+      value: 0.5758573
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

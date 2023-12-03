@@ -1882,7 +1882,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114078676603500440, guid: 693e43330460346d1a79c4874c16cbd2, type: 3}
       propertyPath: m_Text
-      value: QUIT GMAE
+      value: QUIT GAME
       objectReference: {fileID: 0}
     - target: {fileID: 114078676603500440, guid: 693e43330460346d1a79c4874c16cbd2, type: 3}
       propertyPath: m_Color.b

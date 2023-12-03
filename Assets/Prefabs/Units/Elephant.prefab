@@ -8,9 +8,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2431257491815091305, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: Range
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2431257491815091305, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: Speed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2475770700517860917, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: Speed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2478602145919130195, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.144
+      objectReference: {fileID: 0}
+    - target: {fileID: 2478602145919130195, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.557
+      objectReference: {fileID: 0}
+    - target: {fileID: 3701409341896165458, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: m_Radius
+      value: 0.64912736
+      objectReference: {fileID: 0}
+    - target: {fileID: 3701409341896165458, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: m_Center.y
+      value: 0.59194124
+      objectReference: {fileID: 0}
     - target: {fileID: 3783203255126780123, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: m_Name
-      value: Elephant Variant
+      value: Elephant
+      objectReference: {fileID: 0}
+    - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: unitType
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7233426354256217250, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: m_Sprite

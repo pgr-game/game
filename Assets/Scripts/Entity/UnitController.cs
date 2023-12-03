@@ -7,6 +7,7 @@ public class UnitController : MonoBehaviour
     public PlayerManager owner;
     public MapManager mapManager;
     public UnitMove unitMove;
+    public UnitTypes unitType;
 
     public void Init(PlayerManager playerManager, MapManager mapManager) {
         this.owner = playerManager;
