@@ -38,8 +38,6 @@ public class GameManager : MonoBehaviour
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
     public GameObject unitTypeText;
 
-    public GameObject test;
-
     void Start()
     {
         //this should later be called directly from game creator and not the Start function
@@ -115,7 +113,6 @@ public class GameManager : MonoBehaviour
 
     public void setUnitTypeText(string unitType) {
         unitTypeText.GetComponent<TMPro.TextMeshProUGUI>().text = unitType;
-        test = getUnitPrefabByName(unitType);
     }
 
     public GameObject getUnitPrefabByName(String unitType) {
@@ -125,5 +122,9 @@ public class GameManager : MonoBehaviour
             Debug.Log("Invalid unit type");
             return null;
         }
+    }
+
+    public GameObject getUnitPrefab(UnitTypes unitType) {
+        return unitPrefabs[(int)unitType];
     }
 }
