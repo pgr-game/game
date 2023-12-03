@@ -9,6 +9,7 @@ public class PlayerManager : MonoBehaviour
     //assigned by game manager
     public MapManager mapManager;
     public StartingResources startingResources;
+    public GameManager gameManager;
     public bool isComputer;
     public Color color;
 
@@ -21,31 +22,35 @@ public class PlayerManager : MonoBehaviour
     //player's assets
     private List<UnitController> units;
 
-    public void Init()
+    public void Init(GameManager gameManager)
     {
         Debug.Log("Player manager instantiated!");
+        this.gameManager = gameManager;
         InitUnits();
     }
 
     // Update is called once per frame
     void Update()
     {
-        newSelected = SelectObject();
-        if(newSelected) {
-            UnitController currentUnit = newSelected.GetComponent<UnitController>();
-            if(currentUnit && newSelected == selected) {
-                //unselect
-                Debug.Log("Deactivating unit");
-                selected = null;
-                newSelected = null;
-                currentUnit.Deactivate();
-            }
-            else if(currentUnit && !selected) {
-                //select if nothing else is selected
-                Debug.Log("Activating unit");
-                selected = newSelected;
-                currentUnit.Activate();
-                HandleSelected();
+        if (!PauseMenu.isPaused) 
+        { 
+            newSelected = SelectObject();
+            if(newSelected) {
+                UnitController currentUnit = newSelected.GetComponent<UnitController>();
+                if(currentUnit && newSelected == selected) {
+                    //unselect
+                    Debug.Log("Deactivating unit");
+                    selected = null;
+                    newSelected = null;
+                    currentUnit.Deactivate();
+                }
+                else if(currentUnit && !selected) {
+                    //select if nothing else is selected
+                    Debug.Log("Activating unit");
+                    selected = newSelected;
+                    currentUnit.Activate();
+                    HandleSelected();
+                }
             }
         }
     }
@@ -82,7 +87,7 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("Adding starting unit");
             UnitController newUnit = Instantiate(unit, transform.position, Quaternion.identity).GetComponent<UnitController>();
             units.Add(newUnit);
-            newUnit.Init(this, mapManager);
+            newUnit.Init(this, mapManager, gameManager);
         }
     }
 

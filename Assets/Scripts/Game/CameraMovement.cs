@@ -19,8 +19,11 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
-        panCamera();
-        zoomCamera();
+        if (!PauseMenu.isPaused)
+        {
+            panCamera();
+            zoomCamera();
+        }
     }
 
     private void panCamera() {
