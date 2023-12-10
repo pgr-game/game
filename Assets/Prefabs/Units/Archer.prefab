@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 03649448cee5fd64fae97536ce07ab48, type: 3}
     - target: {fileID: 159042730252340600, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_SortingLayer
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 159042730252340600, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_SortingLayerID
@@ -61,8 +61,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4276940642390929518, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: attack
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4276940642390929518, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: maxHealth
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4276940642390929518, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: attackRange
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_LocalPosition.x

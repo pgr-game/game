@@ -10,6 +10,8 @@ public class UnitController : MonoBehaviour
     public UnitTypes unitType;
     public int maxHealth;
     public int currentHealth;
+    public int attack;
+    public int attackRange;
     public GameManager gameManager;
 
     public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager) {
