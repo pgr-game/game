@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     public PlayerManager activePlayer;
     private int numberOfPlayers;
     private PlayerManager[] players;
+    private List<UnitController> units;
 
     // Unit types
     private const int amountOfUnitTypes = 7;
