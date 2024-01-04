@@ -4610,8 +4610,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _img: {fileID: 1409361876}
-  _x: 1
-  _y: 0.5
+  _x: 0.01
+  _y: 0.005
 --- !u!114 &1409361876
 MonoBehaviour:
   m_ObjectHideFlags: 0
