@@ -10,5 +10,6 @@ public class City
     public UnitController UnitInProduction;
     public int UnitInProductionTurnsLeft;
     public List<CityTile> cityTiles;
-
+    public Vector3 uiAnchor;
+    public GameObject UI;
 }

@@ -21,7 +21,7 @@ public class PlayerManager : MonoBehaviour
 
     //player's assets
     private List<UnitController> units;
-    private PlayerCitiesManager playerCitiesManager;
+    public PlayerCitiesManager playerCitiesManager;
 
     public void Init(GameManager gameManager)
     {

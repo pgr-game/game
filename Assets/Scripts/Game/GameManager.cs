@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     public PlayerManager activePlayer;
     private int numberOfPlayers;
     private PlayerManager[] players;
+    public Vector3[] playerPositions;
+
 
     // Unit types
     private const int amountOfUnitTypes = 7;
@@ -49,7 +51,8 @@ public class GameManager : MonoBehaviour
             Debug.Log("Wrong initial data. Stopping game now!");
             return;
         }
-        mapManager.Init();
+        this.playerPositions = playerPositions;
+        mapManager.Init(this);
         InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors);
     }
 

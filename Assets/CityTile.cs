@@ -19,7 +19,7 @@ public class CityTile : MonoBehaviour
         
     }
 
-    public void ClaimStartingCity(PlayerManager playerManager, City city) {
+    public void ClaimStartingCityTile(PlayerManager playerManager, City city) {
         this.city = city;
         this.city.Owner = playerManager;
         this.owner = playerManager;
