@@ -21,6 +21,7 @@ public class MapManager : MonoBehaviour
         if (MapView)
         {
             MapView.Init(MapEntity);
+            InitTileRenderOrder();
         }
         else
         {
@@ -35,6 +36,13 @@ public class MapManager : MonoBehaviour
         if (Input.GetKeyUp(GridToggle))
         {
             MapEntity.GridToggle();
+        }
+    }
+
+    void InitTileRenderOrder() {
+        foreach(Transform child in MapView.transform.Find("Tiles")) {
+            SpriteRenderer sprite = child.Find("Model").GetComponent<SpriteRenderer>();
+            sprite.sortingOrder = -(int)child.transform.position.y;
         }
     }
 }
