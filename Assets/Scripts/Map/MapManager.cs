@@ -96,8 +96,14 @@ public class MapManager : MonoBehaviour
             playerManager.playerCitiesManager.AddCity(city);
         }
 
-        //assign colors and UI
+        //InitCityUI(null);
     }
+
+    //private void InitCityUI(PlayerManager player) {
+        //if(PlayerManager) {
+
+        //}
+    //}
 
     CityTile CityTileFromPosition(Vector3 position) {
         if (Physics.Raycast(new Vector3(position.x, position.y, position.z - 10), Vector3.forward, out hit)) {
