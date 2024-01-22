@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public int InNumberOfPlayers = 3;
     public Vector3[] InPlayerPositions;
     public StartingResources[] InStartingResources;
-    public Color[] InPlayerColors;
+    public Color32[] InPlayerColors;
     //end of game launcher variables
 
     public MapManager mapManager;
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         StartGame(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors);
     }
 
-    public void StartGame(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color[] playerColors) {
+    public void StartGame(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors) {
         if(!IsInitialDataCorrect(numberOfPlayers, playerPositions, startingResources, playerColors)) {
             Debug.Log("Wrong initial data. Stopping game now!");
             return;
@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
         InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors);
     }
 
-    private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color[] playerColors)
+    private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors)
     {
         Debug.Log("Instantiating players");
         this.numberOfPlayers = numberOfPlayers;
@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Player " + activePlayerIndex + " turn");
     }
 
-    private bool IsInitialDataCorrect(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color[] playerColors) 
+    private bool IsInitialDataCorrect(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors) 
     {
         if(startingResources.Length != numberOfPlayers) {
             Debug.Log("Wrong number of player starting resources!");

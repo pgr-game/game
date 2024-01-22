@@ -11,7 +11,7 @@ public class PlayerManager : MonoBehaviour
     public StartingResources startingResources;
     public GameManager gameManager;
     public bool isComputer;
-    public Color color;
+    public Color32 color;
 
     //selecting units and settlements
     private GameObject selected;

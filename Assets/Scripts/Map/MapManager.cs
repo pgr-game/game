@@ -14,6 +14,8 @@ public class MapManager : MonoBehaviour
     public MapEntity MapEntity { get; private set; }
     RaycastHit hit;  
 
+    public GameObject CityUIPrefab; 
+
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
@@ -96,7 +98,7 @@ public class MapManager : MonoBehaviour
             playerManager.playerCitiesManager.AddCity(city);
         }
 
-        //InitCityUI(null);
+        city.InitCityUI(null, this.CityUIPrefab);
     }
 
     //private void InitCityUI(PlayerManager player) {
@@ -154,6 +156,11 @@ public class MapManager : MonoBehaviour
 
     public static Vector3 CalculateMidpoint(List<Vector3> points)
     {
+        foreach (Vector3 o in points)
+        {
+            Debug.Log(o);
+        }
+
         float sumX = 0f;
         float sumY = 0f;
         foreach (Vector3 point in points)
@@ -162,6 +169,8 @@ public class MapManager : MonoBehaviour
             sumY += point.y;
         }
         // Assuming z should remain 0
+        Debug.Log(new Vector3(sumX / points.Count, sumY / points.Count, 0f));
+
         return new Vector3(sumX / points.Count, sumY / points.Count, 0f);
     }
 }

@@ -1814,6 +1814,7 @@ MonoBehaviour:
   Map: {fileID: 11400000, guid: a77ba960765df0a4280f5e58c533253e, type: 2}
   GridToggle: 103
   MapView: {fileID: 523771887}
+  CityUIPrefab: {fileID: 2672807317249986752, guid: 4549d244a30d0984f8c0911bf726b65b, type: 3}
 --- !u!4 &241904844
 Transform:
   m_ObjectHideFlags: 0
@@ -14891,8 +14892,10 @@ MonoBehaviour:
   - {fileID: 4276451211865606460, guid: 5e7b204f2f4fed54581c791b5fcf93b0, type: 3}
   - {fileID: 5409046352657579508, guid: 5bcbf96ed4db27d41926ce4ab732e2b2, type: 3}
   InPlayerColors:
-  - {r: 0.13780695, g: 0.1586678, b: 0.9245283, a: 0}
-  - {r: 0.085596666, g: 0.78113204, b: 0, a: 0}
+  - serializedVersion: 2
+    rgba: 4286185687
+  - serializedVersion: 2
+    rgba: 4283367198
   mapManager: {fileID: 241904843}
   playerPrefab: {fileID: 6202811586810600753, guid: 737370e2dcee64847a4ede0cb6b98416, type: 3}
   turnNumber: 1
