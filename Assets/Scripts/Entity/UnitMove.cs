@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using RedBjorn.ProtoTiles;
 using RedBjorn.ProtoTiles.Example;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 //namespace RedBjorn.ProtoTiles.Example
 //{
-    public class UnitMove : MonoBehaviour
+public class UnitMove : MonoBehaviour
     {
         public float Speed = 5;
         public float Range = 10f;
@@ -25,8 +27,11 @@ using RedBjorn.ProtoTiles.Example;
 
         private bool active = false;
         private bool justActivated = false;
+        
+        // not sure if all x y z coordinates are neccesary
+        Vector3Int hexPosition;
 
-        void Update()
+    void Update()
         {
             if(active && !justActivated) {
                 if (MyInput.GetOnWorldUp(mapManager.MapEntity.Settings.Plane()))
@@ -45,6 +50,9 @@ using RedBjorn.ProtoTiles.Example;
 
         public void Init(MapManager mapManager)
         {
+            var position = transform.position;
+            var tile = mapManager.MapEntity.Tile(position);
+            hexPosition = tile.Position;
             this.mapManager = mapManager;
             Area = Spawner.Spawn(AreaPrefab, Vector3.zero, Quaternion.identity);
             Debug.Log("Initialize UnitMove");
@@ -57,6 +65,7 @@ using RedBjorn.ProtoTiles.Example;
             var tile = mapManager.MapEntity.Tile(clickPos);
             if (tile != null && tile.Vacant)
             {
+                hexPosition = tile.Position;
                 AreaHide();
                 Path.IsEnabled = false;
                 PathHide();

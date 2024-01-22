@@ -50,6 +50,13 @@ MonoBehaviour:
     GridOffset: 0
     Tags:
     - {fileID: 11400000, guid: 25b8c40cae2c9684985e9ebdc6331b8e, type: 2}
+  - Type: City
+    Id: c162c1cee26d52a47998a3e29a9b19d6
+    MapColor: {r: 0.7584905, g: 0.7584905, b: 0.7584905, a: 0.5}
+    Prefab: {fileID: 7362454568944323520, guid: 357b967cec3739e4593a58ab5deabbb5, type: 3}
+    GridOffset: 0
+    Tags:
+    - {fileID: 11400000, guid: 2e01fed2d00c6674bbb41bd8ac7e432f, type: 2}
   Tiles:
   - TilePos: {x: 0, y: 0, z: 0}
     Id: 2d6c3fcbad120d047aa888dea7eae844
@@ -192,7 +199,7 @@ MonoBehaviour:
     - 0
     - 0
   - TilePos: {x: -4, y: 0, z: 4}
-    Id: 2d6c3fcbad120d047aa888dea7eae844
+    Id: c162c1cee26d52a47998a3e29a9b19d6
     MovableArea: 1
     SideHeight:
     - 0
@@ -202,7 +209,7 @@ MonoBehaviour:
     - 0
     - 0
   - TilePos: {x: -5, y: 1, z: 4}
-    Id: 2d6c3fcbad120d047aa888dea7eae844
+    Id: c162c1cee26d52a47998a3e29a9b19d6
     MovableArea: 1
     SideHeight:
     - 0
@@ -222,7 +229,7 @@ MonoBehaviour:
     - 0
     - 0
   - TilePos: {x: -5, y: 2, z: 3}
-    Id: 2d6c3fcbad120d047aa888dea7eae844
+    Id: c162c1cee26d52a47998a3e29a9b19d6
     MovableArea: 1
     SideHeight:
     - 0
@@ -252,7 +259,7 @@ MonoBehaviour:
     - 0
     - 0
   - TilePos: {x: -5, y: 0, z: 5}
-    Id: 2d6c3fcbad120d047aa888dea7eae844
+    Id: c162c1cee26d52a47998a3e29a9b19d6
     MovableArea: 1
     SideHeight:
     - 0
@@ -1492,8 +1499,8 @@ MonoBehaviour:
     - 0
     - 0
   - TilePos: {x: 4, y: 1, z: -5}
-    Id: 04696447885a4a54d8948b54c372e0f5
-    MovableArea: 0
+    Id: c162c1cee26d52a47998a3e29a9b19d6
+    MovableArea: 1
     SideHeight:
     - 0
     - 0
@@ -1552,8 +1559,18 @@ MonoBehaviour:
     - 0
     - 0
   - TilePos: {x: 5, y: 1, z: -6}
-    Id: 04696447885a4a54d8948b54c372e0f5
-    MovableArea: 0
+    Id: c162c1cee26d52a47998a3e29a9b19d6
+    MovableArea: 1
+    SideHeight:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+  - TilePos: {x: 6, y: 1, z: -7}
+    Id: c162c1cee26d52a47998a3e29a9b19d6
+    MovableArea: 1
     SideHeight:
     - 0
     - 0

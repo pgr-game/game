@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public enum UnitTypes {
     Archer,
@@ -32,7 +33,11 @@ public class GameManager : MonoBehaviour
     public PlayerManager activePlayer;
     private int numberOfPlayers;
     private PlayerManager[] players;
+    public Vector3[] playerPositions;
 
+
+    // is it really usefulll for anything ?
+    private List<UnitController> units = new List<UnitController>();
     // Unit types
     private const int amountOfUnitTypes = 7;
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
@@ -49,7 +54,8 @@ public class GameManager : MonoBehaviour
             Debug.Log("Wrong initial data. Stopping game now!");
             return;
         }
-        mapManager.Init();
+        this.playerPositions = playerPositions;
+        mapManager.Init(this);
         InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors);
     }
 
@@ -70,6 +76,7 @@ public class GameManager : MonoBehaviour
                 players[i].gameObject.SetActive(false);
             }
             players[i].Init(this);
+            //units.Concat(players[i].startingResources.units);
         }
         activePlayer = players[activePlayerIndex];
     }

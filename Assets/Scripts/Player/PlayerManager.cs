@@ -20,12 +20,14 @@ public class PlayerManager : MonoBehaviour
     RaycastHit hit;  
 
     //player's assets
-    private List<UnitController> units;
+    private List<UnitController> allyUnits = new List<UnitController>();
+    public PlayerCitiesManager playerCitiesManager;
 
     public void Init(GameManager gameManager)
     {
         Debug.Log("Player manager instantiated!");
         this.gameManager = gameManager;
+        InitCities();
         InitUnits();
     }
 
@@ -53,6 +55,7 @@ public class PlayerManager : MonoBehaviour
                 }
             }
         }
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), transform.TransformDirection(Vector3.forward), Color.green);
     }
 
     GameObject SelectObject()
@@ -60,6 +63,11 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) {  
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);  
             if (Physics.Raycast(ray, out hit)) {  
+                CityTile city = hit.transform.GetComponent<CityTile>();
+                if(city != null) {
+                    Debug.Log("City clicked!");
+                }
+
                 UnitController unit = hit.transform.GetComponent<UnitController>();
                 if(unit == null) {
                     return null;
@@ -82,13 +90,17 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("No starting resources for player!");
             return;
         } 
-        units = new List<UnitController>();
         foreach(UnitController unit in startingResources.units) {
             Debug.Log("Adding starting unit");
             UnitController newUnit = Instantiate(unit, transform.position, Quaternion.identity).GetComponent<UnitController>();
-            units.Add(newUnit);
+            allyUnits.Add(newUnit);
             newUnit.Init(this, mapManager, gameManager);
         }
+    }
+
+    void InitCities() {
+        playerCitiesManager = new PlayerCitiesManager();
+        playerCitiesManager.Init(this);
     }
 
 }
