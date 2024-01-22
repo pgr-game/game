@@ -20,7 +20,7 @@ public class PlayerManager : MonoBehaviour
     RaycastHit hit;  
 
     //player's assets
-    private List<UnitController> units;
+    private List<UnitController> allyUnits = new List<UnitController>();
     public PlayerCitiesManager playerCitiesManager;
 
     public void Init(GameManager gameManager)
@@ -90,11 +90,10 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("No starting resources for player!");
             return;
         } 
-        units = new List<UnitController>();
         foreach(UnitController unit in startingResources.units) {
             Debug.Log("Adding starting unit");
             UnitController newUnit = Instantiate(unit, transform.position, Quaternion.identity).GetComponent<UnitController>();
-            units.Add(newUnit);
+            allyUnits.Add(newUnit);
             newUnit.Init(this, mapManager, gameManager);
         }
     }
