@@ -14896,6 +14896,9 @@ MonoBehaviour:
     rgba: 4286185687
   - serializedVersion: 2
     rgba: 4283367198
+  InStartingCityNames:
+  - Ur
+  - Babylon
   mapManager: {fileID: 241904843}
   playerPrefab: {fileID: 6202811586810600753, guid: 737370e2dcee64847a4ede0cb6b98416, type: 3}
   turnNumber: 1

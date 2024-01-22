@@ -23,11 +23,11 @@ public class PlayerManager : MonoBehaviour
     private List<UnitController> allyUnits = new List<UnitController>();
     public PlayerCitiesManager playerCitiesManager;
 
-    public void Init(GameManager gameManager)
+    public void Init(GameManager gameManager, string startingCityName)
     {
         Debug.Log("Player manager instantiated!");
         this.gameManager = gameManager;
-        InitCities();
+        InitCities(startingCityName);
         InitUnits();
     }
 
@@ -98,9 +98,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    void InitCities() {
+    void InitCities(string startingCityName) {
         playerCitiesManager = new PlayerCitiesManager();
-        playerCitiesManager.Init(this);
+        playerCitiesManager.Init(this, startingCityName);
     }
 
 }

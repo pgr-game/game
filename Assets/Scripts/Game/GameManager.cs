@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public Vector3[] InPlayerPositions;
     public StartingResources[] InStartingResources;
     public Color32[] InPlayerColors;
+    public string[] InStartingCityNames;
     //end of game launcher variables
 
     public MapManager mapManager;
@@ -46,20 +47,20 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         //this should later be called directly from game creator and not the Start function
-        StartGame(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors);
+        StartGame(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames);
     }
 
-    public void StartGame(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors) {
+    public void StartGame(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames) {
         if(!IsInitialDataCorrect(numberOfPlayers, playerPositions, startingResources, playerColors)) {
             Debug.Log("Wrong initial data. Stopping game now!");
             return;
         }
         this.playerPositions = playerPositions;
         mapManager.Init(this);
-        InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors);
+        InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors, startingCityNames);
     }
 
-    private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors)
+    private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames)
     {
         Debug.Log("Instantiating players");
         this.numberOfPlayers = numberOfPlayers;
@@ -75,7 +76,7 @@ public class GameManager : MonoBehaviour
             else {
                 players[i].gameObject.SetActive(false);
             }
-            players[i].Init(this);
+            players[i].Init(this, startingCityNames[i]);
             //units.Concat(players[i].startingResources.units);
         }
         activePlayer = players[activePlayerIndex];

@@ -77,14 +77,14 @@ public class MapManager : MonoBehaviour
                         continue;
                     } else {
                         Debug.Log("Init neutral city");
-                        InitCity(cityTiles, null);
+                        InitCity(cityTiles, null, null); //eventually get a name from list of neutral names
                     }
                 }
             }
         }
     }
 
-    public void InitCity(List<CityTile> cityTiles, PlayerManager playerManager) {
+    public void InitCity(List<CityTile> cityTiles, PlayerManager playerManager, string name) {
         City city = new City();
         city.cityTiles = new List<CityTile>();
 
@@ -98,7 +98,7 @@ public class MapManager : MonoBehaviour
             playerManager.playerCitiesManager.AddCity(city);
         }
 
-        city.InitCityUI(null, this.CityUIPrefab);
+        city.InitCityUI(null, this.CityUIPrefab, name);
     }
 
     //private void InitCityUI(PlayerManager player) {
