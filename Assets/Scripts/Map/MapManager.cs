@@ -47,7 +47,7 @@ public class MapManager : MonoBehaviour
     void InitTileRenderOrder() {
         foreach(Transform child in MapView.transform.Find("Tiles")) {
             SpriteRenderer sprite = child.Find("Model").GetComponent<SpriteRenderer>();
-            sprite.sortingOrder = -(int)child.transform.position.y;
+            sprite.sortingOrder = -(int)child.transform.position.y+100000;
         }
     }
 
