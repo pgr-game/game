@@ -11,7 +11,7 @@ public class PlayerManager : MonoBehaviour
     public StartingResources startingResources;
     public GameManager gameManager;
     public bool isComputer;
-    public Color color;
+    public Color32 color;
 
     //selecting units and settlements
     private GameObject selected;
@@ -28,12 +28,11 @@ public class PlayerManager : MonoBehaviour
     public GameObject goldText;
     public int goldIncome = 5;     // amount given to player every round independently of cities, units etc.
 
-
-    public void Init(GameManager gameManager)
+    public void Init(GameManager gameManager, string startingCityName)
     {
         Debug.Log("Player manager instantiated!");
         this.gameManager = gameManager;
-        InitCities();
+        InitCities(startingCityName);
         InitUnits();
         gold = startingResources.gold;
         GameObject[] texts = GameObject.FindGameObjectsWithTag("currencyText");
@@ -107,9 +106,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    void InitCities() {
+    void InitCities(string startingCityName) {
         playerCitiesManager = new PlayerCitiesManager();
-        playerCitiesManager.Init(this);
+        playerCitiesManager.Init(this, startingCityName);
     }
 
     public void AddGold(int amount) {
