@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
 
 
     // is it really usefulll for anything ?
-    private List<UnitController> units = new List<UnitController>();
+    public List<UnitController> units = new List<UnitController>();
     // Unit types
     private const int amountOfUnitTypes = 7;
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
