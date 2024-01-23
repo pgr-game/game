@@ -28,4 +28,17 @@ public class PlayerCitiesManager
         List<CityTile> startingCityTiles = mapManager.GetCityTilesInPosition(playerManager.transform.position);
         mapManager.InitCity(startingCityTiles, this.playerManager, startingCityName);
     }
+
+    public int GetGoldIncome() {
+        // TODO in the future: make it more advanced, based on level for example
+        return cities.Count*10;
+    }
+
+    public List<City> GetCities() {
+        return cities;
+    }
+
+    public int GetNumberOfCities() {
+        return cities.Count;
+    }
 }

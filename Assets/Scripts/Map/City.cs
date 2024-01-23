@@ -12,6 +12,8 @@ public class City
     public int UnitInProductionTurnsLeft;
     public List<CityTile> cityTiles;
     public Vector3 uiAnchor;
+    public GameObject UI;
+    public int turnCreated;
     public CityUIController UI;
 
     public void InitCityUI(PlayerManager player, GameObject CityUIPrefab, string name) {
@@ -27,5 +29,4 @@ public class City
             UI.SetName(name);
         }
     }
-
 }
