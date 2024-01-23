@@ -23,12 +23,21 @@ public class PlayerManager : MonoBehaviour
     public List<UnitController> allyUnits = new List<UnitController>();
     public PlayerCitiesManager playerCitiesManager;
 
+    // currency
+    private int gold;
+    public GameObject goldText;
+    public int goldIncome = 5;     // amount given to player every round independently of cities, units etc.
+
+
     public void Init(GameManager gameManager)
     {
         Debug.Log("Player manager instantiated!");
         this.gameManager = gameManager;
         InitCities();
         InitUnits();
+        gold = startingResources.gold;
+        GameObject[] texts = GameObject.FindGameObjectsWithTag("currencyText");
+        goldText = texts[0];
     }
 
     // Update is called once per frame
@@ -101,6 +110,45 @@ public class PlayerManager : MonoBehaviour
     void InitCities() {
         playerCitiesManager = new PlayerCitiesManager();
         playerCitiesManager.Init(this);
+    }
+
+    public void AddGold(int amount) {
+        gold += amount;
+        SetGoldText(gold.ToString());
+    }
+
+    public void RemoveGold(int amount) {
+        gold -= amount;
+        SetGoldText(gold.ToString());
+    }
+
+    public void SetGoldText(string gold) {
+        goldText.GetComponent<TMPro.TextMeshProUGUI>().text = gold;
+    }
+
+    public void SetGoldIncome() {
+        // option no 1:
+        if(gameManager.turnNumber % 2 == 0) {
+            goldIncome += 1;
+        }
+        // option no 2: (if the gold income would increase too fast with the first method)
+        // goldIncome = 5 + gameManager.turn/2;
+
+        // here we can do some more advanced calculations, for example based on type of unit
+        int goldForUnits = this.allyUnits.Count / 2;
+        goldIncome += goldForUnits;
+        // here we can do some more advanced calculations, for example based on level of city
+        int goldForCities = this.playerCitiesManager.GetNumberOfCities()*2;
+        goldIncome += goldForCities;
+    }
+
+    public void StartTurn() {
+        if(gameManager.turnNumber != 1) {
+            AddGold(playerCitiesManager.GetGoldIncome());
+        }
+        SetGoldText(gold.ToString());
+        SetGoldIncome();
+        gold += goldIncome;
     }
 
 }
