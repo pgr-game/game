@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UnitList : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class UnitList : MonoBehaviour
             int i = 100;
             foreach (UnitController unitData in gameManager.activePlayer.allyUnits)
             {
-                GameObject newEntry = Instantiate(myPrefab, transform.position + new Vector3(50, i, 0), Quaternion.identity, EmptyObj.transform);
+                GameObject newEntry = Instantiate(myPrefab, transform.position + new Vector3(80, i, 0), Quaternion.identity, EmptyObj.transform);
 
                 GameObject unitName = newEntry.transform.Find("name").gameObject;
                 TMP_Text nameText = unitName.GetComponent<TMP_Text>();
@@ -39,7 +40,15 @@ public class UnitList : MonoBehaviour
                 GameObject unitCurrectntHp = newEntry.transform.Find("hp").gameObject;
                 TMP_Text hpText = unitCurrectntHp.GetComponent<TMP_Text>();
                 hpText.text = unitData.currentHealth.ToString();
-                i += 30;
+
+                GameObject unitCurrectntAttack = newEntry.transform.Find("attack").gameObject;
+                TMP_Text attackText = unitCurrectntAttack.GetComponent<TMP_Text>();
+                attackText.text = unitData.attack.ToString();
+
+                GameObject  button = newEntry.transform.Find("button").gameObject;
+                Button buttonEvent = button.GetComponent<Button>();
+                buttonEvent.onClick.AddListener(delegate { goToPosition(unitData); });
+                i += 40;
             }
         }
         else
@@ -47,5 +56,12 @@ public class UnitList : MonoBehaviour
             GameObject abc = transform.Find("Cool GameObject made from Code").gameObject;
             Destroy(abc);
         }
+    }
+    public void goToPosition(UnitController unitData)
+    {
+        Vector3 tilePosition=unitData.mapManager.MapEntity.WorldPosition(unitData.unitMove.hexPosition);
+
+        Camera.main.transform.position = new Vector3(tilePosition.x, tilePosition.y, Camera.main.transform.position.z);
+
     }
 }

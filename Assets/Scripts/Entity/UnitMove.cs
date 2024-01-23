@@ -29,7 +29,7 @@ public class UnitMove : MonoBehaviour
         private bool justActivated = false;
         
         // not sure if all x y z coordinates are neccesary
-        Vector3Int hexPosition;
+        public Vector3Int hexPosition;
 
     void Update()
         {
