@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     private const int amountOfUnitTypes = 7;
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
     public GameObject unitTypeText;
+    public GameObject unitAttackText;
 
     void Start()
     {
@@ -122,6 +123,10 @@ public class GameManager : MonoBehaviour
 
     public void setUnitTypeText(string unitType) {
         unitTypeText.GetComponent<TMPro.TextMeshProUGUI>().text = unitType;
+    }
+    public void setUnitAttackText(string unitAttack)
+    {
+        unitAttackText.GetComponent<TMPro.TextMeshProUGUI>().text = unitAttack;
     }
 
     public GameObject getUnitPrefabByName(String unitType) {
