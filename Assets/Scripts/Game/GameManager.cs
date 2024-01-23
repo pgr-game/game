@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
             //units.Concat(players[i].startingResources.units);
         }
         activePlayer = players[activePlayerIndex];
+        players[activePlayerIndex].StartTurn();
     }
 
     public void NextPlayer()
@@ -96,6 +97,7 @@ public class GameManager : MonoBehaviour
             turnNumber++;
             turnText.GetComponent<TMPro.TextMeshProUGUI>().text = turnNumber.ToString();
         }
+        players[activePlayerIndex].StartTurn();
         Debug.Log("Player " + activePlayerIndex + " turn");
     }
 

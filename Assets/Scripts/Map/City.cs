@@ -12,4 +12,5 @@ public class City
     public List<CityTile> cityTiles;
     public Vector3 uiAnchor;
     public GameObject UI;
+    public int turnCreated;
 }

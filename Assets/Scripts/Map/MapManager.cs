@@ -85,6 +85,7 @@ public class MapManager : MonoBehaviour
     public void InitCity(List<CityTile> cityTiles, PlayerManager playerManager) {
         City city = new City();
         city.cityTiles = new List<CityTile>();
+        city.turnCreated = gameManager.turnNumber;
 
         foreach(CityTile cityTile in cityTiles) {
             cityTile.ClaimStartingCityTile(playerManager, city);
