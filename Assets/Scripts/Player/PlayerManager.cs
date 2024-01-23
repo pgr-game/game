@@ -123,7 +123,7 @@ public class PlayerManager : MonoBehaviour
     }
 
     public void SetGoldText(string gold) {
-        goldText.GetComponent<TMPro.TextMeshProUGUI>().text = gold;
+        goldText.GetComponent<TMPro.TextMeshProUGUI>().text = "gold: " + gold;
     }
 
     public void SetGoldIncome() {
