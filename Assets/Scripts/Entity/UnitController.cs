@@ -47,4 +47,10 @@ public class UnitController : MonoBehaviour
         Debug.Log("Setting unit color");
         body.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", owner.color);
     }
+
+    public void death() {
+        Destroy(gameObject);
+        owner.allyUnits.Remove(this);
+        gameManager.units.Remove(this);
+    }
 }
