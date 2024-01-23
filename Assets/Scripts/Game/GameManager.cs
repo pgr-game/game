@@ -124,7 +124,7 @@ public class GameManager : MonoBehaviour
     }
     public void setUnitAttackText(string unitAttack)
     {
-        unitTypeText.GetComponent<TMPro.TextMeshProUGUI>().text = unitAttack;
+        unitAttackText.GetComponent<TMPro.TextMeshProUGUI>().text = unitAttack;
     }
 
     public GameObject getUnitPrefabByName(String unitType) {
