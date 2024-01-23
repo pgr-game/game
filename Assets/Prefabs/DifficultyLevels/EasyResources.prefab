@@ -47,3 +47,4 @@ MonoBehaviour:
   units:
   - {fileID: 4276940642390929518, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
   - {fileID: 4904952671420468863, guid: 4ed85a2d63bdf1b47aa30c2058185ac4, type: 3}
+  gold: 100
