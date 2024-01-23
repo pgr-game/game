@@ -20,7 +20,7 @@ public class PlayerManager : MonoBehaviour
     RaycastHit hit;  
 
     //player's assets
-    private List<UnitController> allyUnits = new List<UnitController>();
+    public List<UnitController> allyUnits = new List<UnitController>();
     public PlayerCitiesManager playerCitiesManager;
 
     public void Init(GameManager gameManager)
