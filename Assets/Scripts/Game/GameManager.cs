@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     //end of game launcher variables
 
     public MapManager mapManager;
+    public CityMenuManager cityMenuManager;
     public GameObject playerPrefab;
 
     public int turnNumber = 1;
@@ -58,6 +59,7 @@ public class GameManager : MonoBehaviour
         }
         this.playerPositions = playerPositions;
         mapManager.Init(this);
+        cityMenuManager.Init(this);
         InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors, startingCityNames);
     }
 
