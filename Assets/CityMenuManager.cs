@@ -53,7 +53,7 @@ public class CityMenuManager : MonoBehaviour
                 Debug.Log("setting entry color");
                 background.color = new Color32(118, 99, 27, 255);
             } else {
-                background.color = new Color32(229, 190, 46, 255);
+                background.color = new Color32(240, 166, 63, 255);
             }
         }
     }
