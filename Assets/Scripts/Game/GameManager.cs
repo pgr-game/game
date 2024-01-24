@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
 
 public enum UnitTypes {
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
     public GameObject unitTypeText;
     public GameObject unitAttackText;
+    public Image nextTurnButtonImage;
 
     void Start()
     {
@@ -83,6 +85,7 @@ public class GameManager : MonoBehaviour
             //units.Concat(players[i].startingResources.units);
         }
         activePlayer = players[activePlayerIndex];
+        SetPlayerUIColor(players[activePlayerIndex].color);
         players[activePlayerIndex].StartTurn();
     }
 
@@ -101,8 +104,13 @@ public class GameManager : MonoBehaviour
             turnNumber++;
             turnText.GetComponent<TMPro.TextMeshProUGUI>().text = turnNumber.ToString();
         }
+        SetPlayerUIColor(players[activePlayerIndex].color);
         players[activePlayerIndex].StartTurn();
         Debug.Log("Player " + activePlayerIndex + " turn");
+    }
+
+    private void SetPlayerUIColor(Color color) {
+        nextTurnButtonImage.color = color;
     }
 
     private bool IsInitialDataCorrect(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors) 

@@ -208,7 +208,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224374824136518608, guid: cc85fa46c1f2f7546bf14034f9d306c9, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 80
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 224374824136518608, guid: cc85fa46c1f2f7546bf14034f9d306c9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -341,6 +341,18 @@ PrefabInstance:
     - target: {fileID: 1673164046511760442, guid: cc85fa46c1f2f7546bf14034f9d306c9, type: 3}
       propertyPath: m_HorizontalAlignment
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103941808105173293, guid: cc85fa46c1f2f7546bf14034f9d306c9, type: 3}
+      propertyPath: m_Color.b
+      value: 0.24705882
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103941808105173293, guid: cc85fa46c1f2f7546bf14034f9d306c9, type: 3}
+      propertyPath: m_Color.g
+      value: 0.6509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 2103941808105173293, guid: cc85fa46c1f2f7546bf14034f9d306c9, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9411765
       objectReference: {fileID: 0}
     - target: {fileID: 4467835426604188952, guid: cc85fa46c1f2f7546bf14034f9d306c9, type: 3}
       propertyPath: m_text
