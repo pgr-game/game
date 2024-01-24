@@ -68,19 +68,23 @@ public class CityMenuManager : MonoBehaviour
         foreach (GameObject prefab in unitPrefabs)
             {
                 UnitController unit = prefab.GetComponent<UnitController>();
-                GameObject newEntry = Instantiate(UnitEntryPrefab, unitsContainer.transform.position + new Vector3(80, i, 0), Quaternion.identity, unitsContainer.transform);
+                GameObject newEntry = Instantiate(UnitEntryPrefab, unitsContainer.transform.position + new Vector3(160, i, 0), Quaternion.identity, unitsContainer.transform);
 
                 GameObject unitName = newEntry.transform.Find("name").gameObject;
                 TMP_Text nameText = unitName.GetComponent<TMP_Text>();
-                nameText.text = "dupa";
+                nameText.text = unit.unitType.ToString();
 
                 GameObject unitCurrectntHp = newEntry.transform.Find("hp").gameObject;
                 TMP_Text hpText = unitCurrectntHp.GetComponent<TMP_Text>();
-                hpText.text = unit.turnProduced.ToString();
+                hpText.text = unit.GetProductionTurns().ToString();
 
                 GameObject unitCurrectntAttack = newEntry.transform.Find("attack").gameObject;
                 TMP_Text attackText = unitCurrectntAttack.GetComponent<TMP_Text>();
                 attackText.text = "turns";
+
+                GameObject unitCurrectntImage = newEntry.transform.Find("Image").gameObject;
+                Image image = unitCurrectntImage.GetComponent<Image>();
+                image.sprite = prefab.transform.Find("Sprite").GetComponent<SpriteRenderer>().sprite;
 
                 if(city.unitInProductionPrefab == prefab) {
                     SetEntryColorToSelected(newEntry);
@@ -89,7 +93,7 @@ public class CityMenuManager : MonoBehaviour
                 GameObject  button = newEntry.transform.Find("button").gameObject;
                 Button buttonEvent = button.GetComponent<Button>();
                 buttonEvent.onClick.AddListener(delegate { SelectProductionUnit(newEntry, unit, prefab); });
-                i -= 40;
+                i -= 80;
             }
     }
 

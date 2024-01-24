@@ -34,6 +34,6 @@ public class City
         this.UnitInProduction = unit;
         this.unitInProductionPrefab = unitInProductionPrefab;
         UI.SetUnitInProduction(unitInProductionPrefab);
-        UI.SetTurnsLeft(unit.turnProduced);
+        UI.SetTurnsLeft(unit.GetProductionTurns());
     }
 }
