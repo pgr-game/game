@@ -31,7 +31,7 @@ public class UnitList : MonoBehaviour
             int i = 100;
             foreach (UnitController unitData in gameManager.activePlayer.allyUnits)
             {
-                GameObject newEntry = Instantiate(myPrefab, transform.position + new Vector3(80, i, 0), Quaternion.identity, EmptyObj.transform);
+                GameObject newEntry = Instantiate(myPrefab, transform.position + new Vector3(100, 160 + i, 0), Quaternion.identity, EmptyObj.transform);
 
                 GameObject unitName = newEntry.transform.Find("name").gameObject;
                 TMP_Text nameText = unitName.GetComponent<TMP_Text>();
@@ -48,7 +48,7 @@ public class UnitList : MonoBehaviour
                 GameObject  button = newEntry.transform.Find("button").gameObject;
                 Button buttonEvent = button.GetComponent<Button>();
                 buttonEvent.onClick.AddListener(delegate { goToPosition(unitData); });
-                i += 40;
+                i += 90;
             }
         }
         else

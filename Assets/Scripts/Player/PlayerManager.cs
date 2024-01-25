@@ -11,9 +11,10 @@ public class PlayerManager : MonoBehaviour
     public StartingResources startingResources;
     public GameManager gameManager;
     public bool isComputer;
-    public Color color;
+    public Color32 color;
 
     //selecting units and settlements
+    private bool isInMenu = false;
     private GameObject selected;
     private GameObject newSelected;
     private Ray ray;
@@ -28,12 +29,11 @@ public class PlayerManager : MonoBehaviour
     public GameObject goldText;
     public int goldIncome = 5;     // amount given to player every round independently of cities, units etc.
 
-
-    public void Init(GameManager gameManager)
+    public void Init(GameManager gameManager, string startingCityName)
     {
         Debug.Log("Player manager instantiated!");
         this.gameManager = gameManager;
-        InitCities();
+        InitCities(startingCityName);
         InitUnits();
         gold = startingResources.gold;
         GameObject[] texts = GameObject.FindGameObjectsWithTag("currencyText");
@@ -47,20 +47,13 @@ public class PlayerManager : MonoBehaviour
         { 
             newSelected = SelectObject();
             if(newSelected) {
-                UnitController currentUnit = newSelected.GetComponent<UnitController>();
-                if(currentUnit && newSelected == selected) {
-                    //unselect
-                    Debug.Log("Deactivating unit");
-                    selected = null;
-                    newSelected = null;
-                    currentUnit.Deactivate();
+                if(newSelected.GetComponent<UnitController>() && !isInMenu) {
+                    UnitController currentUnit = newSelected.GetComponent<UnitController>();
+                    HandleUnitClick(currentUnit);
                 }
-                else if(currentUnit && !selected) {
-                    //select if nothing else is selected
-                    Debug.Log("Activating unit");
-                    selected = newSelected;
-                    currentUnit.Activate();
-                    HandleSelected();
+                else if(newSelected.GetComponent<CityTile>()) {
+                    CityTile cityTile = newSelected.GetComponent<CityTile>();
+                    HandleCityClick(cityTile.city);
                 }
             }
         }
@@ -72,26 +65,56 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) {  
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);  
             if (Physics.Raycast(ray, out hit)) {  
-                CityTile city = hit.transform.GetComponent<CityTile>();
-                if(city != null) {
-                    Debug.Log("City clicked!");
-                }
-
-                UnitController unit = hit.transform.GetComponent<UnitController>();
-                if(unit == null) {
-                    return null;
-                } else if(unit.owner == this) {
-                    Debug.Log("Selected: " + hit.transform.name);
-                    return hit.transform.gameObject;
-                }
-            }  
+                Debug.Log("Selected: " + hit.transform.name);
+                return hit.transform.gameObject;
+            }
+            return null;
         }  
         return null;
     }
 
-    void HandleSelected()
+    void HandleSelectedUnit()
     {
         Debug.Log("Handling selected");
+    }
+
+    private void HandleUnitClick(UnitController currentUnit) {
+        if(currentUnit.owner != this) {
+            return;
+        }
+        if(currentUnit && newSelected == selected) {
+            //unselect
+            Debug.Log("Deactivating unit");
+            selected = null;
+            newSelected = null;
+            currentUnit.Deactivate();
+        }
+        else if(currentUnit && !selected) {
+            //select if nothing else is selected
+            Debug.Log("Activating unit");
+            selected = newSelected;
+            currentUnit.Activate();
+            HandleSelectedUnit();
+        }
+    }
+
+    private void HandleCityClick(City city) {
+        if(city.Owner == null) {
+            return;
+        }
+        if(city.Owner != this) {
+            return;
+        }
+        if(gameManager.cityMenuManager.city == city) {
+            gameManager.cityMenuManager.setValues(null);
+            gameManager.cityMenuManager.Deactivate();
+            isInMenu = false;
+            return;
+        }
+        Debug.Log(city.Name);
+        isInMenu = false;
+        gameManager.cityMenuManager.setValues(city);
+        gameManager.cityMenuManager.Activate();
     }
 
     void InitUnits() {
@@ -107,9 +130,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    void InitCities() {
+    void InitCities(string startingCityName) {
         playerCitiesManager = new PlayerCitiesManager();
-        playerCitiesManager.Init(this);
+        playerCitiesManager.Init(this, startingCityName);
     }
 
     public void AddGold(int amount) {

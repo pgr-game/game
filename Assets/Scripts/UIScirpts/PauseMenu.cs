@@ -7,6 +7,7 @@ public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenu;
     public GameObject optionMenu;
+    public GameObject cityMenu;
     public static bool isPaused;
     // Start is called before the first frame update
     void Start()
@@ -19,6 +20,7 @@ public class PauseMenu : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
+            cityMenu.SetActive(false);
             if(isPaused&& optionMenu.activeSelf==true) 
             {
                 optionMenu.SetActive(false);

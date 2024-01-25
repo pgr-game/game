@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
 
 public enum UnitTypes {
@@ -20,10 +21,12 @@ public class GameManager : MonoBehaviour
     public int InNumberOfPlayers = 3;
     public Vector3[] InPlayerPositions;
     public StartingResources[] InStartingResources;
-    public Color[] InPlayerColors;
+    public Color32[] InPlayerColors;
+    public string[] InStartingCityNames;
     //end of game launcher variables
 
     public MapManager mapManager;
+    public CityMenuManager cityMenuManager;
     public GameObject playerPrefab;
 
     public int turnNumber = 1;
@@ -43,24 +46,26 @@ public class GameManager : MonoBehaviour
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
     public GameObject unitTypeText;
     public GameObject unitAttackText;
+    public Image nextTurnButtonImage;
 
     void Start()
     {
         //this should later be called directly from game creator and not the Start function
-        StartGame(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors);
+        StartGame(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames);
     }
 
-    public void StartGame(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color[] playerColors) {
+    public void StartGame(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames) {
         if(!IsInitialDataCorrect(numberOfPlayers, playerPositions, startingResources, playerColors)) {
             Debug.Log("Wrong initial data. Stopping game now!");
             return;
         }
         this.playerPositions = playerPositions;
         mapManager.Init(this);
-        InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors);
+        cityMenuManager.Init(this);
+        InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors, startingCityNames);
     }
 
-    private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color[] playerColors)
+    private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames)
     {
         Debug.Log("Instantiating players");
         this.numberOfPlayers = numberOfPlayers;
@@ -76,10 +81,11 @@ public class GameManager : MonoBehaviour
             else {
                 players[i].gameObject.SetActive(false);
             }
-            players[i].Init(this);
+            players[i].Init(this, startingCityNames[i]);
             //units.Concat(players[i].startingResources.units);
         }
         activePlayer = players[activePlayerIndex];
+        SetPlayerUIColor(players[activePlayerIndex].color);
         players[activePlayerIndex].StartTurn();
     }
 
@@ -98,11 +104,16 @@ public class GameManager : MonoBehaviour
             turnNumber++;
             turnText.GetComponent<TMPro.TextMeshProUGUI>().text = turnNumber.ToString();
         }
+        SetPlayerUIColor(players[activePlayerIndex].color);
         players[activePlayerIndex].StartTurn();
         Debug.Log("Player " + activePlayerIndex + " turn");
     }
 
-    private bool IsInitialDataCorrect(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color[] playerColors) 
+    private void SetPlayerUIColor(Color color) {
+        nextTurnButtonImage.color = color;
+    }
+
+    private bool IsInitialDataCorrect(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors) 
     {
         if(startingResources.Length != numberOfPlayers) {
             Debug.Log("Wrong number of player starting resources!");
