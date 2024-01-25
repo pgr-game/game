@@ -14,6 +14,8 @@ public class MapManager : MonoBehaviour
     public MapEntity MapEntity { get; private set; }
     RaycastHit hit;  
 
+    public GameObject CityUIPrefab; 
+
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
@@ -75,14 +77,14 @@ public class MapManager : MonoBehaviour
                         continue;
                     } else {
                         Debug.Log("Init neutral city");
-                        InitCity(cityTiles, null);
+                        InitCity(cityTiles, null, null); //eventually get a name from list of neutral names
                     }
                 }
             }
         }
     }
 
-    public void InitCity(List<CityTile> cityTiles, PlayerManager playerManager) {
+    public void InitCity(List<CityTile> cityTiles, PlayerManager playerManager, string name) {
         City city = new City();
         city.cityTiles = new List<CityTile>();
         city.turnCreated = gameManager.turnNumber;
@@ -97,7 +99,7 @@ public class MapManager : MonoBehaviour
             playerManager.playerCitiesManager.AddCity(city);
         }
 
-        //InitCityUI(null);
+        city.InitCityUI(null, this.CityUIPrefab, name);
     }
 
     //private void InitCityUI(PlayerManager player) {
@@ -155,6 +157,11 @@ public class MapManager : MonoBehaviour
 
     public static Vector3 CalculateMidpoint(List<Vector3> points)
     {
+        foreach (Vector3 o in points)
+        {
+            Debug.Log(o);
+        }
+
         float sumX = 0f;
         float sumY = 0f;
         foreach (Vector3 point in points)
@@ -163,6 +170,8 @@ public class MapManager : MonoBehaviour
             sumY += point.y;
         }
         // Assuming z should remain 0
+        Debug.Log(new Vector3(sumX / points.Count, sumY / points.Count, 0f));
+
         return new Vector3(sumX / points.Count, sumY / points.Count, 0f);
     }
 }

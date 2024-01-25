@@ -122,4 +122,8 @@ public class UnitController : MonoBehaviour
         productionCost -= (gameManager.turnNumber - city.turnCreated);
         return productionCost;
     }
+
+    public int GetProductionTurns() {
+        return 3;
+    }
 }
