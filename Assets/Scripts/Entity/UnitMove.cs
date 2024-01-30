@@ -14,6 +14,7 @@ public class UnitMove : MonoBehaviour
     {
         public float Speed = 5;
         public float Range = 10f;
+        public float RangeLeft;
         public Transform RotationNode;
         public AreaOutline AreaPrefab;
         public PathDrawer PathPrefab;
@@ -50,6 +51,7 @@ public class UnitMove : MonoBehaviour
 
         public void Init(MapManager mapManager)
         {
+            RangeLeft = Range;
             var position = transform.position;
             var tile = mapManager.MapEntity.Tile(position);
             hexPosition = tile.Position;
@@ -69,7 +71,7 @@ public class UnitMove : MonoBehaviour
                 AreaHide();
                 Path.IsEnabled = false;
                 PathHide();
-                var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, Range);
+                var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, RangeLeft);
                 Move(path, () =>
                 {
                     Path.IsEnabled = true;
@@ -87,6 +89,8 @@ public class UnitMove : MonoBehaviour
                     StopCoroutine(MovingCoroutine);
                 }
                 MovingCoroutine = StartCoroutine(Moving(path, onCompleted));
+                var amountOfSteps = (int)Math.Ceiling((double)path.Count / 2);
+                RangeLeft -= amountOfSteps;
             }
             else
             {
@@ -128,7 +132,7 @@ public class UnitMove : MonoBehaviour
         void AreaShow()
         {
             AreaHide();
-            Area.Show(mapManager.MapEntity.WalkableBorder(transform.position, Range), mapManager.MapEntity);
+            Area.Show(mapManager.MapEntity.WalkableBorder(transform.position, RangeLeft), mapManager.MapEntity);
         }
 
         void AreaHide()
@@ -165,7 +169,7 @@ public class UnitMove : MonoBehaviour
                 var tile = mapManager.MapEntity.Tile(MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane()));
                 if (tile != null && tile.Vacant)
                 {
-                    var path = mapManager.MapEntity.PathPoints(transform.position, mapManager.MapEntity.WorldPosition(tile.Position), Range);
+                    var path = mapManager.MapEntity.PathPoints(transform.position, mapManager.MapEntity.WorldPosition(tile.Position), RangeLeft);
                     Path.Show(path, mapManager.MapEntity);
                     Path.ActiveState();
                     Area.ActiveState();
@@ -192,6 +196,11 @@ public class UnitMove : MonoBehaviour
             justActivated = false;
             AreaHide();
             PathHide();
+        }
+
+        public void ResetRange()
+        {
+            RangeLeft = Range;
         }
     }
 //}
