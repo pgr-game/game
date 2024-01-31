@@ -164,6 +164,10 @@ PrefabInstance:
       propertyPath: maxHealth
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 3133105980512007016, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
+      propertyPath: turnsToProduce
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4825141584707445255, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
       propertyPath: m_Name
       value: LightInfantry

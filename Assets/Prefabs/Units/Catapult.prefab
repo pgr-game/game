@@ -24,6 +24,10 @@ PrefabInstance:
       propertyPath: attackRange
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 630395134617118731, guid: 29226c5c95c31cb479d6c5dc484aea80, type: 3}
+      propertyPath: turnsToProduce
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2466014501988965123, guid: 29226c5c95c31cb479d6c5dc484aea80, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

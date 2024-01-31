@@ -33,7 +33,8 @@ public class City
     public void SetUnitInProduction(UnitController unit, GameObject unitInProductionPrefab) {
         this.UnitInProduction = unit;
         this.unitInProductionPrefab = unitInProductionPrefab;
+        this.UnitInProductionTurnsLeft = unit.GetProductionTurns();
         UI.SetUnitInProduction(unitInProductionPrefab);
-        UI.SetTurnsLeft(unit.GetProductionTurns());
+        UI.SetTurnsLeft(UnitInProductionTurnsLeft);
     }
 }
