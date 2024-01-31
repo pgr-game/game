@@ -172,6 +172,7 @@ public class PlayerManager : MonoBehaviour
         SetGoldText(gold.ToString());
         SetGoldIncome();
         gold += goldIncome;
+        allyUnits.ForEach(unit => unit.unitMove.ResetRange());
     }
 
 }
