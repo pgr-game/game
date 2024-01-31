@@ -30,6 +30,18 @@ public class City
         }
     }
 
+    public void StartTurn() {
+        if(UnitInProductionTurnsLeft != 0) {
+            UnitInProductionTurnsLeft = UnitInProductionTurnsLeft - 1;
+            if(UnitInProductionTurnsLeft == 0) {
+                Debug.Log("Unit produced");
+                UnitInProductionTurnsLeft = UnitInProduction.GetProductionTurns();
+                
+            }
+            UI.SetTurnsLeft(UnitInProductionTurnsLeft);
+        }
+    }
+
     public void SetUnitInProduction(UnitController unit, GameObject unitInProductionPrefab) {
         this.UnitInProduction = unit;
         this.unitInProductionPrefab = unitInProductionPrefab;

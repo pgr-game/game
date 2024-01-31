@@ -173,6 +173,7 @@ public class PlayerManager : MonoBehaviour
         SetGoldIncome();
         gold += goldIncome;
         allyUnits.ForEach(unit => unit.unitMove.ResetRange());
+        playerCitiesManager.StartCitiesTurn();
     }
 
 }
