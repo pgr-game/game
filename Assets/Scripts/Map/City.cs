@@ -35,6 +35,7 @@ public class City
             UnitInProductionTurnsLeft = UnitInProductionTurnsLeft - 1;
             if(UnitInProductionTurnsLeft == 0) {
                 Debug.Log("Unit produced");
+                Owner.InstantiateUnit(UnitInProduction);
                 UnitInProductionTurnsLeft = UnitInProduction.GetProductionTurns();
                 
             }

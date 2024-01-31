@@ -124,10 +124,14 @@ public class PlayerManager : MonoBehaviour
         } 
         foreach(UnitController unit in startingResources.units) {
             Debug.Log("Adding starting unit");
-            UnitController newUnit = Instantiate(unit, transform.position, Quaternion.identity).GetComponent<UnitController>();
-            allyUnits.Add(newUnit);
-            newUnit.Init(this, mapManager, gameManager);
+            InstantiateUnit(unit);
         }
+    }
+
+    public void InstantiateUnit(UnitController unitController) {
+        UnitController newUnit = Instantiate(unitController, transform.position, Quaternion.identity).GetComponent<UnitController>();
+        allyUnits.Add(newUnit);
+        newUnit.Init(this, mapManager, gameManager);
     }
 
     void InitCities(string startingCityName) {
