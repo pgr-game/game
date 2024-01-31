@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
 
 public enum UnitTypes {
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     //end of game launcher variables
 
     public MapManager mapManager;
+    public CityMenuManager cityMenuManager;
     public GameObject playerPrefab;
 
     public int turnNumber = 1;
@@ -43,6 +45,8 @@ public class GameManager : MonoBehaviour
     private const int amountOfUnitTypes = 7;
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
     public GameObject unitTypeText;
+    public GameObject unitAttackText;
+    public Image nextTurnButtonImage;
 
     void Start()
     {
@@ -57,6 +61,7 @@ public class GameManager : MonoBehaviour
         }
         this.playerPositions = playerPositions;
         mapManager.Init(this);
+        cityMenuManager.Init(this);
         InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors, startingCityNames);
     }
 
@@ -80,6 +85,7 @@ public class GameManager : MonoBehaviour
             //units.Concat(players[i].startingResources.units);
         }
         activePlayer = players[activePlayerIndex];
+        SetPlayerUIColor(players[activePlayerIndex].color);
         players[activePlayerIndex].StartTurn();
     }
 
@@ -98,8 +104,13 @@ public class GameManager : MonoBehaviour
             turnNumber++;
             turnText.GetComponent<TMPro.TextMeshProUGUI>().text = turnNumber.ToString();
         }
+        SetPlayerUIColor(players[activePlayerIndex].color);
         players[activePlayerIndex].StartTurn();
         Debug.Log("Player " + activePlayerIndex + " turn");
+    }
+
+    private void SetPlayerUIColor(Color color) {
+        nextTurnButtonImage.color = color;
     }
 
     private bool IsInitialDataCorrect(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors) 
@@ -123,6 +134,10 @@ public class GameManager : MonoBehaviour
 
     public void setUnitTypeText(string unitType) {
         unitTypeText.GetComponent<TMPro.TextMeshProUGUI>().text = unitType;
+    }
+    public void setUnitAttackText(string unitAttack)
+    {
+        unitAttackText.GetComponent<TMPro.TextMeshProUGUI>().text = unitAttack;
     }
 
     public GameObject getUnitPrefabByName(String unitType) {

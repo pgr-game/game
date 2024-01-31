@@ -8,11 +8,11 @@ public class City
     public string Name;
     public PlayerManager Owner;
     public int Level;
+    public GameObject unitInProductionPrefab;
     public UnitController UnitInProduction;
     public int UnitInProductionTurnsLeft;
     public List<CityTile> cityTiles;
     public Vector3 uiAnchor;
-    public GameObject UI;
     public int turnCreated;
     public CityUIController UI;
 
@@ -28,5 +28,12 @@ public class City
             this.Name = name;
             UI.SetName(name);
         }
+    }
+
+    public void SetUnitInProduction(UnitController unit, GameObject unitInProductionPrefab) {
+        this.UnitInProduction = unit;
+        this.unitInProductionPrefab = unitInProductionPrefab;
+        UI.SetUnitInProduction(unitInProductionPrefab);
+        UI.SetTurnsLeft(unit.GetProductionTurns());
     }
 }

@@ -11,6 +11,8 @@ public class CityUIController : MonoBehaviour
     private Image PlayerColorImage;
     private Image HPImage;
     private TMP_Text HPText;
+    private Image unitInProductionImage;
+    private TMP_Text unitInProductionTurnsText;
     // Start is called before the first frame update
     public void Init()
     {
@@ -19,6 +21,9 @@ public class CityUIController : MonoBehaviour
         this.PlayerColorImage = transform.Find("Backdrop/Image").GetComponent<Image>();
         this.HPImage = transform.Find("HP/Filler").GetComponent<Image>();
         this.HPText = transform.Find("HP/Text").GetComponent<TMP_Text>();
+        this.HPText = transform.Find("HP/Text").GetComponent<TMP_Text>();
+        this.unitInProductionImage = transform.Find("UnitImage").GetComponent<Image>();
+        this.unitInProductionTurnsText = transform.Find("TurnsLeft").GetComponent<TMP_Text>();
     }
 
     public void SetName(string name) {
@@ -36,5 +41,22 @@ public class CityUIController : MonoBehaviour
 
     public void SetColor(Color32 color) {
         PlayerColorImage.color = color;
+    }
+
+    public void SetUnitInProductionImage(Sprite sprite) {
+        if(sprite == null) {
+        Debug.Log("sprite null");
+
+        }
+        unitInProductionImage.sprite = sprite;
+    }
+
+    public void SetTurnsLeft(int turnsLeft) {
+        unitInProductionTurnsText.text = turnsLeft.ToString();
+    }
+
+    public void SetUnitInProduction(GameObject unitPrefab) {
+        Sprite sprite = unitPrefab.transform.Find("Sprite").GetComponent<SpriteRenderer>().sprite;
+        SetUnitInProductionImage(sprite);
     }
 }
