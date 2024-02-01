@@ -15,6 +15,7 @@ public class UnitController : MonoBehaviour
     public int attack;
     public int attackRange;
     public int baseProductionCost;
+    public int turnsToProduce;
     public int turnProduced;
     public int level;
     public GameManager gameManager;
@@ -124,6 +125,6 @@ public class UnitController : MonoBehaviour
     }
 
     public int GetProductionTurns() {
-        return 3;
+        return turnsToProduce;
     }
 }

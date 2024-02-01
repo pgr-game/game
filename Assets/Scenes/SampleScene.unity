@@ -2139,6 +2139,41 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18f1747a2a0dca24da30aae7a3c188a3, type: 3}
+--- !u!1 &127000892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 127000893}
+  m_Layer: 5
+  m_Name: DialogContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &127000893
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127000892}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2037950193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.000061035, y: 0}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &127853231 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7365716079596273168, guid: 18f1747a2a0dca24da30aae7a3c188a3, type: 3}
@@ -24510,6 +24545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CityMenu: {fileID: 0}
+  dialogContainer: {fileID: 0}
   UnitEntryPrefab: {fileID: 0}
 --- !u!1001 &1525545917
 PrefabInstance:
@@ -32010,6 +32046,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CityMenu: {fileID: 629583039}
+  dialogContainer: {fileID: 127000893}
   UnitEntryPrefab: {fileID: 7768305636674779308, guid: 2421758fbe0bedf4ba11c99b241c1f99, type: 3}
 --- !u!1001 &1991414978
 PrefabInstance:
@@ -32654,6 +32691,7 @@ RectTransform:
   - {fileID: 816965994}
   - {fileID: 1904108376}
   - {fileID: 1523802838}
+  - {fileID: 127000893}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -34751,6 +34789,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2982312556623606565, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5544688390400928735, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -34758,6 +34800,10 @@ PrefabInstance:
     - target: {fileID: 5544688390400928735, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5742975428193184932, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -571.3053
       objectReference: {fileID: 0}
     - target: {fileID: 5742975428193184932, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
       propertyPath: m_AnchoredPosition.y
