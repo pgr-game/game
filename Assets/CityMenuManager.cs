@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UI.Dialogs;
 
 public class CityMenuManager : MonoBehaviour
 {
     private GameManager gameManager;
     public GameObject CityMenu;
+    public RectTransform dialogContainer;
     public GameObject UnitEntryPrefab;
     public City city;
 
@@ -38,8 +40,39 @@ public class CityMenuManager : MonoBehaviour
         }
     }
 
-    public void SelectProductionUnit(GameObject clickedEntry, UnitController unitController, GameObject prefab) {
+    public void ClickSelectProductionUnit(GameObject clickedEntry, UnitController unitController, GameObject prefab) {
         Debug.Log("Selected unit for production");
+        if(city.UnitInProduction == null) {
+            //no unit was previously selected
+            SelectProductionUnit(clickedEntry, unitController, prefab);
+        } 
+        else if(city.UnitInProductionTurnsLeft == city.UnitInProduction.GetProductionTurns()) {
+            //changing unit that has not progressed its production does not require dialog confirmation
+            SelectProductionUnit(clickedEntry, unitController, prefab);
+        } 
+        else if(unitController == city.UnitInProduction) {
+            //clicking on the currently produced unit should do nothing
+            return;
+        } 
+        else {
+            Debug.Log("Opening dialog");
+            uDialog.NewDialog()
+                   .SetTitleText("Changing production")
+                   .SetContentText("Are you sure? Production progress for currently produced unit will be lost!")
+                   .SetDimensions(468, 192)
+                   .SetModal()
+                   .SetShowTitleCloseButton(false)
+                   .AddButton("Change production", () => { SelectProductionUnit(clickedEntry, unitController, prefab); })
+                   .AddButton("Cancel", () => {})
+                   .SetCloseWhenAnyButtonClicked(true)
+                   .SetDestroyAfterClose(true)
+                   .SetShowAnimation(eShowAnimation.None)
+                   .SetCloseAnimation(eCloseAnimation.None)
+                   .SetParent(dialogContainer);
+        }
+    }
+
+    public void SelectProductionUnit(GameObject clickedEntry, UnitController unitController, GameObject prefab) {
         city.SetUnitInProduction(unitController, prefab);
         SetEntryColorToSelected(clickedEntry);
     }
@@ -92,7 +125,7 @@ public class CityMenuManager : MonoBehaviour
 
                 GameObject  button = newEntry.transform.Find("button").gameObject;
                 Button buttonEvent = button.GetComponent<Button>();
-                buttonEvent.onClick.AddListener(delegate { SelectProductionUnit(newEntry, unit, prefab); });
+                buttonEvent.onClick.AddListener(delegate { ClickSelectProductionUnit(newEntry, unit, prefab); });
                 i -= 80;
             }
     }

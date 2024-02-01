@@ -24,6 +24,10 @@ PrefabInstance:
       propertyPath: attackRange
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2202003963062177549, guid: 53c3e0bb9c45c5143bf8109f60b435ce, type: 3}
+      propertyPath: turnsToProduce
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2873473239764054555, guid: 53c3e0bb9c45c5143bf8109f60b435ce, type: 3}
       propertyPath: m_Sprite
       value: 

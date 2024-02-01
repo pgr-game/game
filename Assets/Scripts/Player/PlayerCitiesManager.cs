@@ -10,6 +10,10 @@ public class PlayerCitiesManager
     private PlayerManager playerManager;
     private MapManager mapManager;
 
+    public void StartCitiesTurn() {
+        cities.ForEach(city => city.StartTurn());
+    }
+
     public void Init(PlayerManager playerManager, string startingCityName) {
         Debug.Log("Initializing player cities");
         this.cities = new List<City>();
