@@ -102,6 +102,10 @@ public class UnitController : MonoBehaviour
             enemy.currentHealth -= this.attack;
             this.attacked = true;
             enemy.UpdateUnitUI();
+            if(enemy.currentHealth <= 0)
+            {
+                enemy.Death(this);
+            }
         }
 
     }
