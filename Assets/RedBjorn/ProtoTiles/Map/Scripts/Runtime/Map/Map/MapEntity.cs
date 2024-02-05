@@ -356,6 +356,21 @@ namespace RedBjorn.ProtoTiles
             return path;
         }
 
+        public List<TileEntity> PathTilesNextTo(Vector3 from, Vector3 to, float range)
+        {
+            var nodes = NodePathFinder.Path(this, Tile(from), Tile(to), range);
+            var path = new List<TileEntity>();
+            if (nodes != null)
+            {
+                foreach (var n in nodes)
+                {
+                    if (n != nodes.Last())
+                        path.Add(n as TileEntity);
+                }
+            }
+            return path;
+        }
+
         /// <summary>
         /// Get path that consist of world space positions
         /// </summary>
