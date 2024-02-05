@@ -21,12 +21,14 @@ public class UnitController : MonoBehaviour
     public GameManager gameManager;
     public GameObject unitUI;
 
+    public bool attacked;
+
     public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager) {
         this.owner = playerManager;
         this.mapManager = mapManager;
         CreateUI();
         ApplyColor();
-        unitMove.Init(mapManager);
+        unitMove.Init(mapManager,this);
         this.gameManager = gameManager;
         currentHealth = maxHealth;
         turnProduced = this.gameManager.turnNumber;
@@ -93,6 +95,16 @@ public class UnitController : MonoBehaviour
         body.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", owner.color);
     }
 
+    public void Attack(UnitController enemy)
+    {
+        if (!this.attacked)
+        {
+            enemy.currentHealth -= this.attack;
+            this.attacked = true;
+            enemy.UpdateUnitUI();
+        }
+
+    }
     public void Death(UnitController killer) {
         Destroy(gameObject);
         owner.allyUnits.Remove(this);

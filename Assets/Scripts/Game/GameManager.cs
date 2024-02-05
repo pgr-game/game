@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
                 players[i].gameObject.SetActive(false);
             }
             players[i].Init(this, startingCityNames[i]);
-            //units.Concat(players[i].startingResources.units);
+            units.AddRange(players[i].startingResources.units);
         }
         activePlayer = players[activePlayerIndex];
         SetPlayerUIColor(players[activePlayerIndex].color);

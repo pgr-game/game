@@ -10,6 +10,8 @@ namespace RedBjorn.ProtoTiles
         int ObstacleCount;
         public TileData Data { get; private set; }
         public TilePreset Preset { get; private set; }
+
+        public UnitController UnitPresent { get; set; }
         MapRules Rules;
 
         public int MovableArea { get { return CachedMovabeArea; } set { CachedMovabeArea = value; } }

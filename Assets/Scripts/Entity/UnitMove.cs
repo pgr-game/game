@@ -7,6 +7,7 @@ using RedBjorn.ProtoTiles;
 using RedBjorn.ProtoTiles.Example;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using System.Diagnostics.CodeAnalysis;
 
 //namespace RedBjorn.ProtoTiles.Example
 //{
@@ -22,6 +23,7 @@ public class UnitMove : MonoBehaviour
         //MapEntity mapManager.MapEntity;
 
         public MapManager mapManager;
+        public UnitController unitController;
         public AreaOutline Area;
         PathDrawer Path;
         Coroutine MovingCoroutine;
@@ -49,11 +51,13 @@ public class UnitMove : MonoBehaviour
             }
         }
 
-        public void Init(MapManager mapManager)
+        public void Init(MapManager mapManager, UnitController unitController)
         {
+            this.unitController = unitController;
             RangeLeft = Range;
             var position = transform.position;
             var tile = mapManager.MapEntity.Tile(position);
+            tile.UnitPresent = this.unitController;
             hexPosition = tile.Position;
             this.mapManager = mapManager;
             Area = Spawner.Spawn(AreaPrefab, Vector3.zero, Quaternion.identity);
@@ -65,8 +69,17 @@ public class UnitMove : MonoBehaviour
         {
             var clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
             var tile = mapManager.MapEntity.Tile(clickPos);
-            if (tile != null && tile.Vacant)
+
+            if(tile.UnitPresent is not null && tile.UnitPresent.owner != this.unitController.owner)
             {
+                this.unitController.Attack(tile.UnitPresent);
+            }
+            else if (tile != null && tile.UnitPresent is null)
+            {
+                TileEntity oldTile = mapManager.MapEntity.Tile(hexPosition);
+                oldTile.UnitPresent = null;
+                tile.UnitPresent = this.unitController;
+
                 hexPosition = tile.Position;
                 AreaHide();
                 Path.IsEnabled = false;
