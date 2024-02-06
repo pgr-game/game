@@ -7,19 +7,43 @@ using UnityEngine.UI;
 public class UnitList : MonoBehaviour
 {
     public GameObject myPrefab;
+    public GameObject unitList;
     public GameManager gameManager;
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public void ButtonPress()
     {
-        
-    }
+        GameObject content = unitList.transform.Find("Scroll View/Viewport/Content").gameObject;
+        unitList.SetActive(!unitList.activeSelf);
+        if (unitList.activeSelf)
+        {
+            foreach (Transform child in content.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            int i = 0;
+            foreach (UnitController unitData in gameManager.activePlayer.allyUnits)
+            {
+                GameObject newEntry = Instantiate(myPrefab, transform.position + new Vector3(100, 160 + i, 0), Quaternion.identity, content.transform);
+                GameObject unitName = newEntry.transform.Find("name").gameObject;
+                TMP_Text nameText = unitName.GetComponent<TMP_Text>();
+                nameText.text = unitData.unitType.ToString();
 
+                GameObject unitCurrectntHp = newEntry.transform.Find("hp").gameObject;
+                TMP_Text hpText = unitCurrectntHp.GetComponent<TMP_Text>();
+                hpText.text = unitData.currentHealth.ToString();
+
+                GameObject unitCurrectntAttack = newEntry.transform.Find("attack").gameObject;
+                TMP_Text attackText = unitCurrectntAttack.GetComponent<TMP_Text>();
+                attackText.text = unitData.attack.ToString();
+
+                GameObject button = newEntry.transform.Find("button").gameObject;
+                Button buttonEvent = button.GetComponent<Button>();
+                buttonEvent.onClick.AddListener(delegate { goToPosition(unitData); });
+                i += 50;
+            }
+        }
+    }
     public void CreateUnitList()
     {
         if (!transform.Find("Cool GameObject made from Code"))

@@ -27,15 +27,19 @@ public class CameraMovement : MonoBehaviour
     }
 
     private void panCamera() {
-        if(Input.GetMouseButtonDown(0)) {
-            dragOrigin = cam.ScreenToWorldPoint(Input.mousePosition);
-        }
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                dragOrigin = cam.ScreenToWorldPoint(Input.mousePosition);
+            }
 
-        if(Input.GetMouseButton(0)) {
-            Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.mousePosition);
-            cam.transform.position += difference;
+            if (Input.GetMouseButton(0))
+            {
+                Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.mousePosition);
+                cam.transform.position += difference;
+            }
         }
-
         //cam.transform.position = Mathf.Clamp(cam.transform.position, minZoom, maxZoom);
     }
 
