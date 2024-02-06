@@ -91,6 +91,7 @@ public class GameManager : MonoBehaviour
 
     public void NextPlayer()
     {
+        players[activePlayerIndex].DeactivateUnitsRange();
         players[activePlayerIndex].gameObject.SetActive(false);
         if(activePlayerIndex + 1 == numberOfPlayers) {
             activePlayerIndex = 0;
