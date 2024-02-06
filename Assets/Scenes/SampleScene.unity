@@ -34990,6 +34990,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1481334161730421074, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
+      propertyPath: m_ScrollSensitivity
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1538086986603975304, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
       propertyPath: m_IsActive
       value: 1

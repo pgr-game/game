@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -60,15 +61,18 @@ public class CameraMovement : MonoBehaviour
 
     private void zoomCamera() {
         // Scroll forward
-        if (Input.GetAxis("Mouse ScrollWheel") > 0 && cam.orthographicSize > minZoom)
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            ZoomOrthoCamera(cam.ScreenToWorldPoint(Input.mousePosition), 1 * zoomSpeed);
-        }
+            if (Input.GetAxis("Mouse ScrollWheel") > 0 && cam.orthographicSize > minZoom)
+            {
+                ZoomOrthoCamera(cam.ScreenToWorldPoint(Input.mousePosition), 1 * zoomSpeed);
+            }
 
-        // Scoll back
-        if (Input.GetAxis("Mouse ScrollWheel") < 0 && cam.orthographicSize < maxZoom)
-        {
-            ZoomOrthoCamera(cam.ScreenToWorldPoint(Input.mousePosition), -1 * zoomSpeed);
+            // Scoll back
+            if (Input.GetAxis("Mouse ScrollWheel") < 0 && cam.orthographicSize < maxZoom)
+            {
+                ZoomOrthoCamera(cam.ScreenToWorldPoint(Input.mousePosition), -1 * zoomSpeed);
+            }
         }
     }
 }
