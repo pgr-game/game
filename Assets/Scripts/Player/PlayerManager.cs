@@ -170,7 +170,8 @@ public class PlayerManager : MonoBehaviour
     }
 
     public void StartTurn() {
-        if(gameManager.turnNumber != 1) {
+        allyUnits.ForEach((unit) => unit.attacked = false);
+        if (gameManager.turnNumber != 1) {
             AddGold(playerCitiesManager.GetGoldIncome());
         }
         SetGoldText(gold.ToString());
