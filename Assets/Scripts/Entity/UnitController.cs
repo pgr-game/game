@@ -39,6 +39,8 @@ public class UnitController : MonoBehaviour
     private void CreateUI()
     {
         GameObject myUI = Instantiate(unitUI, transform.position + new Vector3(0, 2, 0), Quaternion.identity, gameObject.transform);
+
+        
         myUI.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
 
         GameObject unitName = myUI.transform.Find("UnitName").gameObject;
@@ -53,6 +55,12 @@ public class UnitController : MonoBehaviour
         Image hpMeterValue = hpMeter.GetComponent<Image>();
         float value = 1;
         hpMeterValue.fillAmount = value;
+
+        GameObject dejm = myUI.transform.Find("Frame").gameObject;
+        Image dejmimage = dejm.GetComponent<Image>();
+        dejmimage.color = this.owner.color;
+
+
     }
 
     private void UpdateUnitUI()
