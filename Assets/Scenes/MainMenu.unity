@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 24239755}
   - component: {fileID: 24239756}
   - component: {fileID: 24239757}
+  - component: {fileID: 24239758}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -209,6 +210,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &24239758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24239753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 116a0a9eb4143594ea19860069b69dba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumeSlider: {fileID: 912547386}
 --- !u!1 &39062548
 GameObject:
   m_ObjectHideFlags: 0
