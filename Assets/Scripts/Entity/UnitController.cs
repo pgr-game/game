@@ -1,3 +1,4 @@
+using RedBjorn.ProtoTiles;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -114,6 +115,8 @@ public class UnitController : MonoBehaviour
         owner.allyUnits.Remove(this);
         gameManager.units.Remove(this);
         killer.owner.AddGold(CalculateGoldValue());
+        TileEntity oldTile = this.mapManager.MapEntity.Tile(this.unitMove.hexPosition);
+        oldTile.UnitPresent = null;
     }
 
     public int CalculateGoldValue() {
