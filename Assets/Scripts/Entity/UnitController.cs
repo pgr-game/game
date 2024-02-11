@@ -1,3 +1,4 @@
+using RedBjorn.ProtoTiles;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -38,6 +39,8 @@ public class UnitController : MonoBehaviour
     private void CreateUI()
     {
         GameObject myUI = Instantiate(unitUI, transform.position + new Vector3(0, 2, 0), Quaternion.identity, gameObject.transform);
+
+        
         myUI.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
 
         GameObject unitName = myUI.transform.Find("UnitName").gameObject;
@@ -52,6 +55,12 @@ public class UnitController : MonoBehaviour
         Image hpMeterValue = hpMeter.GetComponent<Image>();
         float value = 1;
         hpMeterValue.fillAmount = value;
+
+        GameObject dejm = myUI.transform.Find("Frame").gameObject;
+        Image dejmimage = dejm.GetComponent<Image>();
+        dejmimage.color = this.owner.color;
+
+
     }
 
     private void UpdateUnitUI()
@@ -114,6 +123,8 @@ public class UnitController : MonoBehaviour
         owner.allyUnits.Remove(this);
         gameManager.units.Remove(this);
         killer.owner.AddGold(CalculateGoldValue());
+        TileEntity oldTile = this.mapManager.MapEntity.Tile(this.unitMove.hexPosition);
+        oldTile.UnitPresent = null;
     }
 
     public int CalculateGoldValue() {

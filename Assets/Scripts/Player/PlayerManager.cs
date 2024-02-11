@@ -153,6 +153,14 @@ public class PlayerManager : MonoBehaviour
         goldText.GetComponent<TMPro.TextMeshProUGUI>().text = "gold: " + gold;
     }
 
+    public void DeactivateUnitsRange()
+    {
+        foreach (UnitController unit in allyUnits)
+        {
+            unit.Deactivate();
+        }
+    }
+
     public void SetGoldIncome() {
         // option no 1:
         if(gameManager.turnNumber % 2 == 0) {

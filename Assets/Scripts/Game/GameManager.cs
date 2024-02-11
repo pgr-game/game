@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
     public GameObject unitTypeText;
     public GameObject unitAttackText;
     public Image nextTurnButtonImage;
+    public GameObject UI;
 
     void Start()
     {
@@ -91,8 +92,11 @@ public class GameManager : MonoBehaviour
 
     public void NextPlayer()
     {
+        players[activePlayerIndex].DeactivateUnitsRange();
         players[activePlayerIndex].gameObject.SetActive(false);
-        if(activePlayerIndex + 1 == numberOfPlayers) {
+        GameObject unitList = UI.transform.Find("UnitList").gameObject;
+        unitList.SetActive(false);
+        if (activePlayerIndex + 1 == numberOfPlayers) {
             activePlayerIndex = 0;
         }
         else {
