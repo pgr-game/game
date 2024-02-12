@@ -19,6 +19,7 @@ public class UnitController : MonoBehaviour
     public int turnsToProduce;
     public int turnProduced;
     public int level;
+    public int defense;
     public GameManager gameManager;
     public GameObject unitUI;
 
@@ -90,8 +91,7 @@ public class UnitController : MonoBehaviour
         this.gameManager.setUnitAttackText(attack.ToString());
         this.gameManager.setUnitLevelText(level.ToString());
         this.gameManager.setUnitHealthText(currentHealth.ToString());
-        //TODO change once defense is implemented
-        this.gameManager.setUnitDefenseText("0");
+        this.gameManager.setUnitDefenseText(defense.ToString());
     }
 
     public void Deactivate() 
