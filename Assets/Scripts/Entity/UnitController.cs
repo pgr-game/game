@@ -81,15 +81,23 @@ public class UnitController : MonoBehaviour
     {
         unitMove.Activate();
         UpdateUnitUI();
+        ChangeUnitTexts();
+        this.gameManager.ShowUnitBox();
+    }
+
+    public void ChangeUnitTexts() {
         this.gameManager.setUnitTypeText(unitType.ToString());
         this.gameManager.setUnitAttackText(attack.ToString());
+        this.gameManager.setUnitLevelText(level.ToString());
+        this.gameManager.setUnitHealthText(currentHealth.ToString());
+        //TODO change once defense is implemented
+        this.gameManager.setUnitDefenseText("0");
     }
 
     public void Deactivate() 
     {
         unitMove.Deactivate();
-        this.gameManager.setUnitTypeText("");
-        this.gameManager.setUnitAttackText("");
+        this.gameManager.HideUnitBox();
 
     }
 
