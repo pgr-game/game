@@ -112,11 +112,18 @@ public class UnitController : MonoBehaviour
         body.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", owner.color);
     }
 
+    public int GetDefense() {
+        // TODO: include city or fort defense bonus
+        return defense;
+    }
+
     public void Attack(UnitController enemy)
     {
         if (!this.attacked)
         {
-            enemy.currentHealth -= this.attack;
+            int damage = this.attack - enemy.GetDefense();
+            if (damage < 0) damage = 0;
+            enemy.currentHealth -= damage;
             this.attacked = true;
             enemy.UpdateUnitUI();
             if(enemy.currentHealth <= 0)

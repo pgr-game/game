@@ -42,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: defense
-      value: 10
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: unitType
