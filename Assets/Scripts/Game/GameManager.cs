@@ -46,6 +46,10 @@ public class GameManager : MonoBehaviour
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
     public GameObject unitTypeText;
     public GameObject unitAttackText;
+    public GameObject unitLevelText;
+    public GameObject unitHealthText;
+    public GameObject unitDefenseText;
+    public GameObject unitBox;
     public Image nextTurnButtonImage;
     public GameObject UI;
 
@@ -64,6 +68,7 @@ public class GameManager : MonoBehaviour
         mapManager.Init(this);
         cityMenuManager.Init(this);
         InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors, startingCityNames);
+        this.HideUnitBox();
     }
 
     private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames)
@@ -142,6 +147,29 @@ public class GameManager : MonoBehaviour
     public void setUnitAttackText(string unitAttack)
     {
         unitAttackText.GetComponent<TMPro.TextMeshProUGUI>().text = unitAttack;
+    }
+
+    public void setUnitLevelText(string unitLevel)
+    {
+        unitLevelText.GetComponent<TMPro.TextMeshProUGUI>().text = unitLevel;
+    }
+
+    public void setUnitHealthText(string unitHealth)
+    {
+        unitHealthText.GetComponent<TMPro.TextMeshProUGUI>().text = unitHealth;
+    }
+
+    public void setUnitDefenseText(string unitDefense)
+    {
+        unitDefenseText.GetComponent<TMPro.TextMeshProUGUI>().text = unitDefense;
+    }
+
+    public void HideUnitBox() {
+        unitBox.SetActive(false);
+    }
+
+    public void ShowUnitBox() {
+        unitBox.SetActive(true);
     }
 
     public GameObject getUnitPrefabByName(String unitType) {
