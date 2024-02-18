@@ -20433,11 +20433,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224613882504462314, guid: 05db22e73067f47298102cd2a70e73b3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 268.11
+      value: 268.10986
       objectReference: {fileID: 0}
     - target: {fileID: 224613882504462314, guid: 05db22e73067f47298102cd2a70e73b3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 58.830017
+      value: 58.83008
       objectReference: {fileID: 0}
     - target: {fileID: 224613882504462314, guid: 05db22e73067f47298102cd2a70e73b3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -34285,6 +34285,8 @@ GameObject:
   - component: {fileID: 1991390624}
   - component: {fileID: 1991390626}
   - component: {fileID: 1991390627}
+  - component: {fileID: 1991390629}
+  - component: {fileID: 1991390628}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -34320,12 +34322,16 @@ MonoBehaviour:
   - Ur
   - Babylon
   mapManager: {fileID: 241904843}
+  saveManager: {fileID: 1991390629}
+  loadManager: {fileID: 1991390628}
   cityMenuManager: {fileID: 1991390627}
   playerPrefab: {fileID: 6202811586810600753, guid: 737370e2dcee64847a4ede0cb6b98416, type: 3}
   turnNumber: 1
   turnText: {fileID: 600600140}
   activePlayerIndex: 0
   activePlayer: {fileID: 0}
+  numberOfPlayers: 0
+  players: []
   playerPositions: []
   units: []
   unitPrefabs:
@@ -34389,6 +34395,30 @@ MonoBehaviour:
   CityMenu: {fileID: 629583039}
   dialogContainer: {fileID: 127000893}
   UnitEntryPrefab: {fileID: 7768305636674779308, guid: 2421758fbe0bedf4ba11c99b241c1f99, type: 3}
+--- !u!114 &1991390628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991390623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f37f43136fb4914494401d922af7e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1991390629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991390623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee444ad54272a7645a1af23ee3dc5cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1991414978
 PrefabInstance:
   m_ObjectHideFlags: 0
