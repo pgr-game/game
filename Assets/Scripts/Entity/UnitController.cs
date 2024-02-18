@@ -19,6 +19,7 @@ public class UnitController : MonoBehaviour
     public int turnsToProduce;
     public int turnProduced;
     public int level;
+    public int defense;
     public GameManager gameManager;
     public GameObject unitUI;
 
@@ -90,8 +91,7 @@ public class UnitController : MonoBehaviour
         this.gameManager.setUnitAttackText(attack.ToString());
         this.gameManager.setUnitLevelText(level.ToString());
         this.gameManager.setUnitHealthText(currentHealth.ToString());
-        //TODO change once defense is implemented
-        this.gameManager.setUnitDefenseText("0");
+        this.gameManager.setUnitDefenseText(defense.ToString());
     }
 
     public void Deactivate() 
@@ -112,11 +112,18 @@ public class UnitController : MonoBehaviour
         body.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", owner.color);
     }
 
+    public int GetDefense() {
+        // TODO: include city or fort defense bonus
+        return defense;
+    }
+
     public void Attack(UnitController enemy)
     {
         if (!this.attacked)
         {
-            enemy.currentHealth -= this.attack;
+            int damage = this.attack - enemy.GetDefense();
+            if (damage < 0) damage = 0;
+            enemy.currentHealth -= damage;
             this.attacked = true;
             enemy.UpdateUnitUI();
             if(enemy.currentHealth <= 0)
