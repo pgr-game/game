@@ -23,6 +23,9 @@ public class PlayerManager : MonoBehaviour
     //player's assets
     public List<UnitController> allyUnits = new List<UnitController>();
     public PlayerCitiesManager playerCitiesManager;
+    public PlayerFortsManager playerFortsManager;
+    public GameObject fortPrefab;
+
 
     // currency
     private int gold;
@@ -34,6 +37,7 @@ public class PlayerManager : MonoBehaviour
         Debug.Log("Player manager instantiated!");
         this.gameManager = gameManager;
         InitCities(startingCityName);
+        InitForts();
         InitUnits();
         gold = startingResources.gold;
         GameObject[] texts = GameObject.FindGameObjectsWithTag("currencyText");
@@ -139,6 +143,15 @@ public class PlayerManager : MonoBehaviour
         playerCitiesManager.Init(this, startingCityName);
     }
 
+    void InitForts() {
+        playerFortsManager = new PlayerFortsManager();
+        playerFortsManager.Init(this);
+    }
+
+    public void CreateFort() {
+        playerFortsManager.AddFort(selected.GetComponent<UnitController>());
+    }
+
     public void AddGold(int amount) {
         gold += amount;
         SetGoldText(gold.ToString());
@@ -187,6 +200,10 @@ public class PlayerManager : MonoBehaviour
         gold += goldIncome;
         allyUnits.ForEach(unit => unit.unitMove.ResetRange());
         playerCitiesManager.StartCitiesTurn();
+    }
+
+    public UnitController getSelectedUnit() {
+        return selected.GetComponent<UnitController>();
     }
 
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using RedBjorn.ProtoTiles;
 
 public enum UnitTypes {
     Archer,
@@ -23,27 +24,29 @@ public class GameManager : MonoBehaviour
     public StartingResources[] InStartingResources;
     public Color32[] InPlayerColors;
     public string[] InStartingCityNames;
-    //end of game launcher variables
+    
 
+    // Game elements
     public MapManager mapManager;
     public CityMenuManager cityMenuManager;
     public GameObject playerPrefab;
 
+    // Turn elements
     public int turnNumber = 1;
     public GameObject turnText;
     
+    // Player elements
     public int activePlayerIndex = 0;
     public PlayerManager activePlayer;
     private int numberOfPlayers;
     private PlayerManager[] players;
     public Vector3[] playerPositions;
-
-
-    // is it really usefulll for anything ?
     public List<UnitController> units = new List<UnitController>();
     // Unit types
     private const int amountOfUnitTypes = 7;
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
+
+    // UI elements
     public GameObject unitTypeText;
     public GameObject unitAttackText;
     public GameObject unitLevelText;
@@ -52,7 +55,19 @@ public class GameManager : MonoBehaviour
     public GameObject unitBox;
     public Image nextTurnButtonImage;
     public GameObject UI;
+    public GameObject fortButton;
 
+    // fort elements
+    public TileTag cityTag;
+
+
+    void Update() {
+        // if(activePlayer.getSelectedUnit().CheckIfFortCanBePlaced()) {
+        //     ShowFortButton();
+        // } else {
+        //     HideFortButton();
+        // }
+    }
     void Start()
     {
         //this should later be called directly from game creator and not the Start function
@@ -183,5 +198,17 @@ public class GameManager : MonoBehaviour
 
     public GameObject getUnitPrefab(UnitTypes unitType) {
         return unitPrefabs[(int)unitType];
+    }
+
+    // Fort functions
+    public void ShowFortButton() {
+        fortButton.SetActive(true);
+    }
+    public void HideFortButton() {
+        fortButton.SetActive(false);
+    }
+
+    public void CreateFort() {
+        activePlayer.CreateFort();
     }
 }

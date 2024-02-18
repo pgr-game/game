@@ -24,7 +24,6 @@ public class UnitController : MonoBehaviour
     public GameObject unitUI;
 
     public bool attacked;
-
     public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager) {
         this.owner = playerManager;
         this.mapManager = mapManager;
@@ -168,5 +167,15 @@ public class UnitController : MonoBehaviour
 
     public int GetProductionTurns() {
         return turnsToProduce;
+    }
+
+    public bool CheckIfFortCanBePlaced() {
+        var tile = this.mapManager.MapEntity.Tile(unitMove.hexPosition);
+        if(tile.FortPresent != null) return false;
+        var isCity = false;
+        tile.Preset.Tags.ForEach(tag => {
+            if(tag == gameManager.cityTag) isCity = true;
+        });
+        return !isCity;
     }
 }
