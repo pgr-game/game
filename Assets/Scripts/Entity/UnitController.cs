@@ -23,7 +23,10 @@ public class UnitController : MonoBehaviour
     public GameManager gameManager;
     public GameObject unitUI;
 
+    public GameObject fortButton;
+
     public bool attacked;
+
     public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager) {
         this.owner = playerManager;
         this.mapManager = mapManager;
@@ -60,6 +63,13 @@ public class UnitController : MonoBehaviour
         Image dejmimage = dejm.GetComponent<Image>();
         dejmimage.color = this.owner.color;
 
+        this.fortButton = myUI.transform.Find("PlaceFortButton").gameObject;
+        this.fortButton.SetActive(false);
+
+        var buttonComponent = this.fortButton.transform.Find("holder").gameObject.transform.Find("button").gameObject.GetComponent<Button>();
+        buttonComponent.onClick.AddListener(() => {
+            this.owner.CreateFort();
+        });
 
     }
 
@@ -177,5 +187,13 @@ public class UnitController : MonoBehaviour
             if(tag == gameManager.cityTag) isCity = true;
         });
         return !isCity;
+    }
+
+    public void ShowFortButton() {
+        this.fortButton.SetActive(true);
+    }
+
+    public void HideFortButton() {
+        this.fortButton.SetActive(false);
     }
 }

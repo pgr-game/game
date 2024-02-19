@@ -55,19 +55,8 @@ public class GameManager : MonoBehaviour
     public GameObject unitBox;
     public Image nextTurnButtonImage;
     public GameObject UI;
-    public GameObject fortButton;
-
-    // fort elements
     public TileTag cityTag;
 
-
-    void Update() {
-        // if(activePlayer.getSelectedUnit().CheckIfFortCanBePlaced()) {
-        //     ShowFortButton();
-        // } else {
-        //     HideFortButton();
-        // }
-    }
     void Start()
     {
         //this should later be called directly from game creator and not the Start function
@@ -198,17 +187,5 @@ public class GameManager : MonoBehaviour
 
     public GameObject getUnitPrefab(UnitTypes unitType) {
         return unitPrefabs[(int)unitType];
-    }
-
-    // Fort functions
-    public void ShowFortButton() {
-        fortButton.SetActive(true);
-    }
-    public void HideFortButton() {
-        fortButton.SetActive(false);
-    }
-
-    public void CreateFort() {
-        activePlayer.CreateFort();
     }
 }

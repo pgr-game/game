@@ -25,6 +25,7 @@ public class PlayerManager : MonoBehaviour
     public PlayerCitiesManager playerCitiesManager;
     public PlayerFortsManager playerFortsManager;
     public GameObject fortPrefab;
+    public bool fortButtonActive = false;
 
 
     // currency
@@ -47,7 +48,7 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!PauseMenu.isPaused) 
+        if (!PauseMenu.isPaused || !fortButtonActive) 
         { 
             newSelected = SelectObject();
             if(newSelected) {
@@ -60,6 +61,22 @@ public class PlayerManager : MonoBehaviour
                     HandleCityClick(cityTile.city);
                 }
             }
+
+            var rightClick = RightClick();
+            if(rightClick == selected && selected != null) {
+                if(selected.GetComponent<UnitController>().CheckIfFortCanBePlaced()) {
+                    Debug.Log("Right click on selected unit");
+                    this.selected.GetComponent<UnitController>().ShowFortButton();
+                    fortButtonActive = true;
+                }
+            }
+        } 
+        if(fortButtonActive) {
+            if(Input.GetMouseButtonDown(0)) {
+                Debug.Log("Hiding fort button");
+                this.selected.GetComponent<UnitController>().HideFortButton();
+                fortButtonActive = false;
+            }
         }
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), transform.TransformDirection(Vector3.forward), Color.green);
     }
@@ -70,6 +87,19 @@ public class PlayerManager : MonoBehaviour
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);  
             if (Physics.Raycast(ray, out hit)) {  
                 Debug.Log("Selected: " + hit.transform.name);
+                return hit.transform.gameObject;
+            }
+            return null;
+        }  
+        return null;
+    }
+
+    GameObject RightClick()
+    {
+        if (Input.GetMouseButtonDown(1)) {  
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);  
+            if (Physics.Raycast(ray, out hit)) {  
+                Debug.Log("RightClick on: " + hit.transform.name);
                 return hit.transform.gameObject;
             }
             return null;
@@ -203,6 +233,9 @@ public class PlayerManager : MonoBehaviour
     }
 
     public UnitController getSelectedUnit() {
+        if(selected == null) {
+            return null;
+        }
         return selected.GetComponent<UnitController>();
     }
 
