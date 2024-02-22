@@ -57,16 +57,19 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        SceneLoadData sceneLoadData;
+        string saveRoot = PlayerPrefs.GetString("saveRoot");
+        SceneLoadData sceneLoadData = new SceneLoadData();
+
         saveManager.Init(this);
         //this should later be called directly from game creator and not the Start function
         //there should also be error handling for when saveRoot is wrong
-        //if (SceneLoadData.saveRoot == null) {
+        if (saveRoot == null) {
             sceneLoadData = new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0);
-        //} else {
-        //    saveManager.SetSaveRoot(SceneLoadData.saveRoot);
-        //    sceneLoadData = saveManager.Load();
-        //}
+        } else {
+            Debug.Log("Loading game manager from save");
+            //saveManager.SetSaveRoot(SceneLoadData.saveRoot);
+            //sceneLoadData = saveManager.Load();
+        }
 
         LoadGameData(sceneLoadData);
 

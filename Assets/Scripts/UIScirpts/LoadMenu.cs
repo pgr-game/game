@@ -67,8 +67,10 @@ public class LoadMenu : MonoBehaviour
     }
 
     public void SelectProductionUnit(GameObject clickedEntry) {
-        selectedSaveGameDescription.saveString = clickedEntry.transform.Find("name").gameObject.GetComponent<TMP_Text>().text;
-        selectedSaveGameDescription.saveString = clickedEntry.transform.Find("hp").gameObject.GetComponent<TMP_Text>().text;
+        string saveString = clickedEntry.transform.Find("name").gameObject.GetComponent<TMP_Text>().text;
+        string dateString = clickedEntry.transform.Find("date").gameObject.GetComponent<TMP_Text>().text;
+        selectedSaveGameDescription = new SaveGameDescription(saveString, dateString);
         SetEntryColorToSelected(clickedEntry);
+        PlayerPrefs.SetString("saveRoot", saveString);
     }
 }
