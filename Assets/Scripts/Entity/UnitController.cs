@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class UnitController : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class UnitController : MonoBehaviour
     public int defense;
     public GameManager gameManager;
     public GameObject unitUI;
+    public GameObject damageRecived;
 
     public bool attacked;
 
@@ -122,16 +124,25 @@ public class UnitController : MonoBehaviour
         if (!this.attacked)
         {
             int damage = this.attack - enemy.GetDefense();
-            if (damage < 0) damage = 0;
-            enemy.currentHealth -= damage;
             this.attacked = true;
-            enemy.UpdateUnitUI();
-            if(enemy.currentHealth <= 0)
-            {
-                enemy.Death(this);
-            }
+            enemy.reciveDamage(damage,this);
         }
 
+    }
+
+    public void reciveDamage(int incomingDamage, UnitController attacker)
+    {
+        this.currentHealth = this.currentHealth - incomingDamage;
+        GameObject unitUI = this.transform.Find("UnitDefaultBar(Clone)").gameObject;
+        GameObject damageUI = Instantiate(damageRecived, unitUI.transform.position, Quaternion.identity, unitUI.transform);
+        damageUI.transform.Find("Damage").gameObject.GetComponent<TextMeshProUGUI>().text = attacker.attack.ToString();
+        damageUI.GetComponent<DamageAnimation>().angle = this.transform.position - attacker.transform.position;
+
+        this.UpdateUnitUI();
+        if (this.currentHealth <= 0)
+        {
+            this.Death(this);
+        }
     }
     public void Death(UnitController killer) {
         Destroy(gameObject);
@@ -165,7 +176,6 @@ public class UnitController : MonoBehaviour
         productionCost -= (gameManager.turnNumber - city.turnCreated);
         return productionCost;
     }
-
     public int GetProductionTurns() {
         return turnsToProduce;
     }
