@@ -75,8 +75,8 @@ public class UnitMove : MonoBehaviour
 
             if(tile.UnitPresent is not null && tile.UnitPresent.owner != this.unitController.owner && !this.unitController.attacked)
             {
-                this.unitController.Attack(tile.UnitPresent);
                 SubClass(tile, clickPos, true);
+                this.unitController.Attack(tile.UnitPresent);
             }
             else if (tile != null && tile.UnitPresent is null)
             {
