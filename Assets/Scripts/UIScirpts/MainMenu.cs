@@ -9,6 +9,17 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("SampleScene");
     }
+
+    public void NewGame()
+    {
+        SceneManager.LoadScene("NewGameSetup");
+    }
+
+    public void LoadGame()
+    {
+        SceneManager.LoadScene("ChooseLoadGame");
+    }
+    
     public void QuitGame()
     {
         Application.Quit(); 

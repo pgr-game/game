@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using CI.QuickSave;
@@ -14,6 +15,40 @@ public class LoadManager : MonoBehaviour
 
     public void SetSaveRoot(string saveRoot) { 
         this.saveRoot = saveRoot;
+    }
+
+    public List<SaveGameDescription> LoadSaveGameDecriptions() {
+        Debug.Log("Loading save game options");
+
+        List<SaveGameDescription> saveGameDescriptions = new List<SaveGameDescription>();
+        QuickSaveReader quickSaveReader = QuickSaveReader.Create("SavesList");
+        int numberOfSavedGames = quickSaveReader.Read<int>("numberOfSavedGames");
+        Debug.Log(numberOfSavedGames);
+
+        for(int i = 0; i < numberOfSavedGames; i++) {
+            string saveString = quickSaveReader.Read<string>("saveString"+i);
+            string saveDate = quickSaveReader.Read<string>("saveDate"+i);
+
+            saveGameDescriptions.Add(new SaveGameDescription(saveString, saveDate));
+        }
+
+        return saveGameDescriptions;
+    }
+
+    public void PrepareExampleLoads() {
+        Debug.Log("Preparing example loads...");
+
+        QuickSaveWriter quickSaveWriter1 = QuickSaveWriter.Create("Empty save 1");
+        QuickSaveWriter quickSaveWriter2 = QuickSaveWriter.Create("Empty save 2");
+        QuickSaveWriter quickSaveWriter3 = QuickSaveWriter.Create("SavesList");
+        quickSaveWriter3.Write<int>("numberOfSavedGames", 2);
+        quickSaveWriter3.Write<string>("saveString0", "Empty save 1");
+        quickSaveWriter3.Write<string>("saveString1", "Empty save 2");
+        quickSaveWriter3.Write<string>("saveDate0", DateTime.Now.ToString());
+        quickSaveWriter3.Write<string>("saveDate1", DateTime.Now.ToString());
+        quickSaveWriter1.Commit();
+        quickSaveWriter2.Commit();
+        quickSaveWriter3.Commit();
     }
 
     // We want to load information into a SceneLoadData object 
