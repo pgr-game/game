@@ -71,6 +71,6 @@ public class LoadMenu : MonoBehaviour
         string dateString = clickedEntry.transform.Find("date").gameObject.GetComponent<TMP_Text>().text;
         selectedSaveGameDescription = new SaveGameDescription(saveString, dateString);
         SetEntryColorToSelected(clickedEntry);
-        PlayerPrefs.SetString("saveRoot", saveString);
+        SaveRoot.saveRoot = saveString;
     }
 }
