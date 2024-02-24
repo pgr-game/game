@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
@@ -12,6 +13,9 @@ public class PauseMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(SaveRoot.saveRoot == null) {
+            DisableQuickSave();
+        }
         pauseMenu.SetActive(false);
     }
 
@@ -35,6 +39,14 @@ public class PauseMenu : MonoBehaviour
                 PauseGame();
             }
         }
+    }
+
+    private void DisableQuickSave() {
+        Button button = pauseMenu.transform.Find("Buttons/QuickSaveButton/Button_1 Gray").GetComponent<Button>();
+        if(button != null) {
+            Debug.Log("dupa");
+        }
+        button.interactable = false;
     }
 
     public void PauseGame()

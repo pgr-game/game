@@ -16,6 +16,20 @@ public class SaveManager : MonoBehaviour
         this.saveRoot = saveRoot;
     }
 
+    public void QuickSave() {
+        //Overwrite save from saveRoot if it is not null
+        if(saveRoot == null) {
+            CreateNewSaveFile();
+        }
+        else {
+            Save();
+        }
+    }
+
+    public void CreateNewSaveFile() {
+        
+    }
+
     // Save order:
     // - Save() entry point, calls game manager save and then player state saves
     // - SaveGameManager(...) saves GameManager data
