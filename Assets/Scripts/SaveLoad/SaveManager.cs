@@ -16,18 +16,8 @@ public class SaveManager : MonoBehaviour
         this.saveRoot = saveRoot;
     }
 
-    public void QuickSave() {
-        //Overwrite save from saveRoot if it is not null
-        if(saveRoot == null) {
-            CreateNewSaveFile();
-        }
-        else {
-            Save();
-        }
-    }
-
-    public void CreateNewSaveFile() {
-        
+    public bool IsSaveRootNull() { 
+        return (this.saveRoot == null);
     }
 
     // Save order:
