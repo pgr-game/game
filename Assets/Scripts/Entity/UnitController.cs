@@ -26,6 +26,7 @@ public class UnitController : MonoBehaviour
     public GameObject damageRecived;
 
     public bool attacked;
+    public int expirience = 0;
 
     public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager) {
         this.owner = playerManager;
@@ -141,16 +142,37 @@ public class UnitController : MonoBehaviour
         this.UpdateUnitUI();
         if (this.currentHealth <= 0)
         {
-            this.Death(this);
+            this.Death(attacker);
         }
     }
     public void Death(UnitController killer) {
-        Destroy(gameObject);
         owner.allyUnits.Remove(this);
         gameManager.units.Remove(this);
         killer.owner.AddGold(CalculateGoldValue());
         TileEntity oldTile = this.mapManager.MapEntity.Tile(this.unitMove.hexPosition);
         oldTile.UnitPresent = null;
+        killer.GainXP(this.level);
+        Destroy(gameObject);
+    }
+
+    public void GainXP(int ammountGot)
+    {
+        expirience += ammountGot;
+        if (expirience >= System.Math.Pow(2, level - 1))
+        {
+            Debug.Log("lvl up");
+            level++;
+            expirience = 0;
+            this.UpgradeUnit();
+        }
+    }
+
+    public void UpgradeUnit()
+    {
+        this.attack += 5;
+        this.maxHealth += 5;
+        this.currentHealth += 5;
+        this.defense++;
     }
 
     public int CalculateGoldValue() {
