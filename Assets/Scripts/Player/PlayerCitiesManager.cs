@@ -28,9 +28,14 @@ public class PlayerCitiesManager
     }
 
     void ClaimStartingCity(string startingCityName) {
-        Debug.Log("Claiming starting city");
         List<CityTile> startingCityTiles = mapManager.GetCityTilesInPosition(playerManager.transform.position);
-        mapManager.InitCity(startingCityTiles, this.playerManager, startingCityName);
+        if(startingCityTiles.Count != 0) {
+            Debug.Log("Claiming starting city");
+            mapManager.InitCity(startingCityTiles, this.playerManager, startingCityName);
+        }
+        else {
+            Debug.Log("Starting city can't be claimed");
+        }
     }
 
     public int GetGoldIncome() {

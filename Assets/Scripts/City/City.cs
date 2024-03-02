@@ -17,7 +17,6 @@ public class City
     public CityUIController UI;
 
     public void InitCityUI(PlayerManager player, GameObject CityUIPrefab, string name) {
-        Debug.Log(cityTiles.Select(cityTile => cityTile.transform.position).ToList());
         uiAnchor = MapManager.CalculateMidpoint(cityTiles.Select(cityTile => cityTile.transform.position).ToList());
         UI = UnityEngine.Object.Instantiate(CityUIPrefab, uiAnchor, Quaternion.identity).GetComponent<CityUIController>();
         UI.Init();
@@ -35,7 +34,7 @@ public class City
             UnitInProductionTurnsLeft = UnitInProductionTurnsLeft - 1;
             if(UnitInProductionTurnsLeft == 0) {
                 Debug.Log("Unit produced");
-                Owner.InstantiateUnit(UnitInProduction);
+                Owner.InstantiateUnit(UnitInProduction, null);
                 UnitInProductionTurnsLeft = UnitInProduction.GetProductionTurns();
                 
             }
