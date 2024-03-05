@@ -128,7 +128,10 @@ public class UnitMove : MonoBehaviour
             }
             else
             {
-                onCompleted.SafeInvoke();
+
+                    onCompleted.SafeInvoke();
+
+                
             }
         }
 
@@ -160,7 +163,10 @@ public class UnitMove : MonoBehaviour
                 transform.position = targetPoint;
                 nextIndex++;
             }
-            onCompleted.SafeInvoke();
+            if (active==true)
+            {
+                onCompleted.SafeInvoke();
+            }
         }
 
         void AreaShow()
@@ -196,7 +202,7 @@ public class UnitMove : MonoBehaviour
             }
         }
 
-        void PathUpdate()
+        public void PathUpdate()
         {
             if (Path && Path.IsEnabled)
             {

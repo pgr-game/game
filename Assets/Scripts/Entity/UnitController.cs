@@ -172,13 +172,13 @@ public class UnitController : MonoBehaviour
     public void UpgradeUnit()
     {
         //TODO this not work work me sad. still displays are and path (for some reason onyl sonetimes)
-        this.unitMove.AreaHide();
-        this.Deactivate();
-        this.unitMove.PathHide();
+        this.unitMove.Deactivate();
 
         GameObject unitUI = this.transform.Find("UnitDefaultBar(Clone)").gameObject;
         GameObject lvlUP = Instantiate(lvlUPMenu, this.transform.position, Quaternion.identity, unitUI.transform);
+        lvlUP.transform.position += new Vector3(0,0,-2);
         lvlUP.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+
         GameObject buttons = lvlUP.transform.Find("Buttons").gameObject;
 
         GameObject defButton = buttons.transform.Find("DefenceAddButton").gameObject;
