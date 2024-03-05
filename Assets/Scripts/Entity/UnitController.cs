@@ -2,6 +2,7 @@ using RedBjorn.ProtoTiles;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
@@ -23,7 +24,8 @@ public class UnitController : MonoBehaviour
     public int defense;
     public GameManager gameManager;
     public GameObject unitUI;
-    public GameObject damageRecived;
+    public GameObject damageRecivedUI;
+    public GameObject lvlUPMenu;
 
     public bool attacked;
     public int expirience = 0;
@@ -135,7 +137,7 @@ public class UnitController : MonoBehaviour
     {
         this.currentHealth = this.currentHealth - incomingDamage;
         GameObject unitUI = this.transform.Find("UnitDefaultBar(Clone)").gameObject;
-        GameObject damageUI = Instantiate(damageRecived, unitUI.transform.position, Quaternion.identity, unitUI.transform);
+        GameObject damageUI = Instantiate(damageRecivedUI, unitUI.transform.position, Quaternion.identity, unitUI.transform);
         damageUI.transform.Find("Damage").gameObject.GetComponent<TextMeshProUGUI>().text = attacker.attack.ToString();
         damageUI.GetComponent<DamageAnimation>().angle = this.transform.position - attacker.transform.position;
 
@@ -169,10 +171,45 @@ public class UnitController : MonoBehaviour
 
     public void UpgradeUnit()
     {
+        //TODO this not work work me sad. still displays are and path (for some reason onyl sonetimes)
+        this.unitMove.AreaHide();
+        this.Deactivate();
+        this.unitMove.PathHide();
+
+        GameObject unitUI = this.transform.Find("UnitDefaultBar(Clone)").gameObject;
+        GameObject lvlUP = Instantiate(lvlUPMenu, this.transform.position, Quaternion.identity, unitUI.transform);
+        lvlUP.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        GameObject buttons = lvlUP.transform.Find("Buttons").gameObject;
+
+        GameObject defButton = buttons.transform.Find("DefenceAddButton").gameObject;
+        UnityEngine.UI.Button button = defButton.GetComponent<UnityEngine.UI.Button>();
+        button.onClick.AddListener(delegate { UbgradeDefence(lvlUP); });
+
+        GameObject HPButton = buttons.transform.Find("HPAddButton").gameObject;
+        button = HPButton.GetComponent<UnityEngine.UI.Button>();
+        button.onClick.AddListener(delegate { UbgradeHealth(lvlUP); });
+
+        GameObject attackButton = buttons.transform.Find("AttackAddButton").gameObject;
+        button = attackButton.GetComponent<UnityEngine.UI.Button>();
+        button.onClick.AddListener(delegate { UbgradeAttack(lvlUP); });
+
+    }
+
+    public void UbgradeAttack(GameObject gameObject)
+    {
         this.attack += 5;
+        Destroy(gameObject);
+    }
+    public void UbgradeHealth(GameObject gameObject)
+    {
         this.maxHealth += 5;
         this.currentHealth += 5;
-        this.defense++;
+        Destroy(gameObject);
+    }
+    public void UbgradeDefence(GameObject gameObject)
+    {
+        this.defense += 2;
+        Destroy(gameObject);
     }
 
     public int CalculateGoldValue() {

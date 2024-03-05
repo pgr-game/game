@@ -169,7 +169,7 @@ public class UnitMove : MonoBehaviour
             Area.Show(mapManager.MapEntity.WalkableBorder(transform.position, RangeLeft), mapManager.MapEntity);
         }
 
-        void AreaHide()
+        public void AreaHide()
         {
             if(AreaPrefab != null) {
                 Debug.Log("AreaPrefab is not null");
@@ -188,7 +188,7 @@ public class UnitMove : MonoBehaviour
             }
         }
 
-        void PathHide()
+        public void PathHide()
         {
             if (Path)
             {
