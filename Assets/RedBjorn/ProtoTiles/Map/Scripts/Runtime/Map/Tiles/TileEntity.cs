@@ -12,6 +12,7 @@ namespace RedBjorn.ProtoTiles
         public TilePreset Preset { get; private set; }
 
         public UnitController UnitPresent { get; set; }
+        public Fort FortPresent { get; set; }
         MapRules Rules;
 
         public int MovableArea { get { return CachedMovabeArea; } set { CachedMovabeArea = value; } }

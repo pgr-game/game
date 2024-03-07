@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using RedBjorn.ProtoTiles;
 
 public enum UnitTypes {
     Archer,
@@ -23,29 +24,31 @@ public class GameManager : MonoBehaviour
     public StartingResources[] InStartingResources;
     public Color32[] InPlayerColors;
     public string[] InStartingCityNames;
-    //end of game launcher variables
+    
 
+    // Game elements
     public MapManager mapManager;
     public SaveManager saveManager;
     public LoadManager loadManager;
     public CityMenuManager cityMenuManager;
     public GameObject playerPrefab;
 
+    // Turn elements
     public int turnNumber = 1;
     public GameObject turnText;
     
+    // Player elements
     public int activePlayerIndex = 0;
     public PlayerManager activePlayer;
     public int numberOfPlayers;
     public PlayerManager[] players;
     public Vector3[] playerPositions;
-
-
-    // is it really usefulll for anything ?
     public List<UnitController> units = new List<UnitController>();
     // Unit types
     private const int amountOfUnitTypes = 7;
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
+
+    // UI elements
     public GameObject unitTypeText;
     public GameObject unitAttackText;
     public GameObject unitLevelText;
@@ -54,6 +57,7 @@ public class GameManager : MonoBehaviour
     public GameObject unitBox;
     public Image nextTurnButtonImage;
     public GameObject UI;
+    public TileTag cityTag;
 
     void Start()
     {

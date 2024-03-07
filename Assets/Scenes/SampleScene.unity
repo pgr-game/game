@@ -15029,11 +15029,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224109672722560404, guid: 46a84c550a2054af88948ccfcffde9e2, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 221
+      value: 107.5
       objectReference: {fileID: 0}
     - target: {fileID: 224109672722560404, guid: 46a84c550a2054af88948ccfcffde9e2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 124
+      value: -28.03
       objectReference: {fileID: 0}
     - target: {fileID: 224109672722560404, guid: 46a84c550a2054af88948ccfcffde9e2, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -15105,11 +15105,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224968759145757384, guid: 46a84c550a2054af88948ccfcffde9e2, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 159
+      value: 270.35
       objectReference: {fileID: 0}
     - target: {fileID: 224968759145757384, guid: 46a84c550a2054af88948ccfcffde9e2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -7
+      value: 157.9
       objectReference: {fileID: 0}
     - target: {fileID: 224968759145757384, guid: 46a84c550a2054af88948ccfcffde9e2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -32034,11 +32034,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5884315827915261909, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 282.99805
+      value: 303
       objectReference: {fileID: 0}
     - target: {fileID: 5884315827915261909, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -141
+      value: -162
       objectReference: {fileID: 0}
     - target: {fileID: 5884315827915261909, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -34350,6 +34350,7 @@ MonoBehaviour:
   unitBox: {fileID: 1795039090}
   nextTurnButtonImage: {fileID: 203378221}
   UI: {fileID: 2037950189}
+  cityTag: {fileID: 11400000, guid: 2e01fed2d00c6674bbb41bd8ac7e432f, type: 2}
 --- !u!4 &1991390625
 Transform:
   m_ObjectHideFlags: 0

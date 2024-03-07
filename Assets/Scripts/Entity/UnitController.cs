@@ -27,7 +27,11 @@ public class UnitController : MonoBehaviour
     public GameObject damageRecivedUI;
     public GameObject lvlUPMenu;
 
+    public GameObject fortButton;
+
     public bool attacked;
+    public bool canPlaceFort;
+    public int turnsSinceFortPlaced = 5;
     public int expirience = 0;
 
     public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager) {
@@ -40,6 +44,7 @@ public class UnitController : MonoBehaviour
         currentHealth = maxHealth;
         turnProduced = this.gameManager.turnNumber;
         level = 1;
+        canPlaceFort = true;
     }
 
     private void CreateUI()
@@ -65,8 +70,6 @@ public class UnitController : MonoBehaviour
         GameObject dejm = myUI.transform.Find("Frame").gameObject;
         Image dejmimage = dejm.GetComponent<Image>();
         dejmimage.color = this.owner.color;
-
-
     }
 
     private void UpdateUnitUI()
@@ -118,7 +121,12 @@ public class UnitController : MonoBehaviour
     }
 
     public int GetDefense() {
-        // TODO: include city or fort defense bonus
+        if(IsInFortOrCity()) {
+            if(defense == 0) {
+                return 1;
+            }
+            return defense*2;
+        }
         return defense;
     }
 
@@ -127,6 +135,9 @@ public class UnitController : MonoBehaviour
         if (!this.attacked)
         {
             int damage = this.attack - enemy.GetDefense();
+            if (damage < 0) damage = 0;
+            Debug.Log("Dealing " + damage + " damage to enemy");
+            enemy.currentHealth -= damage;
             this.attacked = true;
             enemy.reciveDamage(damage,this);
         }
@@ -237,5 +248,23 @@ public class UnitController : MonoBehaviour
     }
     public int GetProductionTurns() {
         return turnsToProduce;
+    }
+
+    public bool IsInFortOrCity() {
+        var tile = this.mapManager.MapEntity.Tile(unitMove.hexPosition);
+        if(tile.FortPresent != null) return true;
+        var isCity = false;
+        tile.Preset.Tags.ForEach(tag => {
+            if(tag == gameManager.cityTag) isCity = true;
+        });
+        return isCity;
+    }
+
+    public void Heal() {
+        if(currentHealth == maxHealth) return;
+        currentHealth += (int)(0.2f*maxHealth);
+        if(currentHealth > maxHealth) currentHealth = maxHealth;
+        UpdateUnitUI();
+        Debug.Log("Healing unit");
     }
 }
