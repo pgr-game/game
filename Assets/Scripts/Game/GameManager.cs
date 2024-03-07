@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public SaveManager saveManager;
     public LoadManager loadManager;
     public CityMenuManager cityMenuManager;
+    public PauseMenu pauseMenu;
     public GameObject playerPrefab;
 
     // Turn elements

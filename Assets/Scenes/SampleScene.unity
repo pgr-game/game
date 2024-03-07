@@ -205,12 +205,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3939739}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 429854802}
+  m_Father: {fileID: 1372513083}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -12893,10 +12893,10 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 224889842196503030, guid: 86af10e34574a478c91e0ae5121fcef3, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3939740}
-    - targetCorrespondingSourceObject: {fileID: 224889842196503030, guid: 86af10e34574a478c91e0ae5121fcef3, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1319636807}
+    - targetCorrespondingSourceObject: {fileID: 224098395243960318, guid: 86af10e34574a478c91e0ae5121fcef3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3939740}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 86af10e34574a478c91e0ae5121fcef3, type: 3}
 --- !u!1001 &678644119
@@ -17139,6 +17139,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1795039091}
     m_Modifications:
+    - target: {fileID: 1018973744439756, guid: 05db22e73067f47298102cd2a70e73b3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1515528649962624, guid: 05db22e73067f47298102cd2a70e73b3, type: 3}
       propertyPath: m_Name
       value: UnitType
@@ -23960,6 +23964,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7365716079596273168, guid: 405d1e597b9b50c4da2bedd8b4482c14, type: 3}
   m_PrefabInstance: {fileID: 1192623589}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &1372513083 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 224098395243960318, guid: 86af10e34574a478c91e0ae5121fcef3, type: 3}
+  m_PrefabInstance: {fileID: 672135535}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1373567151
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30600,24 +30609,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5884315827915261909, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
   m_PrefabInstance: {fileID: 1874178252}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1795039092
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1795039090}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1109aec5f3b37da47981b4e5d1db3b57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unitTypeText: {fileID: 0}
-  unitAttackText: {fileID: 0}
-  unitLevelText: {fileID: 0}
-  unitHealthText: {fileID: 0}
-  unitDefenseText: {fileID: 0}
-  unitBox: {fileID: 0}
 --- !u!224 &1795443565 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 731828607481972490, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
@@ -32204,10 +32195,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5884315827915261909, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
       insertIndex: -1
       addedObject: {fileID: 201905063}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2206669921466696581, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1795039092}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
 --- !u!4 &1880539757 stripped
 Transform:
@@ -34331,6 +34319,7 @@ MonoBehaviour:
   saveManager: {fileID: 1991390629}
   loadManager: {fileID: 1991390628}
   cityMenuManager: {fileID: 1991390627}
+  pauseMenu: {fileID: 1991390626}
   playerPrefab: {fileID: 6202811586810600753, guid: 737370e2dcee64847a4ede0cb6b98416, type: 3}
   turnNumber: 1
   turnText: {fileID: 600600140}
@@ -34348,7 +34337,7 @@ MonoBehaviour:
   - {fileID: 7234204313763260200, guid: e45ecb898920ff842801bad3cc8bb233, type: 3}
   - {fileID: 5969487377251852545, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
   - {fileID: 3286708026827661072, guid: 4ed85a2d63bdf1b47aa30c2058185ac4, type: 3}
-  unitStatsUIController: {fileID: 1795039092}
+  unitStatsUIController: {fileID: 2037950195}
   nextTurnButtonImage: {fileID: 203378221}
   UI: {fileID: 2037950189}
   cityTag: {fileID: 0}
@@ -34976,6 +34965,7 @@ GameObject:
   - component: {fileID: 2037950191}
   - component: {fileID: 2037950190}
   - component: {fileID: 2037950194}
+  - component: {fileID: 2037950195}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -35089,6 +35079,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volumeSlider: {fileID: 870690727}
+--- !u!114 &2037950195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2037950189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1109aec5f3b37da47981b4e5d1db3b57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitTypeText: {fileID: 1509917714}
+  unitAttackText: {fileID: 1907763767}
+  unitLevelText: {fileID: 1777687403}
+  unitHealthText: {fileID: 143249331}
+  unitDefenseText: {fileID: 3939739}
+  unitBox: {fileID: 1795039090}
 --- !u!1001 &2039517599
 PrefabInstance:
   m_ObjectHideFlags: 0

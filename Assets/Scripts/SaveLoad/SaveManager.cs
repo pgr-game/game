@@ -15,6 +15,7 @@ public class SaveManager : MonoBehaviour
 
     public void SetSaveRoot(string saveRoot) { 
         this.saveRoot = saveRoot;
+        gameManager.pauseMenu.EnableQuickSave();
     }
 
     public bool IsSaveRootNull() { 
