@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 588427703
   m_SortingLayer: 0
   m_SortingOrder: -10
-  m_Sprite: {fileID: 21300000, guid: d914f6356af4768489f3a9b22815413a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 964d040998000054098048f3c764a1c7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -93,10 +93,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7365716079596273168}
-  - component: {fileID: 4417754378580361972}
   - component: {fileID: 4357692029639228287}
+  - component: {fileID: 8875470182469536782}
   m_Layer: 0
-  m_Name: CityHexXY
+  m_Name: FortHexXY
   m_TagString: defBonus
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -118,19 +118,6 @@ Transform:
   - {fileID: 6938356483961977130}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4417754378580361972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7362454568944323520}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1150f73f457f6434ca526e55fdb5065c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  owner: {fileID: 0}
 --- !u!136 &4357692029639228287
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -154,3 +141,24 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8875470182469536782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7362454568944323520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 872aff5355942b248b74f3d653e6a8fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  owner: {fileID: 0}
+  hexPosition: {x: 0, y: 0, z: 0}
+  id: 0
+  amountOfImages: 3
+  images:
+  - {fileID: 21300000, guid: 964d040998000054098048f3c764a1c7, type: 3}
+  - {fileID: 21300000, guid: f193f6fc5eade434584b6454f738b6dd, type: 3}
+  - {fileID: 21300000, guid: cc175ce5394667c44a8f941d549a1998, type: 3}
+  sprite: {fileID: 5731403472219080264}

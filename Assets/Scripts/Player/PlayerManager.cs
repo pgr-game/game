@@ -25,11 +25,14 @@ public class PlayerManager : MonoBehaviour
     //player's assets
     public List<UnitController> allyUnits = new List<UnitController>();
     public PlayerCitiesManager playerCitiesManager;
+    public PlayerFortsManager playerFortsManager;
+    public GameObject fortPrefab;
 
     // currency
     public int gold;
     public GameObject goldText;
     public int goldIncome = 5;     // amount given to player every round independently of cities, units etc.
+    public const int costOfFort = 100;
 
     public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, int index)
     {
@@ -40,6 +43,7 @@ public class PlayerManager : MonoBehaviour
         this.startingResources = startingResources;
         this.color = color;
         InitCities(startingCityName);
+        InitForts();
         InitUnits();
         this.gold = startingResources.gold;
         GameObject[] texts = GameObject.FindGameObjectsWithTag("currencyText");
@@ -62,7 +66,21 @@ public class PlayerManager : MonoBehaviour
                     HandleCityClick(cityTile.city);
                 }
             }
-        }
+            if (Input.GetKeyDown(KeyCode.B) && selected != null) {
+                Debug.Log("Trying to place a fort");
+                if(selected.GetComponent<UnitController>().IsInFortOrCity()) {
+                    Debug.Log("Fort can't be placed here");
+                }
+                else if(!selected.GetComponent<UnitController>().canPlaceFort) {
+                    Debug.Log("Unit can't place fort yet");
+                }
+                else {
+                    CreateFort();
+                }
+
+            }
+
+        } 
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), transform.TransformDirection(Vector3.forward), Color.green);
     }
 
@@ -177,6 +195,20 @@ public class PlayerManager : MonoBehaviour
         playerCitiesManager.Init(this, startingCityName);
     }
 
+    void InitForts() {
+        playerFortsManager = new PlayerFortsManager();
+        playerFortsManager.Init(this);
+    }
+
+    public void CreateFort() {
+        int result = playerFortsManager.AddFort(selected.GetComponent<UnitController>());
+        if(result == 1) {
+            selected.GetComponent<UnitController>().canPlaceFort = false;
+            selected.GetComponent<UnitController>().turnsSinceFortPlaced = 0;
+            gold -= costOfFort;
+        }
+    }
+
     public void AddGold(int amount) {
         gold += amount;
         SetGoldText(gold.ToString());
@@ -218,6 +250,19 @@ public class PlayerManager : MonoBehaviour
     public void StartTurn() {
         allyUnits.ForEach((unit) => unit.attacked = false);
         if (gameManager.turnNumber != 1) {
+            allyUnits.ForEach((unit) => {
+                unit.turnsSinceFortPlaced++;
+                if(unit.turnsSinceFortPlaced == 5) unit.canPlaceFort = true;
+            });
+        } 
+
+        allyUnits.ForEach((unit) => {
+            if(unit.IsInFortOrCity()) unit.Heal();
+            
+        });
+
+
+        if (gameManager.turnNumber != 1) {
             AddGold(playerCitiesManager.GetGoldIncome());
         }
         SetGoldText(gold.ToString());
@@ -225,6 +270,13 @@ public class PlayerManager : MonoBehaviour
         gold += goldIncome;
         allyUnits.ForEach(unit => unit.unitMove.ResetRange());
         playerCitiesManager.StartCitiesTurn();
+    }
+
+    public UnitController getSelectedUnit() {
+        if(selected == null) {
+            return null;
+        }
+        return selected.GetComponent<UnitController>();
     }
 
 }

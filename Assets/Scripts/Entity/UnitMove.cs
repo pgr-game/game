@@ -33,11 +33,10 @@ public class UnitMove : MonoBehaviour
         private bool active = false;
         private bool justActivated = false;
         
-        // not sure if all x y z coordinates are neccesary
         public Vector3Int hexPosition;
 
-    void Update()
-        {
+        void Update()
+        { 
             if(active && !justActivated) {
                 if (MyInput.GetOnWorldUp(mapManager.MapEntity.Settings.Plane()))
                 {
@@ -51,6 +50,7 @@ public class UnitMove : MonoBehaviour
                     justActivated = false;
                 }
             }
+
         }
 
         public void Init(MapManager mapManager, UnitController unitController)
