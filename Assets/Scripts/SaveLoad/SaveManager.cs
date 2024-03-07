@@ -97,6 +97,7 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>(unitKey + "turnsToProduce", unit.turnsToProduce);
         quickSaveWriter.Write<int>(unitKey + "turnProduced", unit.turnProduced);
         quickSaveWriter.Write<int>(unitKey + "level", unit.level);
+        quickSaveWriter.Write<int>(unitKey + "experience", unit.experience);
         quickSaveWriter.Commit();
     }
 }

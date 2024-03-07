@@ -20,7 +20,7 @@ public class UnitController : MonoBehaviour
     public int baseProductionCost;
     public int turnsToProduce;
     public int turnProduced;
-    public int level;
+    public int level = 1;
     public int defense;
     public GameManager gameManager;
     public GameObject unitUI;
@@ -37,9 +37,17 @@ public class UnitController : MonoBehaviour
         ApplyColor();
         unitMove.Init(mapManager,this);
         this.gameManager = gameManager;
-        currentHealth = maxHealth;
-        turnProduced = this.gameManager.turnNumber;
-        level = 1;
+        if(currentHealth == null || currentHealth == 0) {
+            currentHealth = maxHealth;
+        }
+
+        if(turnProduced == null) {
+            turnProduced = this.gameManager.turnNumber;
+        }
+
+        if(level == null || level == 0) {
+            level = 1;
+        }
     }
 
     private void CreateUI()

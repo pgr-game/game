@@ -155,6 +155,16 @@ public class PlayerManager : MonoBehaviour
         if(unitLoadData != null) {
             Debug.Log("Setting unit position to: " + unitLoadData.position);
             position = unitLoadData.position;
+            unitController.maxHealth = unitLoadData.maxHealth;
+            unitController.currentHealth = unitLoadData.currentHealth;
+            unitController.attack = unitLoadData.attack;
+            unitController.attackRange = unitLoadData.attackRange;
+            unitController.baseProductionCost = unitLoadData.baseProductionCost;
+            unitController.turnsToProduce = unitLoadData.turnsToProduce;
+            unitController.turnProduced = unitLoadData.turnProduced;
+            unitController.level = unitLoadData.level;
+            unitController.turnsToProduce = unitLoadData.turnsToProduce;
+            unitController.experience = unitLoadData.experience;
         }
 
         UnitController newUnit = Instantiate(unitController, position, Quaternion.identity).GetComponent<UnitController>();

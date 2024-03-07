@@ -139,7 +139,8 @@ public class LoadManager : MonoBehaviour
             quickSaveReader.Read<int>(unitKey + "baseProductionCost"),
             quickSaveReader.Read<int>(unitKey + "turnsToProduce"),
             quickSaveReader.Read<int>(unitKey + "turnProduced"),
-            quickSaveReader.Read<int>(unitKey + "level")
+            quickSaveReader.Read<int>(unitKey + "level"),
+            quickSaveReader.Read<int>(unitKey + "experience")
         );
 
         return unitLoadData;
