@@ -187,7 +187,7 @@ public class PlayerManager : MonoBehaviour
 
         UnitController newUnit = Instantiate(unitController, position, Quaternion.identity).GetComponent<UnitController>();
         allyUnits.Add(newUnit);
-        newUnit.Init(this, mapManager, gameManager);
+        newUnit.Init(this, mapManager, gameManager, gameManager.unitStatsUIController);
     }
 
     void InitCities(string startingCityName) {

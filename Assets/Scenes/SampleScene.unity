@@ -15029,11 +15029,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224109672722560404, guid: 46a84c550a2054af88948ccfcffde9e2, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 107.5
+      value: 221
       objectReference: {fileID: 0}
     - target: {fileID: 224109672722560404, guid: 46a84c550a2054af88948ccfcffde9e2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -28.03
+      value: 124
       objectReference: {fileID: 0}
     - target: {fileID: 224109672722560404, guid: 46a84c550a2054af88948ccfcffde9e2, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -15105,11 +15105,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224968759145757384, guid: 46a84c550a2054af88948ccfcffde9e2, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 270.35
+      value: 159
       objectReference: {fileID: 0}
     - target: {fileID: 224968759145757384, guid: 46a84c550a2054af88948ccfcffde9e2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 157.9
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 224968759145757384, guid: 46a84c550a2054af88948ccfcffde9e2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -30600,6 +30600,24 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5884315827915261909, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
   m_PrefabInstance: {fileID: 1874178252}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1795039092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795039090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1109aec5f3b37da47981b4e5d1db3b57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitTypeText: {fileID: 0}
+  unitAttackText: {fileID: 0}
+  unitLevelText: {fileID: 0}
+  unitHealthText: {fileID: 0}
+  unitDefenseText: {fileID: 0}
+  unitBox: {fileID: 0}
 --- !u!224 &1795443565 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 731828607481972490, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
@@ -32034,11 +32052,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5884315827915261909, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 303
+      value: 282.99805
       objectReference: {fileID: 0}
     - target: {fileID: 5884315827915261909, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -162
+      value: -141
       objectReference: {fileID: 0}
     - target: {fileID: 5884315827915261909, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -32186,7 +32204,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5884315827915261909, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
       insertIndex: -1
       addedObject: {fileID: 201905063}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2206669921466696581, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1795039092}
   m_SourcePrefab: {fileID: 100100000, guid: ce7e92ae7dc8f7848a86e680a3ae3fca, type: 3}
 --- !u!4 &1880539757 stripped
 Transform:
@@ -34306,21 +34327,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cbacb8fde3138f4fa0306fbd61b0fc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InNumberOfPlayers: 2
-  InPlayerPositions:
-  - {x: -6.928203, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  InStartingResources:
-  - {fileID: 4276451211865606460, guid: 5e7b204f2f4fed54581c791b5fcf93b0, type: 3}
-  - {fileID: 5409046352657579508, guid: 5bcbf96ed4db27d41926ce4ab732e2b2, type: 3}
-  InPlayerColors:
-  - serializedVersion: 2
-    rgba: 4286185687
-  - serializedVersion: 2
-    rgba: 4283367198
-  InStartingCityNames:
-  - Ur
-  - Babylon
   mapManager: {fileID: 241904843}
   saveManager: {fileID: 1991390629}
   loadManager: {fileID: 1991390628}
@@ -34342,15 +34348,10 @@ MonoBehaviour:
   - {fileID: 7234204313763260200, guid: e45ecb898920ff842801bad3cc8bb233, type: 3}
   - {fileID: 5969487377251852545, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
   - {fileID: 3286708026827661072, guid: 4ed85a2d63bdf1b47aa30c2058185ac4, type: 3}
-  unitTypeText: {fileID: 1509917714}
-  unitAttackText: {fileID: 1907763767}
-  unitLevelText: {fileID: 1777687403}
-  unitHealthText: {fileID: 143249331}
-  unitDefenseText: {fileID: 3939739}
-  unitBox: {fileID: 1795039090}
+  unitStatsUIController: {fileID: 1795039092}
   nextTurnButtonImage: {fileID: 203378221}
   UI: {fileID: 2037950189}
-  cityTag: {fileID: 11400000, guid: 2e01fed2d00c6674bbb41bd8ac7e432f, type: 2}
+  cityTag: {fileID: 0}
 --- !u!4 &1991390625
 Transform:
   m_ObjectHideFlags: 0

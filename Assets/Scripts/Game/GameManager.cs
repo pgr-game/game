@@ -40,12 +40,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
 
     // UI elements
-    public GameObject unitTypeText;
-    public GameObject unitAttackText;
-    public GameObject unitLevelText;
-    public GameObject unitHealthText;
-    public GameObject unitDefenseText;
-    public GameObject unitBox;
+    public UnitStatsUIController unitStatsUIController;
     public Image nextTurnButtonImage;
     public GameObject UI;
     public TileTag cityTag;
@@ -55,32 +50,10 @@ public class GameManager : MonoBehaviour
         //temp before new game tab (one for choosing difficulty, player colors etc)
         //these should only be used for instantiation and will be imported from game launcher later on
         int InNumberOfPlayers = 2;
+
         Vector3[] InPlayerPositions = new Vector3[2];
         InPlayerPositions[0] = new Vector3(-6.928203f, 0f, 0f);
         InPlayerPositions[1] = new Vector3(0f, 0f, 0f);
-        StartingResources[] InStartingResources = new StartingResources[2] {
-            new StartingResources(),
-            new StartingResources()
-        };
-        
-        InStartingResources[0].units = new List<UnitController>();
-        InStartingResources[1].units = new List<UnitController>();
-
-        InStartingResources[0].units.Add((Resources.Load("Units/Archer") as GameObject).GetComponent<UnitController>());
-        InStartingResources[0].units.Add((Resources.Load("Units/Chariot") as GameObject).GetComponent<UnitController>());
-
-        InStartingResources[1].units.Add((Resources.Load("Units/Skirmisher") as GameObject).GetComponent<UnitController>());
-
-        Debug.Log("Starting resources units:");
-        InStartingResources[0].units.ForEach(element => Debug.Log(element.defense));
-        Debug.Log("End of starting resources units");
-
-        InStartingResources[0].unitLoadData = new List<UnitLoadData>();
-        InStartingResources[1].unitLoadData = new List<UnitLoadData>();
-
-        InStartingResources[0].gold = 100;
-        InStartingResources[1].gold = 100;
-
 
         Color32[] InPlayerColors = new Color32[2];
         InPlayerColors[0] = Color.red;
@@ -89,6 +62,8 @@ public class GameManager : MonoBehaviour
         string[] InStartingCityNames = new string[2];
         InStartingCityNames[0] = "Ur";
         InStartingCityNames[1] = "Babylon";
+
+        StartingResources[] InStartingResources = CreateExampleGameStart();
         //end of game launcher variables
 
         string saveRoot = SaveRoot.saveRoot;
@@ -114,7 +89,6 @@ public class GameManager : MonoBehaviour
 
         InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames);
         players[activePlayerIndex].StartTurn();
-        this.HideUnitBox();
     }
 
     public void LoadGameData(SceneLoadData sceneLoadData) {
@@ -196,36 +170,28 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    StartingResources[] CreateExampleGameStart() {
+        StartingResources[] InStartingResources = new StartingResources[2] {
+            new StartingResources(),
+            new StartingResources()
+        };
+        
+        InStartingResources[0].units = new List<UnitController>();
+        InStartingResources[1].units = new List<UnitController>();
 
-    public void setUnitTypeText(string unitType) {
-        unitTypeText.GetComponent<TMPro.TextMeshProUGUI>().text = unitType;
-    }
-    public void setUnitAttackText(string unitAttack)
-    {
-        unitAttackText.GetComponent<TMPro.TextMeshProUGUI>().text = unitAttack;
-    }
+        InStartingResources[0].units.Add((Resources.Load("Units/Archer") as GameObject).GetComponent<UnitController>());
+        InStartingResources[0].units.Add((Resources.Load("Units/Chariot") as GameObject).GetComponent<UnitController>());
 
-    public void setUnitLevelText(string unitLevel)
-    {
-        unitLevelText.GetComponent<TMPro.TextMeshProUGUI>().text = unitLevel;
-    }
+        InStartingResources[1].units.Add((Resources.Load("Units/Skirmisher") as GameObject).GetComponent<UnitController>());
 
-    public void setUnitHealthText(string unitHealth)
-    {
-        unitHealthText.GetComponent<TMPro.TextMeshProUGUI>().text = unitHealth;
-    }
 
-    public void setUnitDefenseText(string unitDefense)
-    {
-        unitDefenseText.GetComponent<TMPro.TextMeshProUGUI>().text = unitDefense;
-    }
+        InStartingResources[0].unitLoadData = new List<UnitLoadData>();
+        InStartingResources[1].unitLoadData = new List<UnitLoadData>();
 
-    public void HideUnitBox() {
-        unitBox.SetActive(false);
-    }
+        InStartingResources[0].gold = 100;
+        InStartingResources[1].gold = 100;
 
-    public void ShowUnitBox() {
-        unitBox.SetActive(true);
+        return InStartingResources;
     }
 
     public GameObject getUnitPrefabByName(String unitType) {
@@ -240,5 +206,4 @@ public class GameManager : MonoBehaviour
     public GameObject getUnitPrefab(UnitTypes unitType) {
         return unitPrefabs[(int)unitType];
     }
-
 }

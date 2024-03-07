@@ -26,6 +26,7 @@ public class UnitController : MonoBehaviour
     public GameObject unitUI;
     public GameObject damageRecivedUI;
     public GameObject lvlUPMenu;
+    public UnitStatsUIController unitStatsUIController;
 
     public GameObject fortButton;
 
@@ -35,22 +36,23 @@ public class UnitController : MonoBehaviour
     public int turnsSinceFortPlaced = 5;
     public int expirience = 0;
 
-    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager) {
+    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController) {
         this.owner = playerManager;
         this.mapManager = mapManager;
+        this.unitStatsUIController = unitStatsUIController;
         CreateUI();
         ApplyColor();
         unitMove.Init(mapManager,this);
         this.gameManager = gameManager;
-        if(currentHealth == null || currentHealth == 0) {
+        if(currentHealth == 0) {
             currentHealth = maxHealth;
         }
 
-        if(turnProduced == null) {
+        if(turnProduced == 0) {
             turnProduced = this.gameManager.turnNumber;
         }
 
-        if(level == null || level == 0) {
+        if(level == 0) {
             level = 1;
         }
         canPlaceFort = true;
@@ -100,21 +102,21 @@ public class UnitController : MonoBehaviour
         unitMove.Activate();
         UpdateUnitUI();
         ChangeUnitTexts();
-        this.gameManager.ShowUnitBox();
+        this.unitStatsUIController.ShowUnitBox();
     }
 
     public void ChangeUnitTexts() {
-        this.gameManager.setUnitTypeText(unitType.ToString());
-        this.gameManager.setUnitAttackText(attack.ToString());
-        this.gameManager.setUnitLevelText(level.ToString());
-        this.gameManager.setUnitHealthText(currentHealth.ToString());
-        this.gameManager.setUnitDefenseText(defense.ToString());
+        this.unitStatsUIController.setUnitTypeText(unitType.ToString());
+        this.unitStatsUIController.setUnitAttackText(attack.ToString());
+        this.unitStatsUIController.setUnitLevelText(level.ToString());
+        this.unitStatsUIController.setUnitHealthText(currentHealth.ToString());
+        this.unitStatsUIController.setUnitDefenseText(defense.ToString());
     }
 
     public void Deactivate() 
     {
         unitMove.Deactivate();
-        this.gameManager.HideUnitBox();
+        this.unitStatsUIController.HideUnitBox();
 
     }
 
