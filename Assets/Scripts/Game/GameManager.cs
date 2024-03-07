@@ -65,6 +65,9 @@ public class GameManager : MonoBehaviour
 
         InStartingResources[0].units.Add((Resources.Load("Units/Archer") as GameObject).GetComponent<UnitController>());
         InStartingResources[0].units.Add((Resources.Load("Units/Chariot") as GameObject).GetComponent<UnitController>());
+
+        InStartingResources[1].units.Add((Resources.Load("Units/Skirmisher") as GameObject).GetComponent<UnitController>());
+
         Debug.Log("Starting resources units:");
         InStartingResources[0].units.ForEach(element => Debug.Log(element.defense));
         Debug.Log("End of starting resources units");
