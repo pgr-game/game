@@ -145,8 +145,6 @@ public class UnitController : MonoBehaviour
         {
             int damage = this.attack - enemy.GetDefense();
             if (damage < 0) damage = 0;
-            Debug.Log("Dealing " + damage + " damage to enemy");
-            enemy.currentHealth -= damage;
             this.attacked = true;
             enemy.reciveDamage(damage,this);
         }
@@ -158,7 +156,7 @@ public class UnitController : MonoBehaviour
         this.currentHealth = this.currentHealth - incomingDamage;
         GameObject unitUI = this.transform.Find("UnitDefaultBar(Clone)").gameObject;
         GameObject damageUI = Instantiate(damageRecivedUI, unitUI.transform.position, Quaternion.identity, unitUI.transform);
-        damageUI.transform.Find("Damage").gameObject.GetComponent<TextMeshProUGUI>().text = attacker.attack.ToString();
+        damageUI.transform.Find("Damage").gameObject.GetComponent<TextMeshProUGUI>().text = incomingDamage.ToString();
         damageUI.GetComponent<DamageAnimation>().angle = this.transform.position - attacker.transform.position;
 
         this.UpdateUnitUI();
@@ -215,21 +213,27 @@ public class UnitController : MonoBehaviour
 
     }
 
-    public void UbgradeAttack(GameObject gameObject)
+    public void UbgradeAttack(GameObject lvlUPMenu)
     {
         this.attack += 5;
-        Destroy(gameObject);
+        Destroy(lvlUPMenu);
+        UpdateUnitUI();
+        ChangeUnitTexts();
     }
-    public void UbgradeHealth(GameObject gameObject)
+    public void UbgradeHealth(GameObject lvlUPMenu)
     {
         this.maxHealth += 5;
         this.currentHealth += 5;
-        Destroy(gameObject);
+        Destroy(lvlUPMenu);
+        UpdateUnitUI();
+        ChangeUnitTexts();
     }
-    public void UbgradeDefence(GameObject gameObject)
+    public void UbgradeDefence(GameObject lvlUPMenu)
     {
         this.defense += 2;
-        Destroy(gameObject);
+        Destroy(lvlUPMenu);
+        UpdateUnitUI();
+        ChangeUnitTexts();
     }
 
     public int CalculateGoldValue() {
@@ -274,6 +278,7 @@ public class UnitController : MonoBehaviour
         currentHealth += (int)(0.2f*maxHealth);
         if(currentHealth > maxHealth) currentHealth = maxHealth;
         UpdateUnitUI();
+        ChangeUnitTexts();
         Debug.Log("Healing unit");
     }
 }
