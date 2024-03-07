@@ -28,7 +28,7 @@ public class UnitController : MonoBehaviour
     public GameObject lvlUPMenu;
 
     public bool attacked;
-    public int expirience = 0;
+    public int experience = 0;
 
     public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager) {
         this.owner = playerManager;
@@ -159,12 +159,12 @@ public class UnitController : MonoBehaviour
 
     public void GainXP(int ammountGot)
     {
-        expirience += ammountGot;
-        if (expirience >= System.Math.Pow(2, level - 1))
+        experience += ammountGot;
+        if (experience >= System.Math.Pow(2, level - 1))
         {
             Debug.Log("lvl up");
             level++;
-            expirience = 0;
+            experience = 0;
             this.UpgradeUnit();
         }
     }
