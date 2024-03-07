@@ -18,12 +18,9 @@ public class LoadManager : MonoBehaviour
     }
 
     public List<SaveGameDescription> LoadSaveGameDecriptions() {
-        Debug.Log("Loading save game options");
-
         List<SaveGameDescription> saveGameDescriptions = new List<SaveGameDescription>();
         QuickSaveReader quickSaveReader = QuickSaveReader.Create("SavesList");
         int numberOfSavedGames = quickSaveReader.Read<int>("numberOfSavedGames");
-        Debug.Log(numberOfSavedGames);
 
         for(int i = 0; i < numberOfSavedGames; i++) {
             string saveString = quickSaveReader.Read<string>("saveString"+i);
@@ -36,8 +33,6 @@ public class LoadManager : MonoBehaviour
     }
 
     public void PrepareExampleLoads() {
-        Debug.Log("Preparing example loads...");
-
         QuickSaveWriter quickSaveWriter1 = QuickSaveWriter.Create("Empty save 1");
         QuickSaveWriter quickSaveWriter2 = QuickSaveWriter.Create("Empty save 2");
         QuickSaveWriter quickSaveWriter3 = QuickSaveWriter.Create("SavesList");
@@ -76,9 +71,6 @@ public class LoadManager : MonoBehaviour
             string colorString = "#" + quickSaveReader.Read<string>("Player" + i + "color");
             Color convertedColor = ColorUtility.TryParseHtmlString(colorString, out convertedColor) ? convertedColor : new Color();
             Color32 convertedColor32 = (Color32)convertedColor;
-            Debug.Log(i);
-            Debug.Log(convertedColor);
-            Debug.Log(convertedColor32);
             sceneLoadData.playerColors[i] = convertedColor32;
         }
         sceneLoadData.startingResources = startingResources;
@@ -121,7 +113,6 @@ public class LoadManager : MonoBehaviour
     private UnitController LoadUnitPrefab(string unitType)
     {
         var path = "Units/";
-        Debug.Log(unitType);
         return Resources.Load<GameObject>(path + unitType).GetComponent<UnitController>();
     }
 

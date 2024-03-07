@@ -76,10 +76,8 @@ public class GameManager : MonoBehaviour
         if (saveRoot == null) {
             sceneLoadData = new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0);
         } else {
-            Debug.Log("Loading game manager from save " + saveRoot);
             loadManager.SetSaveRoot(saveRoot);
             sceneLoadData = loadManager.Load();
-            Debug.Log(sceneLoadData.ToString());
         }
 
         LoadGameData(sceneLoadData);
@@ -96,14 +94,12 @@ public class GameManager : MonoBehaviour
             Debug.Log("Wrong initial data. Stopping game now!");
             return;
         }
-        Debug.Log("LoadGameData");
         this.playerPositions = sceneLoadData.playerPositions;
         this.numberOfPlayers = sceneLoadData.numberOfPlayers;
     }
 
     private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames)
     {
-        Debug.Log("Instantiating players");
         this.numberOfPlayers = numberOfPlayers;
         players = new PlayerManager[numberOfPlayers];
         for(int i = 0; i < numberOfPlayers; i++) {
@@ -149,11 +145,6 @@ public class GameManager : MonoBehaviour
 
     private bool IsInitialDataCorrect(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors) 
     {
-        Debug.Log(numberOfPlayers);
-        Debug.Log(playerPositions);
-        Debug.Log(startingResources);
-        Debug.Log(playerColors);
-        
         if(startingResources.Length != numberOfPlayers) {
             Debug.Log("Wrong number of player starting resources!");
             return false;

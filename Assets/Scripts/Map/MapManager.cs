@@ -34,7 +34,6 @@ public class MapManager : MonoBehaviour
         {
             Debug.Log("Can't find MapView. Random errors can occur");
         }
-        Debug.Log("Map manager initiated");
     }
 
 
@@ -73,10 +72,8 @@ public class MapManager : MonoBehaviour
                         }
                     }
                     if(isPlayerStart) {
-                        Debug.Log("Leave city claim for player");
                         continue;
                     } else {
-                        Debug.Log("Init neutral city");
                         InitCity(cityTiles, null, null); //eventually get a name from list of neutral names
                     }
                 }
@@ -92,7 +89,6 @@ public class MapManager : MonoBehaviour
         foreach(CityTile cityTile in cityTiles) {
             cityTile.ClaimStartingCityTile(playerManager, city);
             city.cityTiles.Add(cityTile);
-            Debug.Log("Init one city tile");
         }
 
         if(playerManager) {
@@ -112,15 +108,11 @@ public class MapManager : MonoBehaviour
         if (Physics.Raycast(new Vector3(position.x, position.y, position.z - 10), Vector3.forward, out hit)) {
             return hit.transform.GetComponent<CityTile>();
         }  
-        //Debug.Log("CityTile not found at position");
         return null;
     }
 
     TileEntity TileEntityFromPosition(Vector3 position) {
         TileEntity tileEntity = MapEntity.Tile(position);
-        if(tileEntity == null) {
-            Debug.Log("TileEntity not found at position");
-        }
         return tileEntity;
     }
 
@@ -128,7 +120,6 @@ public class MapManager : MonoBehaviour
         List<CityTile> tiles = new List<CityTile>();
         CityTile cityTile = CityTileFromPosition(position);
         if(cityTile != null) {
-            Debug.Log("Found city in position");
             tiles.Add(cityTile);
             GetCitySurroundingTiles(tiles, TileEntityFromPosition(position));
         }  
@@ -157,11 +148,6 @@ public class MapManager : MonoBehaviour
 
     public static Vector3 CalculateMidpoint(List<Vector3> points)
     {
-        foreach (Vector3 o in points)
-        {
-            Debug.Log(o);
-        }
-
         float sumX = 0f;
         float sumY = 0f;
         foreach (Vector3 point in points)
@@ -169,8 +155,6 @@ public class MapManager : MonoBehaviour
             sumX += point.x;
             sumY += point.y;
         }
-        // Assuming z should remain 0
-        Debug.Log(new Vector3(sumX / points.Count, sumY / points.Count, 0f));
 
         return new Vector3(sumX / points.Count, sumY / points.Count, 0f);
     }

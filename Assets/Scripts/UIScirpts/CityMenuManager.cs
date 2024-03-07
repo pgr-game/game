@@ -41,7 +41,6 @@ public class CityMenuManager : MonoBehaviour
     }
 
     public void ClickSelectProductionUnit(GameObject clickedEntry, UnitController unitController, GameObject prefab) {
-        Debug.Log("Selected unit for production");
         if(city.UnitInProduction == null) {
             //no unit was previously selected
             SelectProductionUnit(clickedEntry, unitController, prefab);
@@ -55,7 +54,6 @@ public class CityMenuManager : MonoBehaviour
             return;
         } 
         else {
-            Debug.Log("Opening dialog");
             uDialog.NewDialog()
                    .SetTitleText("Changing production")
                    .SetContentText("Are you sure? Production progress for currently produced unit will be lost!")
@@ -83,7 +81,6 @@ public class CityMenuManager : MonoBehaviour
         {
             Image background = child.transform.Find("button/Frame").GetComponent<Image>();
             if(child.gameObject == clickedEntry) {
-                Debug.Log("setting entry color");
                 background.color = new Color32(118, 99, 27, 255);
             } else {
                 background.color = new Color32(240, 166, 63, 255);

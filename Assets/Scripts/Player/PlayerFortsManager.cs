@@ -18,7 +18,6 @@ public class PlayerFortsManager
     }
 
     public int AddFort(UnitController unit) {
-        Debug.Log("Adding fort");
         int id = forts.Count;
         Vector3Int hexPosition = unit.unitMove.hexPosition;
         

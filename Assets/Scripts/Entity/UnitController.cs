@@ -127,7 +127,6 @@ public class UnitController : MonoBehaviour
             Debug.Log("Unit body not found, likely the prefab structure was changed!");
             return;
         }
-        Debug.Log("Setting unit color");
         body.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", owner.color);
     }
 
@@ -182,7 +181,6 @@ public class UnitController : MonoBehaviour
         experience += ammountGot;
         if (experience >= System.Math.Pow(2, level - 1))
         {
-            Debug.Log("lvl up");
             level++;
             experience = 0;
             this.UpgradeUnit();
@@ -281,6 +279,5 @@ public class UnitController : MonoBehaviour
         if(currentHealth > maxHealth) currentHealth = maxHealth;
         UpdateUnitUI();
         ChangeUnitTexts();
-        Debug.Log("Healing unit");
     }
 }

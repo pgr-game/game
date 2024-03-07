@@ -36,7 +36,6 @@ public class PlayerManager : MonoBehaviour
 
     public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, int index)
     {
-        Debug.Log("Player manager instantiated!");
         this.index = index;
         this.gameManager = gameManager;
         this.mapManager = mapManager;
@@ -67,7 +66,6 @@ public class PlayerManager : MonoBehaviour
                 }
             }
             if (Input.GetKeyDown(KeyCode.B) && selected != null) {
-                Debug.Log("Trying to place a fort");
                 if(selected.GetComponent<UnitController>().IsInFortOrCity()) {
                     Debug.Log("Fort can't be placed here");
                 }
@@ -89,17 +87,11 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) {  
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);  
             if (Physics.Raycast(ray, out hit)) {  
-                Debug.Log("Selected: " + hit.transform.name);
                 return hit.transform.gameObject;
             }
             return null;
         }  
         return null;
-    }
-
-    void HandleSelectedUnit()
-    {
-        Debug.Log("Handling selected");
     }
 
     private void HandleUnitClick(UnitController currentUnit) {
@@ -108,17 +100,14 @@ public class PlayerManager : MonoBehaviour
         }
         if(currentUnit && newSelected == selected) {
             //unselect
-            Debug.Log("Deactivating unit");
             selected = null;
             newSelected = null;
             currentUnit.Deactivate();
         }
         else if(currentUnit && !selected) {
             //select if nothing else is selected
-            Debug.Log("Activating unit");
             selected = newSelected;
             currentUnit.Activate();
-            HandleSelectedUnit();
         }
     }
 
@@ -135,7 +124,6 @@ public class PlayerManager : MonoBehaviour
             isInMenu = false;
             return;
         }
-        Debug.Log(city.Name);
         isInMenu = false;
         gameManager.cityMenuManager.setValues(city);
         gameManager.cityMenuManager.Activate();
@@ -161,7 +149,6 @@ public class PlayerManager : MonoBehaviour
         {
             foreach(UnitController unit in startingResources.units) 
             {
-                Debug.Log("Adding starting unit");
                 InstantiateUnit(unit, null);
             }
         }
@@ -171,7 +158,6 @@ public class PlayerManager : MonoBehaviour
     public void InstantiateUnit(UnitController unitController, UnitLoadData unitLoadData) {
         Vector3 position = transform.position;
         if(unitLoadData != null) {
-            Debug.Log("Setting unit position to: " + unitLoadData.position);
             position = unitLoadData.position;
             unitController.maxHealth = unitLoadData.maxHealth;
             unitController.currentHealth = unitLoadData.currentHealth;
