@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
     //end of game launcher variables
 
     public MapManager mapManager;
+    public SaveManager saveManager;
+    public LoadManager loadManager;
     public CityMenuManager cityMenuManager;
     public GameObject playerPrefab;
 
@@ -34,8 +36,8 @@ public class GameManager : MonoBehaviour
     
     public int activePlayerIndex = 0;
     public PlayerManager activePlayer;
-    private int numberOfPlayers;
-    private PlayerManager[] players;
+    public int numberOfPlayers;
+    public PlayerManager[] players;
     public Vector3[] playerPositions;
 
 
@@ -55,20 +57,39 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        string saveRoot = SaveRoot.saveRoot;
+        SceneLoadData sceneLoadData = new SceneLoadData();
+
+        saveManager.Init(this);
+        loadManager.Init(this);
         //this should later be called directly from game creator and not the Start function
-        StartGame(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames);
+        //there should also be error handling for when saveRoot is wrong
+        if (saveRoot == null) {
+            sceneLoadData = new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0);
+        } else {
+            Debug.Log("Loading game manager from save");
+            loadManager.SetSaveRoot(saveRoot);
+            sceneLoadData = loadManager.Load();
+        }
+
+        LoadGameData(sceneLoadData);
+
+        mapManager.Init(this);
+        cityMenuManager.Init(this);
+
+        InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames);
+        players[activePlayerIndex].StartTurn();
+        this.HideUnitBox();
     }
 
-    public void StartGame(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames) {
-        if(!IsInitialDataCorrect(numberOfPlayers, playerPositions, startingResources, playerColors)) {
+    public void LoadGameData(SceneLoadData sceneLoadData) {
+        if(!IsInitialDataCorrect(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors)) {
             Debug.Log("Wrong initial data. Stopping game now!");
             return;
         }
-        this.playerPositions = playerPositions;
-        mapManager.Init(this);
-        cityMenuManager.Init(this);
-        InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors, startingCityNames);
-        this.HideUnitBox();
+        Debug.Log("LoadGameData");
+        this.playerPositions = sceneLoadData.playerPositions;
+        this.numberOfPlayers = sceneLoadData.numberOfPlayers;
     }
 
     private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames)
@@ -87,12 +108,11 @@ public class GameManager : MonoBehaviour
             else {
                 players[i].gameObject.SetActive(false);
             }
-            players[i].Init(this, startingCityNames[i]);
+            players[i].Init(this, startingCityNames[i], i);
             units.AddRange(players[i].startingResources.units);
         }
         activePlayer = players[activePlayerIndex];
         SetPlayerUIColor(players[activePlayerIndex].color);
-        players[activePlayerIndex].StartTurn();
     }
 
     public void NextPlayer()
@@ -184,4 +204,5 @@ public class GameManager : MonoBehaviour
     public GameObject getUnitPrefab(UnitTypes unitType) {
         return unitPrefabs[(int)unitType];
     }
+
 }

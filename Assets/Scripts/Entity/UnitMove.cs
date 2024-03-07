@@ -75,8 +75,8 @@ public class UnitMove : MonoBehaviour
 
             if(tile.UnitPresent is not null && tile.UnitPresent.owner != this.unitController.owner && !this.unitController.attacked)
             {
-                this.unitController.Attack(tile.UnitPresent);
                 SubClass(tile, clickPos, true);
+                this.unitController.Attack(tile.UnitPresent);
             }
             else if (tile != null && tile.UnitPresent is null)
             {
@@ -128,7 +128,10 @@ public class UnitMove : MonoBehaviour
             }
             else
             {
-                onCompleted.SafeInvoke();
+
+                    onCompleted.SafeInvoke();
+
+                
             }
         }
 
@@ -160,7 +163,10 @@ public class UnitMove : MonoBehaviour
                 transform.position = targetPoint;
                 nextIndex++;
             }
-            onCompleted.SafeInvoke();
+            if (active==true)
+            {
+                onCompleted.SafeInvoke();
+            }
         }
 
         void AreaShow()
@@ -169,7 +175,7 @@ public class UnitMove : MonoBehaviour
             Area.Show(mapManager.MapEntity.WalkableBorder(transform.position, RangeLeft), mapManager.MapEntity);
         }
 
-        void AreaHide()
+        public void AreaHide()
         {
             if(AreaPrefab != null) {
                 Debug.Log("AreaPrefab is not null");
@@ -188,7 +194,7 @@ public class UnitMove : MonoBehaviour
             }
         }
 
-        void PathHide()
+        public void PathHide()
         {
             if (Path)
             {
@@ -196,7 +202,7 @@ public class UnitMove : MonoBehaviour
             }
         }
 
-        void PathUpdate()
+        public void PathUpdate()
         {
             if (Path && Path.IsEnabled)
             {
