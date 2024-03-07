@@ -25,14 +25,12 @@ public class PlayerManager : MonoBehaviour
     public PlayerCitiesManager playerCitiesManager;
     public PlayerFortsManager playerFortsManager;
     public GameObject fortPrefab;
-    public bool fortButtonActive = false;
-
 
     // currency
     private int gold;
     public GameObject goldText;
     public int goldIncome = 5;     // amount given to player every round independently of cities, units etc.
-
+    public const int costOfFort = 100;
     public void Init(GameManager gameManager, string startingCityName)
     {
         Debug.Log("Player manager instantiated!");
@@ -48,7 +46,7 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!PauseMenu.isPaused || !fortButtonActive) 
+        if (!PauseMenu.isPaused) 
         { 
             newSelected = SelectObject();
             if(newSelected) {
@@ -61,23 +59,21 @@ public class PlayerManager : MonoBehaviour
                     HandleCityClick(cityTile.city);
                 }
             }
-
-            var rightClick = RightClick();
-            if(rightClick == selected && selected != null) {
-                if(selected.GetComponent<UnitController>().CheckIfFortCanBePlaced()) {
-                    Debug.Log("Right click on selected unit");
-                    this.selected.GetComponent<UnitController>().ShowFortButton();
-                    fortButtonActive = true;
+            if (Input.GetKeyDown(KeyCode.B) && selected != null) {
+                Debug.Log("Trying to place a fort");
+                if(selected.GetComponent<UnitController>().IsInFortOrCity()) {
+                    Debug.Log("Fort can't be placed here");
                 }
+                else if(!selected.GetComponent<UnitController>().canPlaceFort) {
+                    Debug.Log("Unit can't place fort yet");
+                }
+                else {
+                    CreateFort();
+                }
+
             }
+
         } 
-        if(fortButtonActive) {
-            if(Input.GetMouseButtonDown(0)) {
-                Debug.Log("Hiding fort button");
-                this.selected.GetComponent<UnitController>().HideFortButton();
-                fortButtonActive = false;
-            }
-        }
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), transform.TransformDirection(Vector3.forward), Color.green);
     }
 
@@ -87,19 +83,6 @@ public class PlayerManager : MonoBehaviour
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);  
             if (Physics.Raycast(ray, out hit)) {  
                 Debug.Log("Selected: " + hit.transform.name);
-                return hit.transform.gameObject;
-            }
-            return null;
-        }  
-        return null;
-    }
-
-    GameObject RightClick()
-    {
-        if (Input.GetMouseButtonDown(1)) {  
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);  
-            if (Physics.Raycast(ray, out hit)) {  
-                Debug.Log("RightClick on: " + hit.transform.name);
                 return hit.transform.gameObject;
             }
             return null;
@@ -179,7 +162,12 @@ public class PlayerManager : MonoBehaviour
     }
 
     public void CreateFort() {
-        playerFortsManager.AddFort(selected.GetComponent<UnitController>());
+        int result = playerFortsManager.AddFort(selected.GetComponent<UnitController>());
+        if(result == 1) {
+            selected.GetComponent<UnitController>().canPlaceFort = false;
+            selected.GetComponent<UnitController>().turnsSinceFortPlaced = 0;
+            gold -= costOfFort;
+        }
     }
 
     public void AddGold(int amount) {
@@ -222,6 +210,19 @@ public class PlayerManager : MonoBehaviour
 
     public void StartTurn() {
         allyUnits.ForEach((unit) => unit.attacked = false);
+        if (gameManager.turnNumber != 1) {
+            allyUnits.ForEach((unit) => {
+                unit.turnsSinceFortPlaced++;
+                if(unit.turnsSinceFortPlaced == 5) unit.canPlaceFort = true;
+            });
+        } 
+
+        allyUnits.ForEach((unit) => {
+            if(unit.IsInFortOrCity()) unit.Heal();
+            
+        });
+
+
         if (gameManager.turnNumber != 1) {
             AddGold(playerCitiesManager.GetGoldIncome());
         }

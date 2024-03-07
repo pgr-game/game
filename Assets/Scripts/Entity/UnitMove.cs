@@ -36,20 +36,18 @@ public class UnitMove : MonoBehaviour
         public Vector3Int hexPosition;
 
         void Update()
-        {
-            if(!unitController.owner.fortButtonActive) {
-                if(active && !justActivated) {
-                    if (MyInput.GetOnWorldUp(mapManager.MapEntity.Settings.Plane()))
-                    {
-                        HandleWorldClick();
-                    }
-                    PathUpdate();
-                }   
-                if(active && justActivated) {
-                    if (Input.GetMouseButtonUp(0))
-                    {
-                        justActivated = false;
-                    }
+        { 
+            if(active && !justActivated) {
+                if (MyInput.GetOnWorldUp(mapManager.MapEntity.Settings.Plane()))
+                {
+                    HandleWorldClick();
+                }
+                PathUpdate();
+            }   
+            if(active && justActivated) {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    justActivated = false;
                 }
             }
 

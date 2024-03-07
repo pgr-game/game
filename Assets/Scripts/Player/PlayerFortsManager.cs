@@ -17,7 +17,7 @@ public class PlayerFortsManager
         this.mapManager = playerManager.mapManager;
     }
 
-    public void AddFort(UnitController unit) {
+    public int AddFort(UnitController unit) {
         Debug.Log("Adding fort");
         int id = forts.Count;
         Vector3Int hexPosition = unit.unitMove.hexPosition;
@@ -27,9 +27,13 @@ public class PlayerFortsManager
         GameObject fort = GameObject.Instantiate(playerManager.fortPrefab, position, Quaternion.identity);
         int result = fort.GetComponent<Fort>().Init(id, playerManager, hexPosition);
         
-        if(result == 1) forts.Add(fort.GetComponent<Fort>());
+        if(result == 1) {
+            forts.Add(fort.GetComponent<Fort>());
+            return 1;
+        }   
         else {
           Debug.LogError("Could not add fort");
+          return 0;
           //Destroy(fort);  
         } 
     }
