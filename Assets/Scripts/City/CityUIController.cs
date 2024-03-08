@@ -44,10 +44,6 @@ public class CityUIController : MonoBehaviour
     }
 
     public void SetUnitInProductionImage(Sprite sprite) {
-        if(sprite == null) {
-        Debug.Log("sprite null");
-
-        }
         unitInProductionImage.sprite = sprite;
     }
 

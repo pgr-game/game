@@ -63,7 +63,6 @@ public class UnitMove : MonoBehaviour
             hexPosition = tile.Position;
             this.mapManager = mapManager;
             Area = Spawner.Spawn(AreaPrefab, Vector3.zero, Quaternion.identity);
-            Debug.Log("Initialize UnitMove");
             AreaHide();
         }
 
@@ -177,9 +176,6 @@ public class UnitMove : MonoBehaviour
 
         public void AreaHide()
         {
-            if(AreaPrefab != null) {
-                Debug.Log("AreaPrefab is not null");
-            }
             Area.Hide();
         }
 
