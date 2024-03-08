@@ -14,7 +14,7 @@ public class LoadMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        loadManager.PrepareExampleLoads();
+        //loadManager.PrepareExampleLoads();
         List<SaveGameDescription> saveGameDescriptions = loadManager.LoadSaveGameDecriptions();
         FillLoadList(saveGameDescriptions);
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using RedBjorn.ProtoTiles;
 using RedBjorn.ProtoTiles.Example;
 
@@ -33,11 +34,14 @@ public class PlayerManager : MonoBehaviour
     public int goldIncome = 5;     // amount given to player every round independently of cities, units etc.
     public const int costOfFort = 100;
 
-    public void Init(GameManager gameManager, string startingCityName, int index)
+    public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, int index)
     {
         Debug.Log("Player manager instantiated!");
         this.index = index;
         this.gameManager = gameManager;
+        this.mapManager = mapManager;
+        this.startingResources = startingResources;
+        this.color = color;
         InitCities(startingCityName);
         InitForts();
         InitUnits();
@@ -142,14 +146,46 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("No starting resources for player!");
             return;
         } 
-        foreach(UnitController unit in startingResources.units) {
-            Debug.Log("Adding starting unit");
-            InstantiateUnit(unit);
+
+        if(startingResources.unitLoadData.Count > 0) {
+            var unitControllerAndLoadData = startingResources.units.Zip(
+                startingResources.unitLoadData, (u, d) => new { UnitController = u, UnitLoadData = d }
+            );
+
+            foreach(var ud in unitControllerAndLoadData)
+            {
+                InstantiateUnit(ud.UnitController, ud.UnitLoadData);
+            }
         }
+        else 
+        {
+            foreach(UnitController unit in startingResources.units) 
+            {
+                Debug.Log("Adding starting unit");
+                InstantiateUnit(unit, null);
+            }
+        }
+        
     }
 
-    public void InstantiateUnit(UnitController unitController) {
-        UnitController newUnit = Instantiate(unitController, transform.position, Quaternion.identity).GetComponent<UnitController>();
+    public void InstantiateUnit(UnitController unitController, UnitLoadData unitLoadData) {
+        Vector3 position = transform.position;
+        if(unitLoadData != null) {
+            Debug.Log("Setting unit position to: " + unitLoadData.position);
+            position = unitLoadData.position;
+            unitController.maxHealth = unitLoadData.maxHealth;
+            unitController.currentHealth = unitLoadData.currentHealth;
+            unitController.attack = unitLoadData.attack;
+            unitController.attackRange = unitLoadData.attackRange;
+            unitController.baseProductionCost = unitLoadData.baseProductionCost;
+            unitController.turnsToProduce = unitLoadData.turnsToProduce;
+            unitController.turnProduced = unitLoadData.turnProduced;
+            unitController.level = unitLoadData.level;
+            unitController.turnsToProduce = unitLoadData.turnsToProduce;
+            unitController.experience = unitLoadData.experience;
+        }
+
+        UnitController newUnit = Instantiate(unitController, position, Quaternion.identity).GetComponent<UnitController>();
         allyUnits.Add(newUnit);
         newUnit.Init(this, mapManager, gameManager);
     }

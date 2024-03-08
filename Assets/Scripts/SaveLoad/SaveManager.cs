@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using CI.QuickSave;
@@ -22,6 +23,7 @@ public class SaveManager : MonoBehaviour
 
     // Save order:
     // - Save() entry point, calls game manager save and then player state saves
+    // - SaveSaveRoot(...) makes it possible to find the save when loading
     // - SaveGameManager(...) saves GameManager data
     // - SavePlayer(...) saves player data into starting resources and calls unit saves
     // - SaveUnit(...) saves single unit data as if it was part of player's StartingResources
@@ -29,12 +31,30 @@ public class SaveManager : MonoBehaviour
 
     public void Save() 
     {
+        Debug.Log("Starting save "+ saveRoot);
         QuickSaveWriter quickSaveWriter = QuickSaveWriter.Create(saveRoot);
+        SaveSaveRoot();
         SaveGameManager(this.gameManager, quickSaveWriter);
 
         foreach(PlayerManager player in this.gameManager.players) {
             SavePlayer(player, quickSaveWriter);
         }
+    }
+
+    private void SaveSaveRoot() {
+        int numberOfSavedGames = 0;
+        QuickSaveReader quickSaveReader = QuickSaveReader.Create("SavesList");
+
+        if(quickSaveReader != null) {
+            numberOfSavedGames = quickSaveReader.Read<int>("numberOfSavedGames");
+        }
+        
+        Debug.Log("Number of saved games: " + numberOfSavedGames);
+        QuickSaveWriter quickSaveWriter = QuickSaveWriter.Create("SavesList");
+        quickSaveWriter.Write<int>("numberOfSavedGames", numberOfSavedGames + 1);
+        quickSaveWriter.Write<string>("saveString"+numberOfSavedGames, saveRoot);
+        quickSaveWriter.Write<string>("saveDate"+numberOfSavedGames, DateTime.Now.ToString());
+        quickSaveWriter.Commit();
     }
 
     private void SaveGameManager(GameManager gameManager, QuickSaveWriter quickSaveWriter)
@@ -67,6 +87,7 @@ public class SaveManager : MonoBehaviour
     private void SaveUnit(UnitController unit, QuickSaveWriter quickSaveWriter, string playerKey, int index)
     {
         string unitKey = playerKey + "unit" + index;
+        quickSaveWriter.Write<Vector3>(unitKey + "position", unit.transform.position);
         quickSaveWriter.Write<string>(unitKey + "unitType", unit.unitType.ToString());
         quickSaveWriter.Write<int>(unitKey + "maxHealth", unit.maxHealth);
         quickSaveWriter.Write<int>(unitKey + "currentHealth", unit.currentHealth);
@@ -76,6 +97,7 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>(unitKey + "turnsToProduce", unit.turnsToProduce);
         quickSaveWriter.Write<int>(unitKey + "turnProduced", unit.turnProduced);
         quickSaveWriter.Write<int>(unitKey + "level", unit.level);
+        quickSaveWriter.Write<int>(unitKey + "experience", unit.experience);
         quickSaveWriter.Commit();
     }
 }

@@ -18,15 +18,6 @@ public enum UnitTypes {
 
 public class GameManager : MonoBehaviour
 {
-    //these should only be used for instantiation and will be imported from game launcher later on
-    public int InNumberOfPlayers = 3;
-    public Vector3[] InPlayerPositions;
-    public StartingResources[] InStartingResources;
-    public Color32[] InPlayerColors;
-    public string[] InStartingCityNames;
-    
-
-    // Game elements
     public MapManager mapManager;
     public SaveManager saveManager;
     public LoadManager loadManager;
@@ -61,6 +52,45 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        //temp before new game tab (one for choosing difficulty, player colors etc)
+        //these should only be used for instantiation and will be imported from game launcher later on
+        int InNumberOfPlayers = 2;
+        Vector3[] InPlayerPositions = new Vector3[2];
+        InPlayerPositions[0] = new Vector3(-6.928203f, 0f, 0f);
+        InPlayerPositions[1] = new Vector3(0f, 0f, 0f);
+        StartingResources[] InStartingResources = new StartingResources[2] {
+            new StartingResources(),
+            new StartingResources()
+        };
+        
+        InStartingResources[0].units = new List<UnitController>();
+        InStartingResources[1].units = new List<UnitController>();
+
+        InStartingResources[0].units.Add((Resources.Load("Units/Archer") as GameObject).GetComponent<UnitController>());
+        InStartingResources[0].units.Add((Resources.Load("Units/Chariot") as GameObject).GetComponent<UnitController>());
+
+        InStartingResources[1].units.Add((Resources.Load("Units/Skirmisher") as GameObject).GetComponent<UnitController>());
+
+        Debug.Log("Starting resources units:");
+        InStartingResources[0].units.ForEach(element => Debug.Log(element.defense));
+        Debug.Log("End of starting resources units");
+
+        InStartingResources[0].unitLoadData = new List<UnitLoadData>();
+        InStartingResources[1].unitLoadData = new List<UnitLoadData>();
+
+        InStartingResources[0].gold = 100;
+        InStartingResources[1].gold = 100;
+
+
+        Color32[] InPlayerColors = new Color32[2];
+        InPlayerColors[0] = Color.red;
+        InPlayerColors[1] = Color.blue;
+
+        string[] InStartingCityNames = new string[2];
+        InStartingCityNames[0] = "Ur";
+        InStartingCityNames[1] = "Babylon";
+        //end of game launcher variables
+
         string saveRoot = SaveRoot.saveRoot;
         SceneLoadData sceneLoadData = new SceneLoadData();
 
@@ -71,9 +101,10 @@ public class GameManager : MonoBehaviour
         if (saveRoot == null) {
             sceneLoadData = new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0);
         } else {
-            Debug.Log("Loading game manager from save");
+            Debug.Log("Loading game manager from save " + saveRoot);
             loadManager.SetSaveRoot(saveRoot);
             sceneLoadData = loadManager.Load();
+            Debug.Log(sceneLoadData.ToString());
         }
 
         LoadGameData(sceneLoadData);
@@ -103,17 +134,13 @@ public class GameManager : MonoBehaviour
         players = new PlayerManager[numberOfPlayers];
         for(int i = 0; i < numberOfPlayers; i++) {
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
-            players[i].mapManager = mapManager;
-            players[i].startingResources = InStartingResources[i];
-            players[i].color = playerColors[i];
+            players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], i);
             if(i == activePlayerIndex) {
                 players[i].gameObject.SetActive(true);
             }
             else {
                 players[i].gameObject.SetActive(false);
             }
-            players[i].Init(this, startingCityNames[i], i);
-            units.AddRange(players[i].startingResources.units);
         }
         activePlayer = players[activePlayerIndex];
         SetPlayerUIColor(players[activePlayerIndex].color);
@@ -148,6 +175,11 @@ public class GameManager : MonoBehaviour
 
     private bool IsInitialDataCorrect(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors) 
     {
+        Debug.Log(numberOfPlayers);
+        Debug.Log(playerPositions);
+        Debug.Log(startingResources);
+        Debug.Log(playerColors);
+        
         if(startingResources.Length != numberOfPlayers) {
             Debug.Log("Wrong number of player starting resources!");
             return false;

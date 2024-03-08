@@ -68,9 +68,18 @@ public class LoadManager : MonoBehaviour
         sceneLoadData = LoadGameManager(sceneLoadData, quickSaveReader);
         
         StartingResources[] startingResources = new StartingResources[sceneLoadData.numberOfPlayers];
+        sceneLoadData.playerColors = new Color32[sceneLoadData.numberOfPlayers];
+        sceneLoadData.startingCityNames = new string[sceneLoadData.numberOfPlayers];
 
-        for(int i = 0; i < gameManager.numberOfPlayers; i++) {
-            //startingResources[i] = LoadPlayer(player, quickSaveReader, i);
+        for(int i = 0; i < sceneLoadData.numberOfPlayers; i++) {
+            startingResources[i] = LoadPlayer(quickSaveReader, i);
+            string colorString = "#" + quickSaveReader.Read<string>("Player" + i + "color");
+            Color convertedColor = ColorUtility.TryParseHtmlString(colorString, out convertedColor) ? convertedColor : new Color();
+            Color32 convertedColor32 = (Color32)convertedColor;
+            Debug.Log(i);
+            Debug.Log(convertedColor);
+            Debug.Log(convertedColor32);
+            sceneLoadData.playerColors[i] = convertedColor32;
         }
         sceneLoadData.startingResources = startingResources;
         return sceneLoadData;
@@ -86,39 +95,55 @@ public class LoadManager : MonoBehaviour
         return sceneLoadData;
     }
 
-    // private StartingResources LoadPlayer(PlayerManager player, QuickSaveReader quickSaveReader, int index) 
-    // {
-    //     string playerKey = "Player" + index;
-    //     StartingResources startingResources = new StartingResources();
-    //     //All player data
-        
-    //     string numberOfUnits = quickSaveReader.Read<int>(playerKey + "numberOfUnits");
-    //     startingResources.units = new UnitController[numberOfUnits];
-    //     //player.isComputer = quickSaveReader.Read<bool>(playerKey + "isComputer");
-    //     //player.color = ColorUtility.TryParseHtmlString(quickSaveReader.Read<string>(playerKey + "color"));
-    //     startingResources.gold = quickSaveReader.Read<int>(playerKey + "gold");
-    //     //player.goldIncome = quickSaveReader.Read<int>(playerKey + "goldIncome");
-       
-    //     for(int i = 0; i < numberOfUnits; i++) {
-    //     {
-    //         player.allyUnits.Add(this.LoadUnit(quickSaveReader, i));          
-    //     }
-    // }
+    private StartingResources LoadPlayer(QuickSaveReader quickSaveReader, int index) 
+    {
+        string playerKey = "Player" + index;
+        StartingResources startingResources = new StartingResources();
+    
+        int numberOfUnits = quickSaveReader.Read<int>(playerKey + "numberOfUnits");
+        startingResources.units = new List<UnitController>();
+        startingResources.unitLoadData = new List<UnitLoadData>();
 
-    // private UnitController LoadUnit(QuickSaveReader quickSaveReader, int index)
-    // {
-    //     var path = "Prefabs/Units/"
-    //     blocks[0] = Resources.Load<GameObject>(path);
-    //     string unitKey = playerKey + "unit" + unitIndex;
-    //     unit.unitType = quickSaveReader.Read<string>(unitKey + "unitType");
-    //     unit.maxHealth = quickSaveReader.Read<int>(unitKey + "maxHealth");
-    //     unit.currentHealth = quickSaveReader.Read<int>(unitKey + "currentHealth");
-    //     unit.attack = quickSaveReader.Read<int>(unitKey + "attack");
-    //     unit.attackRange = quickSaveReader.Read<int>(unitKey + "attackRange");
-    //     unit.baseProductionCost = quickSaveReader.Read<int>(unitKey + "baseProductionCost");
-    //     unit.turnsToProduce = quickSaveReader.Read<int>(unitKey + "turnsToProduce");
-    //     unit.turnProduced = quickSaveReader.Read<int>(unitKey + "turnProduced");
-    //     unit.level = quickSaveReader.Read<int>(unitKey + "level");
-    // }
+        //player.isComputer = quickSaveReader.Read<bool>(playerKey + "isComputer");
+        startingResources.gold = quickSaveReader.Read<int>(playerKey + "gold");
+        //player.goldIncome = quickSaveReader.Read<int>(playerKey + "goldIncome");
+
+        for(int i = 0; i < numberOfUnits; i++)
+        {
+            string unitType = quickSaveReader.Read<string>(playerKey + "unit" + i + "unitType");
+            startingResources.units.Add(LoadUnitPrefab(unitType));          
+            startingResources.unitLoadData.Add(LoadUnitData(quickSaveReader, playerKey, i));          
+        }
+
+        return startingResources;
+    }
+
+    private UnitController LoadUnitPrefab(string unitType)
+    {
+        var path = "Units/";
+        Debug.Log(unitType);
+        return Resources.Load<GameObject>(path + unitType).GetComponent<UnitController>();
+    }
+
+    private UnitLoadData LoadUnitData(QuickSaveReader quickSaveReader, string playerKey, int unitIndex)
+    {
+        string unitKey = playerKey + "unit" + unitIndex;
+
+        UnitLoadData unitLoadData = new UnitLoadData(
+            quickSaveReader.Read<Vector3>(unitKey + "position"),
+            quickSaveReader.Read<string>(unitKey + "unitType"),
+            quickSaveReader.Read<int>(unitKey + "maxHealth"),
+            quickSaveReader.Read<int>(unitKey + "currentHealth"),
+            quickSaveReader.Read<int>(unitKey + "attack"),
+            quickSaveReader.Read<int>(unitKey + "attackRange"),
+            quickSaveReader.Read<int>(unitKey + "baseProductionCost"),
+            quickSaveReader.Read<int>(unitKey + "turnsToProduce"),
+            quickSaveReader.Read<int>(unitKey + "turnProduced"),
+            quickSaveReader.Read<int>(unitKey + "level"),
+            quickSaveReader.Read<int>(unitKey + "experience")
+        );
+
+        return unitLoadData;
+    }
 
 }
