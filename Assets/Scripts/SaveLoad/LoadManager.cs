@@ -104,6 +104,9 @@ public class LoadManager : MonoBehaviour
         startingResources.units = new List<UnitController>();
         startingResources.unitLoadData = new List<UnitLoadData>();
 
+        int numberOfForts = quickSaveReader.Read<int>(playerKey + "numberOfForts");
+        startingResources.fortLoadData = new List<FortLoadData>();
+
         //player.isComputer = quickSaveReader.Read<bool>(playerKey + "isComputer");
         startingResources.gold = quickSaveReader.Read<int>(playerKey + "gold");
         //player.goldIncome = quickSaveReader.Read<int>(playerKey + "goldIncome");
@@ -113,6 +116,11 @@ public class LoadManager : MonoBehaviour
             string unitType = quickSaveReader.Read<string>(playerKey + "unit" + i + "unitType");
             startingResources.units.Add(LoadUnitPrefab(unitType));          
             startingResources.unitLoadData.Add(LoadUnitData(quickSaveReader, playerKey, i));          
+        }
+
+        for(int i = 0; i < numberOfForts; i++)
+        {
+            startingResources.fortLoadData.Add(LoadFortData(quickSaveReader, playerKey, i));          
         }
 
         return startingResources;
@@ -144,6 +152,19 @@ public class LoadManager : MonoBehaviour
         );
 
         return unitLoadData;
+    }
+
+    private FortLoadData LoadFortData(QuickSaveReader quickSaveReader, string playerKey, int fortIndex)
+    {
+        string fortKey = playerKey + "fort" + fortIndex;
+
+        FortLoadData fortLoadData = new FortLoadData(
+            quickSaveReader.Read<Vector3>(fortKey + "position"),
+            quickSaveReader.Read<Vector3Int>(fortKey + "hexPosition"),
+            quickSaveReader.Read<int>(fortKey + "id")
+        );
+
+        return fortLoadData;
     }
 
 }

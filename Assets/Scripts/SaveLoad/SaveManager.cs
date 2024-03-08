@@ -70,17 +70,26 @@ public class SaveManager : MonoBehaviour
         string playerKey = "Player" + player.index;
         //All player data
         quickSaveWriter.Write<int>(playerKey + "numberOfUnits", player.allyUnits.Count);
+        quickSaveWriter.Write<int>(playerKey + "numberOfForts", player.playerFortsManager.forts.Count);
         quickSaveWriter.Write<bool>(playerKey + "isComputer", player.isComputer);
         quickSaveWriter.Write<string>(playerKey + "color", ColorUtility.ToHtmlStringRGBA(player.color));
         quickSaveWriter.Write<int>(playerKey + "gold", player.gold);
         quickSaveWriter.Write<int>(playerKey + "goldIncome", player.goldIncome);
        
-       int i = 0;
+        int i = 0;
         foreach(UnitController unit in player.allyUnits)
         {
             SaveUnit(unit, quickSaveWriter, playerKey, i);    
             i++;      
         }
+
+        i = 0;
+        foreach(Fort fort in player.playerFortsManager.forts)
+        {
+            SaveFort(fort, quickSaveWriter, playerKey, i);    
+            i++;      
+        }
+
         quickSaveWriter.Commit();
     }
 
@@ -98,6 +107,15 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>(unitKey + "turnProduced", unit.turnProduced);
         quickSaveWriter.Write<int>(unitKey + "level", unit.level);
         quickSaveWriter.Write<int>(unitKey + "experience", unit.experience);
+        quickSaveWriter.Commit();
+    }
+
+    private void SaveFort(Fort fort, QuickSaveWriter quickSaveWriter, string playerKey, int index)
+    {
+        string fortKey = playerKey + "fort" + index;
+        quickSaveWriter.Write<Vector3>(fortKey + "position", fort.transform.position);
+        quickSaveWriter.Write<Vector3Int>(fortKey + "hexPosition", fort.hexPosition);
+        quickSaveWriter.Write<int>(fortKey + "id", fort.id);
         quickSaveWriter.Commit();
     }
 }

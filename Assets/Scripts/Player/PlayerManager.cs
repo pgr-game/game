@@ -198,10 +198,17 @@ public class PlayerManager : MonoBehaviour
     void InitForts() {
         playerFortsManager = new PlayerFortsManager();
         playerFortsManager.Init(this);
+
+        if(startingResources.fortLoadData != null) {
+            foreach(FortLoadData fort in startingResources.fortLoadData) {
+                playerFortsManager.AddFort(fort.hexPosition, fort.id);
+            }
+        }
     }
 
     public void CreateFort() {
-        int result = playerFortsManager.AddFort(selected.GetComponent<UnitController>());
+        Vector3Int hexPosition = selected.GetComponent<UnitController>().unitMove.hexPosition;
+        int result = playerFortsManager.AddFort(hexPosition, 0);
         if(result == 1) {
             selected.GetComponent<UnitController>().canPlaceFort = false;
             selected.GetComponent<UnitController>().turnsSinceFortPlaced = 0;
