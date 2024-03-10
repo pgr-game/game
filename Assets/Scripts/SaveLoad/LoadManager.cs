@@ -32,6 +32,17 @@ public class LoadManager : MonoBehaviour
         return saveGameDescriptions;
     }
 
+    public void CreateSaveFilesFile() {
+        try {
+            QuickSaveReader quickSaveReader = QuickSaveReader.Create("SavesList");
+            return;
+        } catch (QuickSaveException e) {
+            QuickSaveWriter quickSaveWriter = QuickSaveWriter.Create("SavesList");
+            quickSaveWriter.Write<int>("numberOfSavedGames", 0);
+            quickSaveWriter.Commit();
+        }
+    }
+
     public void PrepareExampleLoads() {
         QuickSaveWriter quickSaveWriter1 = QuickSaveWriter.Create("Empty save 1");
         QuickSaveWriter quickSaveWriter2 = QuickSaveWriter.Create("Empty save 2");
