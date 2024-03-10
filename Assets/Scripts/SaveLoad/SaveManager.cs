@@ -118,4 +118,15 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>(fortKey + "id", fort.id);
         quickSaveWriter.Commit();
     }
+
+    public void CreateSaveFilesFile() {
+        try {
+            QuickSaveReader quickSaveReader = QuickSaveReader.Create("SavesList");
+            return;
+        } catch (QuickSaveException e) {
+            QuickSaveWriter quickSaveWriter = QuickSaveWriter.Create("SavesList");
+            quickSaveWriter.Write<int>("numberOfSavedGames", 0);
+            quickSaveWriter.Commit();
+        }
+    }
 }

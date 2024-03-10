@@ -68,6 +68,7 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void CreateNewSaveFile() {
+        saveManager.CreateSaveFilesFile();
         saveManager.SetSaveRoot(tempSaveRoot);
         saveManager.Save();
         ResumeGame();
