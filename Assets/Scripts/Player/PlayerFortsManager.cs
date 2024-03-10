@@ -22,7 +22,7 @@ public class PlayerFortsManager
 
         if(id == 0) {
             id = forts.Count;
-        }        
+        }
         Vector3 mapPos = playerManager.mapManager.MapEntity.WorldPosition(hexPosition);
         var position = new Vector3(mapPos.x, mapPos.y, -1);
         GameObject fort = GameObject.Instantiate(playerManager.fortPrefab, position, Quaternion.identity);
