@@ -15,6 +15,7 @@ public class SaveManager : MonoBehaviour
 
     public void SetSaveRoot(string saveRoot) { 
         this.saveRoot = saveRoot;
+        gameManager.pauseMenu.EnableQuickSave();
     }
 
     public bool IsSaveRootNull() { 
@@ -49,7 +50,6 @@ public class SaveManager : MonoBehaviour
             numberOfSavedGames = quickSaveReader.Read<int>("numberOfSavedGames");
         }
         
-        Debug.Log("Number of saved games: " + numberOfSavedGames);
         QuickSaveWriter quickSaveWriter = QuickSaveWriter.Create("SavesList");
         quickSaveWriter.Write<int>("numberOfSavedGames", numberOfSavedGames + 1);
         quickSaveWriter.Write<string>("saveString"+numberOfSavedGames, saveRoot);

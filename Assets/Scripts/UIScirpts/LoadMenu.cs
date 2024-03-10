@@ -29,7 +29,6 @@ public class LoadMenu : MonoBehaviour
         int i = 0;
         foreach (SaveGameDescription saveGameDescription in saveGameDescriptions)
         {
-            Debug.Log("Adding save to list");
             GameObject newEntry = Instantiate(ListItemPrefab, loadContainer.transform.position + new Vector3(100, 100, 0), 
             Quaternion.identity, loadContainer.transform);
 
@@ -58,7 +57,6 @@ public class LoadMenu : MonoBehaviour
         {
             Image background = child.transform.Find("button/Frame").GetComponent<Image>();
             if(child.gameObject == clickedEntry) {
-                Debug.Log("setting entry color");
                 background.color = new Color32(118, 99, 27, 255);
             } else {
                 background.color = new Color32(240, 166, 63, 255);

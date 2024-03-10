@@ -26,6 +26,7 @@ public class UnitController : MonoBehaviour
     public GameObject unitUI;
     public GameObject damageRecivedUI;
     public GameObject lvlUPMenu;
+    public UnitStatsUIController unitStatsUIController;
 
     public GameObject fortButton;
 
@@ -35,22 +36,23 @@ public class UnitController : MonoBehaviour
     public int turnsSinceFortPlaced = 5;
     public int expirience = 0;
 
-    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager) {
+    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController) {
         this.owner = playerManager;
         this.mapManager = mapManager;
+        this.unitStatsUIController = unitStatsUIController;
         CreateUI();
         ApplyColor();
         unitMove.Init(mapManager,this);
         this.gameManager = gameManager;
-        if(currentHealth == null || currentHealth == 0) {
+        if(currentHealth == 0) {
             currentHealth = maxHealth;
         }
 
-        if(turnProduced == null) {
+        if(turnProduced == 0) {
             turnProduced = this.gameManager.turnNumber;
         }
 
-        if(level == null || level == 0) {
+        if(level == 0) {
             level = 1;
         }
         canPlaceFort = true;
@@ -100,21 +102,21 @@ public class UnitController : MonoBehaviour
         unitMove.Activate();
         UpdateUnitUI();
         ChangeUnitTexts();
-        this.gameManager.ShowUnitBox();
+        this.unitStatsUIController.ShowUnitBox();
     }
 
     public void ChangeUnitTexts() {
-        this.gameManager.setUnitTypeText(unitType.ToString());
-        this.gameManager.setUnitAttackText(attack.ToString());
-        this.gameManager.setUnitLevelText(level.ToString());
-        this.gameManager.setUnitHealthText(currentHealth.ToString());
-        this.gameManager.setUnitDefenseText(defense.ToString());
+        this.unitStatsUIController.setUnitTypeText(unitType.ToString());
+        this.unitStatsUIController.setUnitAttackText(attack.ToString());
+        this.unitStatsUIController.setUnitLevelText(level.ToString());
+        this.unitStatsUIController.setUnitHealthText(currentHealth.ToString());
+        this.unitStatsUIController.setUnitDefenseText(defense.ToString());
     }
 
     public void Deactivate() 
     {
         unitMove.Deactivate();
-        this.gameManager.HideUnitBox();
+        this.unitStatsUIController.HideUnitBox();
 
     }
 
@@ -125,7 +127,6 @@ public class UnitController : MonoBehaviour
             Debug.Log("Unit body not found, likely the prefab structure was changed!");
             return;
         }
-        Debug.Log("Setting unit color");
         body.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", owner.color);
     }
 
@@ -145,8 +146,6 @@ public class UnitController : MonoBehaviour
         {
             int damage = this.attack - enemy.GetDefense();
             if (damage < 0) damage = 0;
-            Debug.Log("Dealing " + damage + " damage to enemy");
-            enemy.currentHealth -= damage;
             this.attacked = true;
             enemy.reciveDamage(damage,this);
         }
@@ -158,7 +157,7 @@ public class UnitController : MonoBehaviour
         this.currentHealth = this.currentHealth - incomingDamage;
         GameObject unitUI = this.transform.Find("UnitDefaultBar(Clone)").gameObject;
         GameObject damageUI = Instantiate(damageRecivedUI, unitUI.transform.position, Quaternion.identity, unitUI.transform);
-        damageUI.transform.Find("Damage").gameObject.GetComponent<TextMeshProUGUI>().text = attacker.attack.ToString();
+        damageUI.transform.Find("Damage").gameObject.GetComponent<TextMeshProUGUI>().text = incomingDamage.ToString();
         damageUI.GetComponent<DamageAnimation>().angle = this.transform.position - attacker.transform.position;
 
         this.UpdateUnitUI();
@@ -182,7 +181,6 @@ public class UnitController : MonoBehaviour
         experience += ammountGot;
         if (experience >= System.Math.Pow(2, level - 1))
         {
-            Debug.Log("lvl up");
             level++;
             experience = 0;
             this.UpgradeUnit();
@@ -215,21 +213,27 @@ public class UnitController : MonoBehaviour
 
     }
 
-    public void UbgradeAttack(GameObject gameObject)
+    public void UbgradeAttack(GameObject lvlUPMenu)
     {
         this.attack += 5;
-        Destroy(gameObject);
+        Destroy(lvlUPMenu);
+        UpdateUnitUI();
+        ChangeUnitTexts();
     }
-    public void UbgradeHealth(GameObject gameObject)
+    public void UbgradeHealth(GameObject lvlUPMenu)
     {
         this.maxHealth += 5;
         this.currentHealth += 5;
-        Destroy(gameObject);
+        Destroy(lvlUPMenu);
+        UpdateUnitUI();
+        ChangeUnitTexts();
     }
-    public void UbgradeDefence(GameObject gameObject)
+    public void UbgradeDefence(GameObject lvlUPMenu)
     {
         this.defense += 2;
-        Destroy(gameObject);
+        Destroy(lvlUPMenu);
+        UpdateUnitUI();
+        ChangeUnitTexts();
     }
 
     public int CalculateGoldValue() {
@@ -274,6 +278,6 @@ public class UnitController : MonoBehaviour
         currentHealth += (int)(0.2f*maxHealth);
         if(currentHealth > maxHealth) currentHealth = maxHealth;
         UpdateUnitUI();
-        Debug.Log("Healing unit");
+        ChangeUnitTexts();
     }
 }

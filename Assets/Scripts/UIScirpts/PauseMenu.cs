@@ -78,6 +78,11 @@ public class PauseMenu : MonoBehaviour
         button.interactable = false;
     }
 
+    public void EnableQuickSave() {
+        Button button = pauseMenu.transform.Find("Buttons/QuickSaveButton/Button_1 Gray").GetComponent<Button>();
+        button.interactable = true;
+    }
+
     public void PauseGame()
     {
         pauseMenu.SetActive(true);
