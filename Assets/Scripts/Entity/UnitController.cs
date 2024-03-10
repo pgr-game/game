@@ -131,7 +131,7 @@ public class UnitController : MonoBehaviour
     }
 
     public int GetDefense() {
-        if(IsInFortOrCity()) {
+        if(IsInOwnCityOrFort()) {
             if(defense == 0) {
                 return 1;
             }
@@ -266,12 +266,36 @@ public class UnitController : MonoBehaviour
     public bool IsInFortOrCity() {
         var tile = this.mapManager.MapEntity.Tile(unitMove.hexPosition);
         if(tile.FortPresent != null) return true;
-        var isCity = false;
-        tile.Preset.Tags.ForEach(tag => {
-            if(tag == gameManager.cityTag) isCity = true;
-        });
-        return isCity;
+        if(tile.CityTilePresent != null) return true;
+        return false;
     }
+
+
+    public bool IsFortThisPlayer() {
+        var tile = this.mapManager.MapEntity.Tile(unitMove.hexPosition);
+        if(tile.FortPresent != null) {
+            if(tile.FortPresent.owner == this.owner) return true;
+        }
+        return false;
+    }
+
+
+    public bool IsCityThisPlayer() {
+        var tile = this.mapManager.MapEntity.Tile(unitMove.hexPosition);
+        if(tile.CityTilePresent != null) {
+            if(tile.CityTilePresent.city.Owner == this.owner) return true;
+        }
+        return false;
+    }
+
+
+    public bool IsInOwnCityOrFort() {
+        if(!IsInFortOrCity()) return false;
+        if(!(IsFortThisPlayer() || IsCityThisPlayer())) return false;
+        return true;
+    }
+
+
 
     public void Heal() {
         if(currentHealth == maxHealth) return;

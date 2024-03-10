@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 4357692029639228287}
   m_Layer: 0
   m_Name: CityHexXY
-  m_TagString: defBonus
+  m_TagString: CityTile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -130,7 +130,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1150f73f457f6434ca526e55fdb5065c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  city: {fileID: 0}
   owner: {fileID: 0}
+  gameManager: {fileID: 0}
 --- !u!136 &4357692029639228287
 CapsuleCollider:
   m_ObjectHideFlags: 0

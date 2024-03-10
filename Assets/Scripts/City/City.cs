@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class City
+public class City : MonoBehaviour
 {
     public string Name;
     public PlayerManager Owner;
