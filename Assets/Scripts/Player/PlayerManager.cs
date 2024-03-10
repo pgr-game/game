@@ -250,7 +250,7 @@ public class PlayerManager : MonoBehaviour
         } 
 
         allyUnits.ForEach((unit) => {
-            if(unit.IsInFortOrCity()) unit.Heal();
+            if(unit.IsInOwnCityOrFort()) unit.Heal();
             
         });
 
