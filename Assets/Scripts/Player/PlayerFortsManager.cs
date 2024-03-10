@@ -6,7 +6,7 @@ using RedBjorn.ProtoTiles.Example;
 
 public class PlayerFortsManager
 {
-    private List<Fort> forts;
+    public List<Fort> forts {get; private set;}
     private PlayerManager playerManager;
     private MapManager mapManager;
 
@@ -17,8 +17,13 @@ public class PlayerFortsManager
         this.mapManager = playerManager.mapManager;
     }
 
-    public int AddFort(UnitController unit) {
-        int id = forts.Count;
+    public int AddFort(Vector3Int hexPosition, int id) {
+        Debug.Log("Adding fort");
+
+        if(id == 0) {
+            id = forts.Count;
+        }
+
         Vector3Int hexPosition = unit.unitMove.hexPosition;
         
         Vector3 mapPos = playerManager.mapManager.MapEntity.WorldPosition(hexPosition);
