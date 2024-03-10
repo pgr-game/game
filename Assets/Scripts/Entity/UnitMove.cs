@@ -7,6 +7,9 @@ using RedBjorn.ProtoTiles;
 using RedBjorn.ProtoTiles.Example;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.IO;
 
 //namespace RedBjorn.ProtoTiles.Example
 //{
@@ -22,6 +25,7 @@ public class UnitMove : MonoBehaviour
         //MapEntity mapManager.MapEntity;
 
         public MapManager mapManager;
+        public UnitController unitController;
         public AreaOutline Area;
         PathDrawer Path;
         Coroutine MovingCoroutine;
@@ -29,11 +33,10 @@ public class UnitMove : MonoBehaviour
         private bool active = false;
         private bool justActivated = false;
         
-        // not sure if all x y z coordinates are neccesary
         public Vector3Int hexPosition;
 
-    void Update()
-        {
+        void Update()
+        { 
             if(active && !justActivated) {
                 if (MyInput.GetOnWorldUp(mapManager.MapEntity.Settings.Plane()))
                 {
@@ -47,37 +50,67 @@ public class UnitMove : MonoBehaviour
                     justActivated = false;
                 }
             }
+
         }
 
-        public void Init(MapManager mapManager)
+        public void Init(MapManager mapManager, UnitController unitController)
         {
+            this.unitController = unitController;
             RangeLeft = Range;
             var position = transform.position;
             var tile = mapManager.MapEntity.Tile(position);
+            tile.UnitPresent = this.unitController;
             hexPosition = tile.Position;
             this.mapManager = mapManager;
             Area = Spawner.Spawn(AreaPrefab, Vector3.zero, Quaternion.identity);
-            Debug.Log("Initialize UnitMove");
             AreaHide();
         }
 
         void HandleWorldClick()
         {
             var clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
-            var tile = mapManager.MapEntity.Tile(clickPos);
-            if (tile != null && tile.Vacant)
+            var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, RangeLeft);
+            var tile = path.Last();
+
+            if(tile.UnitPresent is not null && tile.UnitPresent.owner != this.unitController.owner && !this.unitController.attacked)
             {
-                hexPosition = tile.Position;
-                AreaHide();
-                Path.IsEnabled = false;
-                PathHide();
-                var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, RangeLeft);
-                Move(path, () =>
-                {
-                    Path.IsEnabled = true;
-                    AreaShow();
-                });
+                SubClass(tile, clickPos, true);
+                this.unitController.Attack(tile.UnitPresent);
             }
+            else if (tile != null && tile.UnitPresent is null)
+            {
+                SubClass(tile, clickPos, false);
+
+            }
+        }
+
+        private void SubClass(TileEntity tile,Vector3 clickPos,bool attackMove)
+        {
+            TileEntity oldTile = mapManager.MapEntity.Tile(hexPosition);
+            oldTile.UnitPresent = null;
+
+            List<TileEntity> path;
+            if (!attackMove)
+            {
+                path = mapManager.MapEntity.PathTiles(transform.position, clickPos, RangeLeft);
+            }
+            else
+            {
+                path = mapManager.MapEntity.PathTilesNextTo(transform.position, clickPos, RangeLeft);
+            }
+
+            path.Last().UnitPresent = this.unitController;
+            hexPosition = path.Last().Position;
+            AreaHide();
+            Path.IsEnabled = false;
+            PathHide();
+
+
+        Move(path, () =>
+            {
+                Path.IsEnabled = true;
+                AreaShow();
+            });
         }
 
         public void Move(List<TileEntity> path, Action onCompleted)
@@ -94,7 +127,10 @@ public class UnitMove : MonoBehaviour
             }
             else
             {
-                onCompleted.SafeInvoke();
+
+                    onCompleted.SafeInvoke();
+
+                
             }
         }
 
@@ -126,7 +162,10 @@ public class UnitMove : MonoBehaviour
                 transform.position = targetPoint;
                 nextIndex++;
             }
-            onCompleted.SafeInvoke();
+            if (active==true)
+            {
+                onCompleted.SafeInvoke();
+            }
         }
 
         void AreaShow()
@@ -135,11 +174,8 @@ public class UnitMove : MonoBehaviour
             Area.Show(mapManager.MapEntity.WalkableBorder(transform.position, RangeLeft), mapManager.MapEntity);
         }
 
-        void AreaHide()
+        public void AreaHide()
         {
-            if(AreaPrefab != null) {
-                Debug.Log("AreaPrefab is not null");
-            }
             Area.Hide();
         }
 
@@ -154,7 +190,7 @@ public class UnitMove : MonoBehaviour
             }
         }
 
-        void PathHide()
+        public void PathHide()
         {
             if (Path)
             {
@@ -162,7 +198,7 @@ public class UnitMove : MonoBehaviour
             }
         }
 
-        void PathUpdate()
+        public void PathUpdate()
         {
             if (Path && Path.IsEnabled)
             {

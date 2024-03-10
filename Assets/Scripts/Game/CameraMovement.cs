@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -27,15 +28,19 @@ public class CameraMovement : MonoBehaviour
     }
 
     private void panCamera() {
-        if(Input.GetMouseButtonDown(0)) {
-            dragOrigin = cam.ScreenToWorldPoint(Input.mousePosition);
-        }
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                dragOrigin = cam.ScreenToWorldPoint(Input.mousePosition);
+            }
 
-        if(Input.GetMouseButton(0)) {
-            Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.mousePosition);
-            cam.transform.position += difference;
+            if (Input.GetMouseButton(0))
+            {
+                Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.mousePosition);
+                cam.transform.position += difference;
+            }
         }
-
         //cam.transform.position = Mathf.Clamp(cam.transform.position, minZoom, maxZoom);
     }
 
@@ -56,15 +61,18 @@ public class CameraMovement : MonoBehaviour
 
     private void zoomCamera() {
         // Scroll forward
-        if (Input.GetAxis("Mouse ScrollWheel") > 0 && cam.orthographicSize > minZoom)
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            ZoomOrthoCamera(cam.ScreenToWorldPoint(Input.mousePosition), 1 * zoomSpeed);
-        }
+            if (Input.GetAxis("Mouse ScrollWheel") > 0 && cam.orthographicSize > minZoom)
+            {
+                ZoomOrthoCamera(cam.ScreenToWorldPoint(Input.mousePosition), 1 * zoomSpeed);
+            }
 
-        // Scoll back
-        if (Input.GetAxis("Mouse ScrollWheel") < 0 && cam.orthographicSize < maxZoom)
-        {
-            ZoomOrthoCamera(cam.ScreenToWorldPoint(Input.mousePosition), -1 * zoomSpeed);
+            // Scoll back
+            if (Input.GetAxis("Mouse ScrollWheel") < 0 && cam.orthographicSize < maxZoom)
+            {
+                ZoomOrthoCamera(cam.ScreenToWorldPoint(Input.mousePosition), -1 * zoomSpeed);
+            }
         }
     }
 }

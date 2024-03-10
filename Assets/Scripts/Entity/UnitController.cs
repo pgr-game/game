@@ -1,8 +1,11 @@
+using RedBjorn.ProtoTiles;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class UnitController : MonoBehaviour
 {
@@ -15,26 +18,51 @@ public class UnitController : MonoBehaviour
     public int attack;
     public int attackRange;
     public int baseProductionCost;
+    public int turnsToProduce;
     public int turnProduced;
-    public int level;
+    public int level = 1;
+    public int defense;
     public GameManager gameManager;
     public GameObject unitUI;
+    public GameObject damageRecivedUI;
+    public GameObject lvlUPMenu;
+    public UnitStatsUIController unitStatsUIController;
 
-    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager) {
+    public GameObject fortButton;
+
+    public bool attacked;
+    public int experience = 0;
+    public bool canPlaceFort;
+    public int turnsSinceFortPlaced = 5;
+    public int expirience = 0;
+
+    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController) {
         this.owner = playerManager;
         this.mapManager = mapManager;
+        this.unitStatsUIController = unitStatsUIController;
         CreateUI();
         ApplyColor();
-        unitMove.Init(mapManager);
+        unitMove.Init(mapManager,this);
         this.gameManager = gameManager;
-        currentHealth = maxHealth;
-        turnProduced = this.gameManager.turnNumber;
-        level = 1;
+        if(currentHealth == 0) {
+            currentHealth = maxHealth;
+        }
+
+        if(turnProduced == 0) {
+            turnProduced = this.gameManager.turnNumber;
+        }
+
+        if(level == 0) {
+            level = 1;
+        }
+        canPlaceFort = true;
     }
 
     private void CreateUI()
     {
         GameObject myUI = Instantiate(unitUI, transform.position + new Vector3(0, 2, 0), Quaternion.identity, gameObject.transform);
+
+        
         myUI.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
 
         GameObject unitName = myUI.transform.Find("UnitName").gameObject;
@@ -49,6 +77,10 @@ public class UnitController : MonoBehaviour
         Image hpMeterValue = hpMeter.GetComponent<Image>();
         float value = 1;
         hpMeterValue.fillAmount = value;
+
+        GameObject dejm = myUI.transform.Find("Frame").gameObject;
+        Image dejmimage = dejm.GetComponent<Image>();
+        dejmimage.color = this.owner.color;
     }
 
     private void UpdateUnitUI()
@@ -69,15 +101,22 @@ public class UnitController : MonoBehaviour
     {
         unitMove.Activate();
         UpdateUnitUI();
-        this.gameManager.setUnitTypeText(unitType.ToString());
-        this.gameManager.setUnitAttackText(attack.ToString());
+        ChangeUnitTexts();
+        this.unitStatsUIController.ShowUnitBox();
+    }
+
+    public void ChangeUnitTexts() {
+        this.unitStatsUIController.setUnitTypeText(unitType.ToString());
+        this.unitStatsUIController.setUnitAttackText(attack.ToString());
+        this.unitStatsUIController.setUnitLevelText(level.ToString());
+        this.unitStatsUIController.setUnitHealthText(currentHealth.ToString());
+        this.unitStatsUIController.setUnitDefenseText(defense.ToString());
     }
 
     public void Deactivate() 
     {
         unitMove.Deactivate();
-        this.gameManager.setUnitTypeText("");
-        this.gameManager.setUnitAttackText("");
+        this.unitStatsUIController.HideUnitBox();
 
     }
 
@@ -88,15 +127,113 @@ public class UnitController : MonoBehaviour
             Debug.Log("Unit body not found, likely the prefab structure was changed!");
             return;
         }
-        Debug.Log("Setting unit color");
         body.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", owner.color);
     }
 
+    public int GetDefense() {
+        if(IsInOwnCityOrFort()) {
+            if(defense == 0) {
+                return 1;
+            }
+            return defense*2;
+        }
+        return defense;
+    }
+
+    public void Attack(UnitController enemy)
+    {
+        if (!this.attacked)
+        {
+            int damage = this.attack - enemy.GetDefense();
+            if (damage < 0) damage = 0;
+            this.attacked = true;
+            enemy.reciveDamage(damage,this);
+        }
+
+    }
+
+    public void reciveDamage(int incomingDamage, UnitController attacker)
+    {
+        this.currentHealth = this.currentHealth - incomingDamage;
+        GameObject unitUI = this.transform.Find("UnitDefaultBar(Clone)").gameObject;
+        GameObject damageUI = Instantiate(damageRecivedUI, unitUI.transform.position, Quaternion.identity, unitUI.transform);
+        damageUI.transform.Find("Damage").gameObject.GetComponent<TextMeshProUGUI>().text = incomingDamage.ToString();
+        damageUI.GetComponent<DamageAnimation>().angle = this.transform.position - attacker.transform.position;
+
+        this.UpdateUnitUI();
+        if (this.currentHealth <= 0)
+        {
+            this.Death(attacker);
+        }
+    }
     public void Death(UnitController killer) {
-        Destroy(gameObject);
         owner.allyUnits.Remove(this);
         gameManager.units.Remove(this);
         killer.owner.AddGold(CalculateGoldValue());
+        TileEntity oldTile = this.mapManager.MapEntity.Tile(this.unitMove.hexPosition);
+        oldTile.UnitPresent = null;
+        killer.GainXP(this.level);
+        Destroy(gameObject);
+    }
+
+    public void GainXP(int ammountGot)
+    {
+        experience += ammountGot;
+        if (experience >= System.Math.Pow(2, level - 1))
+        {
+            level++;
+            experience = 0;
+            this.UpgradeUnit();
+        }
+    }
+
+    public void UpgradeUnit()
+    {
+        //TODO this not work work me sad. still displays are and path (for some reason onyl sonetimes)
+        this.unitMove.Deactivate();
+
+        GameObject unitUI = this.transform.Find("UnitDefaultBar(Clone)").gameObject;
+        GameObject lvlUP = Instantiate(lvlUPMenu, this.transform.position, Quaternion.identity, unitUI.transform);
+        lvlUP.transform.position += new Vector3(0,0,-2);
+        lvlUP.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+
+        GameObject buttons = lvlUP.transform.Find("Buttons").gameObject;
+
+        GameObject defButton = buttons.transform.Find("DefenceAddButton").gameObject;
+        UnityEngine.UI.Button button = defButton.GetComponent<UnityEngine.UI.Button>();
+        button.onClick.AddListener(delegate { UbgradeDefence(lvlUP); });
+
+        GameObject HPButton = buttons.transform.Find("HPAddButton").gameObject;
+        button = HPButton.GetComponent<UnityEngine.UI.Button>();
+        button.onClick.AddListener(delegate { UbgradeHealth(lvlUP); });
+
+        GameObject attackButton = buttons.transform.Find("AttackAddButton").gameObject;
+        button = attackButton.GetComponent<UnityEngine.UI.Button>();
+        button.onClick.AddListener(delegate { UbgradeAttack(lvlUP); });
+
+    }
+
+    public void UbgradeAttack(GameObject lvlUPMenu)
+    {
+        this.attack += 5;
+        Destroy(lvlUPMenu);
+        UpdateUnitUI();
+        ChangeUnitTexts();
+    }
+    public void UbgradeHealth(GameObject lvlUPMenu)
+    {
+        this.maxHealth += 5;
+        this.currentHealth += 5;
+        Destroy(lvlUPMenu);
+        UpdateUnitUI();
+        ChangeUnitTexts();
+    }
+    public void UbgradeDefence(GameObject lvlUPMenu)
+    {
+        this.defense += 2;
+        Destroy(lvlUPMenu);
+        UpdateUnitUI();
+        ChangeUnitTexts();
     }
 
     public int CalculateGoldValue() {
@@ -122,8 +259,49 @@ public class UnitController : MonoBehaviour
         productionCost -= (gameManager.turnNumber - city.turnCreated);
         return productionCost;
     }
-
     public int GetProductionTurns() {
-        return 3;
+        return turnsToProduce;
+    }
+
+    public bool IsInFortOrCity() {
+        var tile = this.mapManager.MapEntity.Tile(unitMove.hexPosition);
+        if(tile.FortPresent != null) return true;
+        if(tile.CityTilePresent != null) return true;
+        return false;
+    }
+
+
+    public bool IsFortThisPlayer() {
+        var tile = this.mapManager.MapEntity.Tile(unitMove.hexPosition);
+        if(tile.FortPresent != null) {
+            if(tile.FortPresent.owner == this.owner) return true;
+        }
+        return false;
+    }
+
+
+    public bool IsCityThisPlayer() {
+        var tile = this.mapManager.MapEntity.Tile(unitMove.hexPosition);
+        if(tile.CityTilePresent != null) {
+            if(tile.CityTilePresent.city.Owner == this.owner) return true;
+        }
+        return false;
+    }
+
+
+    public bool IsInOwnCityOrFort() {
+        if(!IsInFortOrCity()) return false;
+        if(!(IsFortThisPlayer() || IsCityThisPlayer())) return false;
+        return true;
+    }
+
+
+
+    public void Heal() {
+        if(currentHealth == maxHealth) return;
+        currentHealth += (int)(0.2f*maxHealth);
+        if(currentHealth > maxHealth) currentHealth = maxHealth;
+        UpdateUnitUI();
+        ChangeUnitTexts();
     }
 }

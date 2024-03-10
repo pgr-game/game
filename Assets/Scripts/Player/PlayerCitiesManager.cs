@@ -10,8 +10,11 @@ public class PlayerCitiesManager
     private PlayerManager playerManager;
     private MapManager mapManager;
 
+    public void StartCitiesTurn() {
+        cities.ForEach(city => city.StartTurn());
+    }
+
     public void Init(PlayerManager playerManager, string startingCityName) {
-        Debug.Log("Initializing player cities");
         this.cities = new List<City>();
         this.playerManager = playerManager;
         this.mapManager = playerManager.mapManager;
@@ -19,14 +22,16 @@ public class PlayerCitiesManager
     }
 
     public void AddCity(City city) {
-        Debug.Log("Adding city");
         cities.Add(city);
     }
 
     void ClaimStartingCity(string startingCityName) {
-        Debug.Log("Claiming starting city");
         List<CityTile> startingCityTiles = mapManager.GetCityTilesInPosition(playerManager.transform.position);
-        mapManager.InitCity(startingCityTiles, this.playerManager, startingCityName);
+        if(startingCityTiles.Count != 0) {
+            mapManager.InitCity(startingCityTiles, this.playerManager, startingCityName);
+        }
+        else {
+        }
     }
 
     public int GetGoldIncome() {

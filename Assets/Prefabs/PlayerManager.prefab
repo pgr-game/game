@@ -46,5 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapManager: {fileID: 0}
   startingResources: {fileID: 0}
+  gameManager: {fileID: 0}
   isComputer: 0
-  color: {r: 0, g: 0, b: 0, a: 0}
+  color:
+    serializedVersion: 2
+    rgba: 0
+  allyUnits: []
+  fortPrefab: {fileID: 7362454568944323520, guid: 26ffc5ad993277348bf537bf162f852c, type: 3}
+  goldText: {fileID: 0}
+  goldIncome: 5

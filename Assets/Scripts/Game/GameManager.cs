@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using RedBjorn.ProtoTiles;
 
 public enum UnitTypes {
     Archer,
@@ -17,82 +18,123 @@ public enum UnitTypes {
 
 public class GameManager : MonoBehaviour
 {
-    //these should only be used for instantiation and will be imported from game launcher later on
-    public int InNumberOfPlayers = 3;
-    public Vector3[] InPlayerPositions;
-    public StartingResources[] InStartingResources;
-    public Color32[] InPlayerColors;
-    public string[] InStartingCityNames;
-    //end of game launcher variables
-
     public MapManager mapManager;
+    public SaveManager saveManager;
+    public LoadManager loadManager;
     public CityMenuManager cityMenuManager;
+    public PauseMenu pauseMenu;
     public GameObject playerPrefab;
 
+    // Turn elements
     public int turnNumber = 1;
     public GameObject turnText;
     
+    // Player elements
     public int activePlayerIndex = 0;
     public PlayerManager activePlayer;
-    private int numberOfPlayers;
-    private PlayerManager[] players;
+    public int numberOfPlayers;
+    public PlayerManager[] players;
     public Vector3[] playerPositions;
-
-
-    // is it really usefulll for anything ?
     public List<UnitController> units = new List<UnitController>();
     // Unit types
     private const int amountOfUnitTypes = 7;
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
-    public GameObject unitTypeText;
-    public GameObject unitAttackText;
+
+    // UI elements
+    public UnitStatsUIController unitStatsUIController;
     public Image nextTurnButtonImage;
+    public GameObject UI;
+    public TileTag cityTag;
 
     void Start()
     {
+        //temp before new game tab (one for choosing difficulty, player colors etc)
+        //these should only be used for instantiation and will be imported from game launcher later on
+        int InNumberOfPlayers = 2;
+
+        Vector3[] InPlayerPositions = new Vector3[2];
+        InPlayerPositions[0] = new Vector3(-6.928203f, 0f, 0f);
+        InPlayerPositions[1] = new Vector3(0f, 0f, 0f);
+
+        Color32[] InPlayerColors = new Color32[2];
+        InPlayerColors[0] = Color.red;
+        InPlayerColors[1] = Color.blue;
+
+        string[] InStartingCityNames = new string[2];
+        InStartingCityNames[0] = "Ur";
+        InStartingCityNames[1] = "Babylon";
+
+        StartingResources[] InStartingResources = CreateExampleGameStart();
+        //end of game launcher variables
+
+        string saveRoot = SaveRoot.saveRoot;
+        SceneLoadData sceneLoadData = new SceneLoadData();
+
+        saveManager.Init(this);
+        loadManager.Init(this);
         //this should later be called directly from game creator and not the Start function
-        StartGame(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames);
+        //there should also be error handling for when saveRoot is wrong
+        if (saveRoot == null) {
+            sceneLoadData = new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0);
+        } else {
+            loadManager.SetSaveRoot(saveRoot);
+            sceneLoadData = loadManager.Load();
+        }
+
+        LoadGameData(sceneLoadData);
+
+        mapManager.Init(this);
+        cityMenuManager.Init(this);
+
+        InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames);
+        players[activePlayerIndex].StartTurn();
+
+        GameObject[] cityTiles = GameObject.FindGameObjectsWithTag("CityTile");
+        foreach (GameObject cityTileObject in cityTiles)
+        {
+            CityTile cityTileComponent = cityTileObject.GetComponent<CityTile>();
+            if (cityTileComponent != null)
+            {
+                cityTileComponent.Initialize(this);
+            }
+        }
+        
     }
 
-    public void StartGame(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames) {
-        if(!IsInitialDataCorrect(numberOfPlayers, playerPositions, startingResources, playerColors)) {
+    public void LoadGameData(SceneLoadData sceneLoadData) {
+        if(!IsInitialDataCorrect(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors)) {
             Debug.Log("Wrong initial data. Stopping game now!");
             return;
         }
-        this.playerPositions = playerPositions;
-        mapManager.Init(this);
-        cityMenuManager.Init(this);
-        InstantiatePlayers(numberOfPlayers, playerPositions, startingResources, playerColors, startingCityNames);
+        this.playerPositions = sceneLoadData.playerPositions;
+        this.numberOfPlayers = sceneLoadData.numberOfPlayers;
     }
 
     private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames)
     {
-        Debug.Log("Instantiating players");
         this.numberOfPlayers = numberOfPlayers;
         players = new PlayerManager[numberOfPlayers];
         for(int i = 0; i < numberOfPlayers; i++) {
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
-            players[i].mapManager = mapManager;
-            players[i].startingResources = InStartingResources[i];
-            players[i].color = playerColors[i];
+            players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], i);
             if(i == activePlayerIndex) {
                 players[i].gameObject.SetActive(true);
             }
             else {
                 players[i].gameObject.SetActive(false);
             }
-            players[i].Init(this, startingCityNames[i]);
-            //units.Concat(players[i].startingResources.units);
         }
         activePlayer = players[activePlayerIndex];
         SetPlayerUIColor(players[activePlayerIndex].color);
-        players[activePlayerIndex].StartTurn();
     }
 
     public void NextPlayer()
     {
+        players[activePlayerIndex].DeactivateUnitsRange();
         players[activePlayerIndex].gameObject.SetActive(false);
-        if(activePlayerIndex + 1 == numberOfPlayers) {
+        GameObject unitList = UI.transform.Find("UnitList").gameObject;
+        unitList.SetActive(false);
+        if (activePlayerIndex + 1 == numberOfPlayers) {
             activePlayerIndex = 0;
         }
         else {
@@ -131,13 +173,28 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    StartingResources[] CreateExampleGameStart() {
+        StartingResources[] InStartingResources = new StartingResources[2] {
+            new StartingResources(),
+            new StartingResources()
+        };
+        
+        InStartingResources[0].units = new List<UnitController>();
+        InStartingResources[1].units = new List<UnitController>();
 
-    public void setUnitTypeText(string unitType) {
-        unitTypeText.GetComponent<TMPro.TextMeshProUGUI>().text = unitType;
-    }
-    public void setUnitAttackText(string unitAttack)
-    {
-        unitAttackText.GetComponent<TMPro.TextMeshProUGUI>().text = unitAttack;
+        InStartingResources[0].units.Add((Resources.Load("Units/Archer") as GameObject).GetComponent<UnitController>());
+        InStartingResources[0].units.Add((Resources.Load("Units/Chariot") as GameObject).GetComponent<UnitController>());
+
+        InStartingResources[1].units.Add((Resources.Load("Units/Skirmisher") as GameObject).GetComponent<UnitController>());
+
+
+        InStartingResources[0].unitLoadData = new List<UnitLoadData>();
+        InStartingResources[1].unitLoadData = new List<UnitLoadData>();
+
+        InStartingResources[0].gold = 100;
+        InStartingResources[1].gold = 100;
+
+        return InStartingResources;
     }
 
     public GameObject getUnitPrefabByName(String unitType) {
