@@ -66,16 +66,15 @@ public class PlayerManager : MonoBehaviour
                 }
             }
             if (Input.GetKeyDown(KeyCode.B) && selected != null) {
-                if(selected.GetComponent<UnitController>().IsInFortOrCity()) {
-                    Debug.Log("Fort can't be placed here");
+                if(!selected.GetComponent<UnitController>().CanPlaceFortOnTile()) {
+                    Debug.Log("Fort can't be placed here");     // maybe add dialog box in the future
+                    return;
                 }
-                else if(!selected.GetComponent<UnitController>().canPlaceFort) {
-                    Debug.Log("Unit can't place fort yet");
+                if(!selected.GetComponent<UnitController>().canPlaceFort) {
+                    Debug.Log("Unit can't place fort yet");     // maybe add dialog box in the future
+                    return;
                 }
-                else {
-                    CreateFort();
-                }
-
+                CreateFort();
             }
 
         } 
@@ -241,19 +240,16 @@ public class PlayerManager : MonoBehaviour
     }
 
     public void StartTurn() {
-        allyUnits.ForEach((unit) => unit.attacked = false);
-        if (gameManager.turnNumber != 1) {
-            allyUnits.ForEach((unit) => {
-                unit.turnsSinceFortPlaced++;
-                if(unit.turnsSinceFortPlaced == 5) unit.canPlaceFort = true;
-            });
-        } 
-
         allyUnits.ForEach((unit) => {
-            if(unit.IsInOwnCityOrFort()) unit.Heal();
-            
+            unit.attacked = false;
+            unit.unitMove.ResetRange();
+            if(unit.CanHealOrGetDefenceBonus()) unit.Heal();
+            unit.CommitToBuildingFort();
+            if(gameManager.turnNumber != 1) {
+                unit.turnsSinceFortPlaced++;
+                if(unit.turnsSinceFortPlaced == 10) unit.canPlaceFort = true;
+            }
         });
-
 
         if (gameManager.turnNumber != 1) {
             AddGold(playerCitiesManager.GetGoldIncome());
@@ -261,7 +257,6 @@ public class PlayerManager : MonoBehaviour
         SetGoldText(gold.ToString());
         SetGoldIncome();
         gold += goldIncome;
-        allyUnits.ForEach(unit => unit.unitMove.ResetRange());
         playerCitiesManager.StartCitiesTurn();
     }
 
@@ -270,6 +265,16 @@ public class PlayerManager : MonoBehaviour
             return null;
         }
         return selected.GetComponent<UnitController>();
+    }
+
+    // probably will be deleted when we implement multiple units on a tile
+    public void ResetUnitPresentOnTile(TileEntity tile, UnitController currentUnit) {
+        allyUnits.ForEach((unit) => {
+            if(currentUnit != unit && unit.GetCurrentTile() == tile) {
+                tile.UnitPresent = unit;
+                return;
+            }
+        });
     }
 
 }

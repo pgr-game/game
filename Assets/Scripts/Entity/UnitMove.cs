@@ -66,21 +66,28 @@ public class UnitMove : MonoBehaviour
             AreaHide();
         }
 
+        // TODO: probably need changing when we implement multiple units on a tile
         void HandleWorldClick()
         {
             var clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
             var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, RangeLeft);
             var tile = path.Last();
-
+            if(tile == null) return;
+            // attack
             if(tile.UnitPresent is not null && tile.UnitPresent.owner != this.unitController.owner && !this.unitController.attacked)
             {
                 SubClass(tile, clickPos, true);
                 this.unitController.Attack(tile.UnitPresent);
             }
-            else if (tile != null && tile.UnitPresent is null)
+            // move to empty tile
+            else if (tile.UnitPresent is null)
             {
                 SubClass(tile, clickPos, false);
-
+            }
+            // move to tile with own fort or city 
+            else if(unitController.CanStackUnits(tile))
+            {
+                SubClass(tile, clickPos, false);
             }
         }
 
@@ -88,6 +95,7 @@ public class UnitMove : MonoBehaviour
         {
             TileEntity oldTile = mapManager.MapEntity.Tile(hexPosition);
             oldTile.UnitPresent = null;
+            unitController.owner.ResetUnitPresentOnTile(oldTile, this.unitController);
 
             List<TileEntity> path;
             if (!attackMove)

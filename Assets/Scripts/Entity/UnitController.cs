@@ -33,7 +33,7 @@ public class UnitController : MonoBehaviour
     public bool attacked;
     public int experience = 0;
     public bool canPlaceFort;
-    public int turnsSinceFortPlaced = 5;
+    public int turnsSinceFortPlaced = 10;
     public int expirience = 0;
 
     public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController) {
@@ -131,7 +131,7 @@ public class UnitController : MonoBehaviour
     }
 
     public int GetDefense() {
-        if(IsInOwnCityOrFort()) {
+        if(CanHealOrGetDefenceBonus()) {
             if(defense == 0) {
                 return 1;
             }
@@ -263,39 +263,44 @@ public class UnitController : MonoBehaviour
         return turnsToProduce;
     }
 
-    public bool IsInFortOrCity() {
-        var tile = this.mapManager.MapEntity.Tile(unitMove.hexPosition);
-        if(tile.FortPresent != null) return true;
-        if(tile.CityTilePresent != null) return true;
-        return false;
+    public TileEntity GetCurrentTile() {
+        return mapManager.MapEntity.Tile(unitMove.hexPosition);
     }
 
+    public bool IsInFort(TileEntity tile) {
+        return (tile.FortPresent != null);
+    }
 
-    public bool IsFortThisPlayer() {
-        var tile = this.mapManager.MapEntity.Tile(unitMove.hexPosition);
-        if(tile.FortPresent != null) {
-            if(tile.FortPresent.owner == this.owner) return true;
+    public bool IsInCity(TileEntity tile) {
+        return (tile.CityTilePresent != null);
+    }
+
+    public bool CanPlaceFortOnTile() {
+        var tile = GetCurrentTile();
+        return !(IsInCity(tile) || IsInFort(tile));
+    }
+
+    public bool CanHealOrGetDefenceBonus() {
+        var tile = GetCurrentTile();
+        if(IsInCity(tile)) {
+            return (tile.CityTilePresent.city.Owner == this.owner);
+        }
+        if(IsInFort(tile)) {
+            return (tile.FortPresent.owner == this.owner && tile.FortPresent.isBuilt);
         }
         return false;
     }
 
-
-    public bool IsCityThisPlayer() {
-        var tile = this.mapManager.MapEntity.Tile(unitMove.hexPosition);
-        if(tile.CityTilePresent != null) {
-            if(tile.CityTilePresent.city.Owner == this.owner) return true;
+    public bool CanStackUnits(TileEntity tile) {
+        if(IsInCity(tile)) {
+            return (tile.CityTilePresent.city.Owner == this.owner);
+        }
+        if(IsInFort(tile)) {
+            if(tile.FortPresent.owner == this.owner) Debug.Log("Fort owner is the same as unit owner");
+            return (tile.FortPresent.owner == this.owner);
         }
         return false;
     }
-
-
-    public bool IsInOwnCityOrFort() {
-        if(!IsInFortOrCity()) return false;
-        if(!(IsFortThisPlayer() || IsCityThisPlayer())) return false;
-        return true;
-    }
-
-
 
     public void Heal() {
         if(currentHealth == maxHealth) return;
@@ -303,5 +308,16 @@ public class UnitController : MonoBehaviour
         if(currentHealth > maxHealth) currentHealth = maxHealth;
         UpdateUnitUI();
         ChangeUnitTexts();
+    }
+
+    public void CommitToBuildingFort() {
+        var tile = GetCurrentTile();
+        if(!IsInFort(tile)) return;
+        if(tile.FortPresent.owner != this.owner) return;
+        if(tile.FortPresent.isBuilt) return;
+        tile.FortPresent.turnsUntilBuilt--;
+        if(tile.FortPresent.turnsUntilBuilt == 0) {
+            tile.FortPresent.BuildComplete();
+        }
     }
 }
