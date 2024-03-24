@@ -179,7 +179,7 @@ public class UnitController : MonoBehaviour
     public void GainXP(int ammountGot)
     {
         experience += ammountGot;
-        if (experience >= System.Math.Pow(2, level - 1))
+        if (experience >= System.Math.Pow(2, level))
         {
             level++;
             experience = 0;
