@@ -34,7 +34,6 @@ public class UnitController : MonoBehaviour
     public int experience = 0;
     public bool canPlaceFort;
     public int turnsSinceFortPlaced = 10;
-    public int expirience = 0;
 
     public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController) {
         this.owner = playerManager;
@@ -101,16 +100,8 @@ public class UnitController : MonoBehaviour
     {
         unitMove.Activate();
         UpdateUnitUI();
-        ChangeUnitTexts();
+        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
         this.unitStatsUIController.ShowUnitBox();
-    }
-
-    public void ChangeUnitTexts() {
-        this.unitStatsUIController.setUnitTypeText(unitType.ToString());
-        this.unitStatsUIController.setUnitAttackText(attack.ToString());
-        this.unitStatsUIController.setUnitLevelText(level.ToString());
-        this.unitStatsUIController.setUnitHealthText(currentHealth.ToString());
-        this.unitStatsUIController.setUnitDefenseText(defense.ToString());
     }
 
     public void Deactivate() 
@@ -149,7 +140,7 @@ public class UnitController : MonoBehaviour
             this.attacked = true;
             enemy.reciveDamage(damage,this);
         }
-
+        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
     }
 
     public void reciveDamage(int incomingDamage, UnitController attacker)
@@ -218,7 +209,7 @@ public class UnitController : MonoBehaviour
         this.attack += 5;
         Destroy(lvlUPMenu);
         UpdateUnitUI();
-        ChangeUnitTexts();
+        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
     }
     public void UbgradeHealth(GameObject lvlUPMenu)
     {
@@ -226,14 +217,14 @@ public class UnitController : MonoBehaviour
         this.currentHealth += 5;
         Destroy(lvlUPMenu);
         UpdateUnitUI();
-        ChangeUnitTexts();
+        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
     }
     public void UbgradeDefence(GameObject lvlUPMenu)
     {
         this.defense += 2;
         Destroy(lvlUPMenu);
         UpdateUnitUI();
-        ChangeUnitTexts();
+        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
     }
 
     public int CalculateGoldValue() {
@@ -307,7 +298,7 @@ public class UnitController : MonoBehaviour
         currentHealth += (int)(0.2f*maxHealth);
         if(currentHealth > maxHealth) currentHealth = maxHealth;
         UpdateUnitUI();
-        ChangeUnitTexts();
+        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
     }
 
     public void CommitToBuildingFort() {
