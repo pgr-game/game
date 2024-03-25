@@ -16,11 +16,12 @@ public class GameCreatorController : MonoBehaviour
         gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
         
         mapDropdown.onValueChanged.AddListener(delegate {
-            DropdownValueChanged(mapDropdown);
+            MapNameDropdownValueChanged(mapDropdown);
         });
     }
 
-    void DropdownValueChanged(TMP_Dropdown change)
+    // Setting the map name in the GameSettings object
+    void MapNameDropdownValueChanged(TMP_Dropdown change)
     {
         gameSettings.GetComponent<GameSettings>().SetMapName(change.options[change.value].text);
     }
