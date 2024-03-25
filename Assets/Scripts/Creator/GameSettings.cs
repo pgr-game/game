@@ -17,6 +17,5 @@ public class GameSettings : MonoBehaviour
 
     private void Awake() {
         DontDestroyOnLoad(this.gameObject);
-        mapName = "RiverDelta";
     }
 }
