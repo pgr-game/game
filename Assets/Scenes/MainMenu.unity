@@ -5094,7 +5094,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -5105,6 +5105,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 44039325}
@@ -5113,11 +5117,19 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1277588066}
     - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 44039330}
+    - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
@@ -5129,12 +5141,20 @@ PrefabInstance:
       value: SetActive
       objectReference: {fileID: 0}
     - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: OnFormLoad
+      objectReference: {fileID: 0}
+    - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: UnityEngine.GameObject, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: UnityEngine.GameObject, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: GameCreatorController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
@@ -5150,6 +5170,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 114685384189009500, guid: 5131754af739541a7a443bd0498d5498, type: 3}

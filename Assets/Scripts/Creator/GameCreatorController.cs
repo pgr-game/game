@@ -25,5 +25,9 @@ public class GameCreatorController : MonoBehaviour
         gameSettings.GetComponent<GameSettings>().SetMapName(change.options[change.value].text);
     }
 
+    public void OnFormLoad() {
+        gameSettings.mapName = "RiverDelta";
+    }
+
 
 }

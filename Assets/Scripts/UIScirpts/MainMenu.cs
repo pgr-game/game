@@ -15,7 +15,9 @@ public class MainMenu : MonoBehaviour
     public void StartGame() {
         // todo: implement saving and loading a map selection
         var gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
-
+        if(gameSettings.mapName == null) {
+            gameSettings.mapName = "RiverDelta";
+        }
         SceneManager.LoadScene(gameSettings.mapName);
     }
 }
