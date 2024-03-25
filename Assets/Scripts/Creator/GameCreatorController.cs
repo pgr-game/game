@@ -25,7 +25,5 @@ public class GameCreatorController : MonoBehaviour
         gameSettings.GetComponent<GameSettings>().SetMapName(change.options[change.value].text);
     }
 
-    public void StartGame() {
-        SceneManager.LoadScene(gameSettings.mapName);
-    }
+
 }

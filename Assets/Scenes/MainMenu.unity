@@ -384,6 +384,7 @@ GameObject:
   - component: {fileID: 44039326}
   - component: {fileID: 44039329}
   - component: {fileID: 44039330}
+  - component: {fileID: 44039331}
   m_Layer: 5
   m_Name: GameCreatorMenu
   m_TagString: Untagged
@@ -446,6 +447,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameSettings: {fileID: 0}
   mapDropdown: {fileID: 2113258013}
+--- !u!114 &44039331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 44039325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61a9925a1e7bb8f41973cbf9766dc1fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &61720724
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3312,7 +3325,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: PlayGame
+      value: StartGame
       objectReference: {fileID: 0}
     - target: {fileID: 114604369937241004, guid: 5131754af739541a7a443bd0498d5498, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -9502,7 +9515,7 @@ PrefabInstance:
     - target: {fileID: 114129147277146790, guid: 693e43330460346d1a79c4874c16cbd2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 44039330}
+      objectReference: {fileID: 44039331}
     - target: {fileID: 114129147277146790, guid: 693e43330460346d1a79c4874c16cbd2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -9513,7 +9526,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114129147277146790, guid: 693e43330460346d1a79c4874c16cbd2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: GameCreatorController, Assembly-CSharp
+      value: MainMenu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 114129147277146790, guid: 693e43330460346d1a79c4874c16cbd2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

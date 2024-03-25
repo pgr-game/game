@@ -131,8 +131,7 @@ public class LoadManager : MonoBehaviour
 
     private UnitController LoadUnitPrefab(string unitType)
     {
-        var path = "Units/";
-        return Resources.Load<GameObject>(path + unitType).GetComponent<UnitController>();
+        return gameManager.getUnitPrefabByName(unitType).GetComponent<UnitController>();
     }
 
     private UnitLoadData LoadUnitData(QuickSaveReader quickSaveReader, string playerKey, int unitIndex)

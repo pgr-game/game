@@ -9,4 +9,13 @@ public class MainMenu : MonoBehaviour
     {
         Application.Quit(); 
     }
+
+
+
+    public void StartGame() {
+        // todo: implement saving and loading a map selection
+        var gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
+
+        SceneManager.LoadScene(gameSettings.mapName);
+    }
 }
