@@ -81,6 +81,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4276940642390929518, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: unitType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4276940642390929518, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: lvlUPMenu
       value: 
       objectReference: {fileID: 1896118921665356655, guid: 8db0cc2a3bfe80b4da1a37c714f9a015, type: 3}
