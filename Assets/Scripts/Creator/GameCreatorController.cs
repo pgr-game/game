@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 
 public class GameCreatorController : MonoBehaviour
@@ -82,9 +83,24 @@ public class GameCreatorController : MonoBehaviour
             case "Lakes":
                 return new string[] { "Nineveh", "Tikal", "Memphis", "Pataliputra" };
             case "Mountains":
-                return new string[] { "City1", "City2", "City3", "City4" };
+                return new string[] { "Ur", "Hattusa", "Chan Chan", "Mycenae" };
             default:
                 return new string[] { "City1", "City2", "City3", "City4" };
+        }
+    }
+
+    public Vector3[] getPlayerPositionsByMap(string mapName) {        
+        switch (mapName) {
+            case "RiverDelta":
+                return new Vector3[] { new Vector3(-6.928203f, 0, 0), new Vector3(12.12436f, 0, 0), new Vector3(-8.660254f, -18f, 0), new Vector3(12.12436f, -9f, 0) };
+            case "BigSea":
+                return new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0) };
+            case "Lakes":
+                return new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0) };
+            case "Mountains":
+                return new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0) };
+            default:
+                return new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0) };
         }
     }
 
@@ -105,7 +121,9 @@ public class GameCreatorController : MonoBehaviour
             gameSettings.playerColors[i] = GetColorOfPlayerFromDropdown(colorDropdowns[i]);
         }
 
-        // todo player positions
+        // Player positions
+        Vector3[] playerPositions = getPlayerPositionsByMap(gameSettings.mapName).Take(numberOfPlayers).ToArray();
+        gameSettings.playerPositions = playerPositions;
 
         // Cities names
         gameSettings.citiesNames = getCitiesNamesByMap(gameSettings.mapName);
