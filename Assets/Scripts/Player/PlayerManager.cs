@@ -41,7 +41,7 @@ public class PlayerManager : MonoBehaviour
         this.mapManager = mapManager;
         this.startingResources = startingResources;
         this.color = color;
-        InitCities(startingCityName);
+        InitCities(startingCityName, startingResources.cityLoadData);
         InitForts();
         InitUnits();
         this.gold = startingResources.gold;
@@ -175,9 +175,9 @@ public class PlayerManager : MonoBehaviour
         newUnit.Init(this, mapManager, gameManager, gameManager.unitStatsUIController);
     }
 
-    void InitCities(string startingCityName) {
+    void InitCities(string startingCityName, List<CityLoadData> cityLoadData) {
         playerCitiesManager = new PlayerCitiesManager();
-        playerCitiesManager.Init(this, startingCityName);
+        playerCitiesManager.Init(this, startingCityName, cityLoadData);
     }
 
     void InitForts() {
