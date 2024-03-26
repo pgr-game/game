@@ -94,11 +94,11 @@ public class GameCreatorController : MonoBehaviour
             case "RiverDelta":
                 return new Vector3[] { new Vector3(-6.928203f, 0, 0), new Vector3(12.12436f, 0, 0), new Vector3(-8.660254f, -18f, 0), new Vector3(12.12436f, -9f, 0) };
             case "BigSea":
-                return new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0) };
+                return new Vector3[] { new Vector3(-6.928203f, 0, 0), new Vector3(12.12436f, 0, 0), new Vector3(12.99038f, -22.5f, 0), new Vector3(-14.72243f, -25.5f, 0) };
             case "Lakes":
-                return new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0) };
+                return new Vector3[] { new Vector3(-6.928203f, 0, 0), new Vector3(12.12436f, 0, 0), new Vector3(13.85641f, -21f, 0), new Vector3(-19.91858f, -16.5f, 0) };
             case "Mountains":
-                return new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0) };
+                return new Vector3[] { new Vector3(-6.928203f, 0, 0), new Vector3(12.99038f, 1.5f, 0), new Vector3(-21.65063f, -4.5f, 0), new Vector3(-11.25833f, -13.5f, 0) };
             default:
                 return new Vector3[] { new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0) };
         }
