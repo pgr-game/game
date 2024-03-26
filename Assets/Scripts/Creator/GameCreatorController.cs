@@ -44,7 +44,7 @@ public class GameCreatorController : MonoBehaviour
     Color GetColorOfPlayerFromDropdown(TMP_Dropdown change)
     {
         var colorName = change.options[change.value].text;
-        Color color;
+        Color32 color;
 
         switch (colorName.ToLower())
         {
@@ -116,7 +116,7 @@ public class GameCreatorController : MonoBehaviour
         gameSettings.GetComponent<GameSettings>().numberOfPlayers = numberOfPlayers;
 
         // Player colors
-        gameSettings.playerColors = new Color[numberOfPlayers];
+        gameSettings.playerColors = new Color32[numberOfPlayers];
         for(int i=0; i<numberOfPlayers; i++) {
             gameSettings.playerColors[i] = GetColorOfPlayerFromDropdown(colorDropdowns[i]);
         }
@@ -133,7 +133,7 @@ public class GameCreatorController : MonoBehaviour
     }
 
     public void ValidateGameSettings() {
-        Color[] colors = gameSettings.playerColors;
+        Color32[] colors = gameSettings.playerColors;
         int[] duplicates = CheckForDuplicateColors(colors);
         if(duplicates.Length == 0) {
             this.gameObject.GetComponent<MainMenu>().StartGame();
@@ -150,14 +150,14 @@ public class GameCreatorController : MonoBehaviour
         }
     }
 
-    int[] CheckForDuplicateColors(Color[] colors)
+    int[] CheckForDuplicateColors(Color32[] colors)
     {
-        Dictionary<Color, List<int>> colorIndices = new Dictionary<Color, List<int>>();
+        Dictionary<Color32, List<int>> colorIndices = new Dictionary<Color32, List<int>>();
         List<int> duplicates = new List<int>();
 
         for (int i = 0; i < colors.Length; i++)
         {
-            Color color = colors[i];
+            Color32 color = colors[i];
             if (colorIndices.ContainsKey(color))
             {
                 if (colorIndices[color].Count == 1)

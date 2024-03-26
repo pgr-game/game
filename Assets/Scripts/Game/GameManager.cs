@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     public CityMenuManager cityMenuManager;
     public PauseMenu pauseMenu;
     public GameObject playerPrefab;
+    public GameSettings gameSettings;
 
     // Turn elements
     public int turnNumber = 1;
@@ -48,34 +49,16 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        //temp before new game tab (one for choosing difficulty, player colors etc)
-        //these should only be used for instantiation and will be imported from game launcher later on
-        int InNumberOfPlayers = 2;
-
-        Vector3[] InPlayerPositions = new Vector3[2];
-        InPlayerPositions[0] = new Vector3(-6.928203f, 0f, 0f);
-        InPlayerPositions[1] = new Vector3(0f, 0f, 0f);
-
-        Color32[] InPlayerColors = new Color32[2];
-        InPlayerColors[0] = Color.red;
-        InPlayerColors[1] = Color.blue;
-
-        string[] InStartingCityNames = new string[2];
-        InStartingCityNames[0] = "Ur";
-        InStartingCityNames[1] = "Babylon";
-
-        StartingResources[] InStartingResources = CreateExampleGameStart();
-        //end of game launcher variables
-
+        gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
         string saveRoot = SaveRoot.saveRoot;
         SceneLoadData sceneLoadData = new SceneLoadData();
 
         saveManager.Init(this);
         loadManager.Init(this);
-        //this should later be called directly from game creator and not the Start function
+        
         //there should also be error handling for when saveRoot is wrong
         if (saveRoot == null) {
-            sceneLoadData = new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0);
+            sceneLoadData = LoadDataFromSettingsCreator();
         } else {
             loadManager.SetSaveRoot(saveRoot);
             sceneLoadData = loadManager.Load();
@@ -101,6 +84,64 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public SceneLoadData LoadDataFromSettingsCreator() {
+        int InNumberOfPlayers = gameSettings.numberOfPlayers;
+        Vector3[] InPlayerPositions = gameSettings.playerPositions;
+        Color32[] InPlayerColors = gameSettings.playerColors;
+        string[] InStartingCityNames = gameSettings.citiesNames;
+        StartingResources[] InStartingResources = new StartingResources[InNumberOfPlayers];
+
+        for(int i = 0; i < InNumberOfPlayers; i++) {
+            InStartingResources[i] = getStartingResourcesByDifficulty(gameSettings.difficulty);
+        }
+
+        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0);
+    }
+
+    public StartingResources getStartingResourcesByDifficulty(string difficulty) {
+        if(difficulty == "Easy") {
+            return getStartingResourcesEasy();
+        } else if(difficulty == "Medium") {
+            return getStartingResourcesMedium();
+        } else if(difficulty == "Hard") {
+            return getStartingResourcesHard();
+        } else {
+            return getStartingResourcesEasy();
+        }
+
+    }
+
+    public StartingResources getStartingResourcesEasy() {
+        StartingResources InStartingResources = new StartingResources();
+        InStartingResources.units = new List<UnitController>();
+        InStartingResources.units.Add(unitPrefabs.ElementAt(5).GetComponent<UnitController>());
+        InStartingResources.units.Add(unitPrefabs.ElementAt(6).GetComponent<UnitController>());
+        InStartingResources.unitLoadData = new List<UnitLoadData>();
+        InStartingResources.gold = 300;
+
+        return InStartingResources;
+    }
+
+    public StartingResources getStartingResourcesMedium() {
+        StartingResources InStartingResources = new StartingResources();
+        InStartingResources.units = new List<UnitController>();
+        InStartingResources.units.Add(unitPrefabs.ElementAt(5).GetComponent<UnitController>());
+        InStartingResources.unitLoadData = new List<UnitLoadData>();
+        InStartingResources.gold = 200;
+        
+        return InStartingResources;
+    }
+
+    public StartingResources getStartingResourcesHard() {
+        StartingResources InStartingResources = new StartingResources();
+        InStartingResources.units = new List<UnitController>();
+        InStartingResources.units.Add(unitPrefabs.ElementAt(6).GetComponent<UnitController>());
+        InStartingResources.unitLoadData = new List<UnitLoadData>();
+        InStartingResources.gold = 100;
+        
+        return InStartingResources;
+    }
+    
     public void LoadGameData(SceneLoadData sceneLoadData) {
         if(!IsInitialDataCorrect(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors)) {
             Debug.Log("Wrong initial data. Stopping game now!");
