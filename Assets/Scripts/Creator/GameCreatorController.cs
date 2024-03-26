@@ -147,7 +147,6 @@ public class GameCreatorController : MonoBehaviour
             message += " are duplicated! Please change before proceeding.";
             colorDuplicateText.text = message;
             colorDuplicateText.gameObject.SetActive(true);
-            //Debug.Log(message);
         }
     }
 
