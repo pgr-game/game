@@ -73,6 +73,21 @@ public class GameCreatorController : MonoBehaviour
         return color;
     }
 
+    public string[] getCitiesNamesByMap(string mapName) {
+        switch (mapName) {
+            case "RiverDelta":
+                return new string[] { "Babylon", "Alexandria", "Carthage", "Persepolis" };
+            case "BigSea":
+                return new string[] { "Teotihuacan", "Knossos", "Olympia ", "Petra" };
+            case "Lakes":
+                return new string[] { "Nineveh", "Tikal", "Memphis", "Pataliputra" };
+            case "Mountains":
+                return new string[] { "City1", "City2", "City3", "City4" };
+            default:
+                return new string[] { "City1", "City2", "City3", "City4" };
+        }
+    }
+
     public void SetupGameSettings() {
         // Map name
         gameSettings.GetComponent<GameSettings>().SetMapName(mapDropdown.options[mapDropdown.value].text);
@@ -91,6 +106,9 @@ public class GameCreatorController : MonoBehaviour
         }
 
         // todo player positions
+
+        // Cities names
+        gameSettings.citiesNames = getCitiesNamesByMap(gameSettings.mapName);
 
         // validation and starting game if valid
         ValidateGameSettings();

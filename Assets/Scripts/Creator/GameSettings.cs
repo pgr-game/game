@@ -9,6 +9,7 @@ public class GameSettings : MonoBehaviour
     public Color[] playerColors;
     public Vector3[] playerPositions;
     public string difficulty;
+    public string[] citiesNames;
 
     public void SetMapName(string name)
     {
