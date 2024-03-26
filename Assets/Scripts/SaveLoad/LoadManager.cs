@@ -139,15 +139,13 @@ public class LoadManager : MonoBehaviour
 
     private UnitController LoadUnitPrefab(string unitType)
     {
-        foreach (var unitPrefab in gameManager.unitPrefabs)
+        GameObject prefabObject = gameManager.getUnitPrefabByName(unitType);
+        if (prefabObject == null) {
+            return null;
+        } else
         {
-            if(unitPrefab.name == unitType)
-            {
-                return unitPrefab.GetComponent<UnitController>();
-            }
+            return gameManager.getUnitPrefabByName(unitType).GetComponent<UnitController>();
         }
-
-        return null;
     }
 
     private UnitLoadData LoadUnitData(QuickSaveReader quickSaveReader, string playerKey, int unitIndex)
