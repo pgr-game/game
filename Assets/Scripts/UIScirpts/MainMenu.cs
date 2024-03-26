@@ -5,23 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public void PlayGame()
-    {
-        SceneManager.LoadScene("SampleScene");
-    }
-
-    public void NewGame()
-    {
-        SceneManager.LoadScene("NewGameSetup");
-    }
-
-    public void LoadGame()
-    {
-        SceneManager.LoadScene("ChooseLoadGame");
-    }
-    
     public void QuitGame()
     {
         Application.Quit(); 
+    }
+
+
+
+    public void StartGame() {
+        // todo: implement saving and loading a map selection
+        var gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
+        if(gameSettings.mapName == null) {
+            gameSettings.mapName = "RiverDelta";
+        }
+        SceneManager.LoadScene(gameSettings.mapName);
     }
 }

@@ -36,7 +36,7 @@ public class LoadManager : MonoBehaviour
         try {
             QuickSaveReader quickSaveReader = QuickSaveReader.Create("SavesList");
             return;
-        } catch (QuickSaveException e) {
+        } catch (QuickSaveException) {
             QuickSaveWriter quickSaveWriter = QuickSaveWriter.Create("SavesList");
             quickSaveWriter.Write<int>("numberOfSavedGames", 0);
             quickSaveWriter.Commit();
@@ -110,6 +110,9 @@ public class LoadManager : MonoBehaviour
         int numberOfForts = quickSaveReader.Read<int>(playerKey + "numberOfForts");
         startingResources.fortLoadData = new List<FortLoadData>();
 
+        int numberOfCities = quickSaveReader.Read<int>(playerKey + "numberOfCities");
+        startingResources.cityLoadData = new List<CityLoadData>();
+
         //player.isComputer = quickSaveReader.Read<bool>(playerKey + "isComputer");
         startingResources.gold = quickSaveReader.Read<int>(playerKey + "gold");
         //player.goldIncome = quickSaveReader.Read<int>(playerKey + "goldIncome");
@@ -126,13 +129,23 @@ public class LoadManager : MonoBehaviour
             startingResources.fortLoadData.Add(LoadFortData(quickSaveReader, playerKey, i));          
         }
 
+        for(int i = 0; i < numberOfCities; i++)
+        {
+            startingResources.cityLoadData.Add(LoadCityData(quickSaveReader, playerKey, i));          
+        }
+
         return startingResources;
     }
 
     private UnitController LoadUnitPrefab(string unitType)
     {
-        var path = "Units/";
-        return Resources.Load<GameObject>(path + unitType).GetComponent<UnitController>();
+        GameObject prefabObject = gameManager.getUnitPrefabByName(unitType);
+        if (prefabObject == null) {
+            return null;
+        } else
+        {
+            return gameManager.getUnitPrefabByName(unitType).GetComponent<UnitController>();
+        }
     }
 
     private UnitLoadData LoadUnitData(QuickSaveReader quickSaveReader, string playerKey, int unitIndex)
@@ -167,6 +180,21 @@ public class LoadManager : MonoBehaviour
         );
 
         return fortLoadData;
+    }
+
+    private CityLoadData LoadCityData(QuickSaveReader quickSaveReader, string playerKey, int index)
+    {
+        string cityKey = playerKey + "city" + index;
+
+        CityLoadData cityLoadData = new CityLoadData(
+            quickSaveReader.Read<Vector3>(cityKey + "position"),
+            quickSaveReader.Read<string>(cityKey + "name"),
+            quickSaveReader.Read<int>(cityKey + "level"),
+            quickSaveReader.Read<string>(cityKey + "unitInProduction"),
+            quickSaveReader.Read<int>(cityKey + "unitInProductionTurnsLeft")
+        );
+
+        return cityLoadData;
     }
 
 }

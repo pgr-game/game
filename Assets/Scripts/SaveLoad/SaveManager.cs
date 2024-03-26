@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using CI.QuickSave;
+using System.Linq;
 
 public class SaveManager : MonoBehaviour
 {
@@ -71,6 +72,7 @@ public class SaveManager : MonoBehaviour
         //All player data
         quickSaveWriter.Write<int>(playerKey + "numberOfUnits", player.allyUnits.Count);
         quickSaveWriter.Write<int>(playerKey + "numberOfForts", player.playerFortsManager.forts.Count);
+        quickSaveWriter.Write<int>(playerKey + "numberOfCities", player.playerCitiesManager.cities.Count);
         quickSaveWriter.Write<bool>(playerKey + "isComputer", player.isComputer);
         quickSaveWriter.Write<string>(playerKey + "color", ColorUtility.ToHtmlStringRGBA(player.color));
         quickSaveWriter.Write<int>(playerKey + "gold", player.gold);
@@ -87,6 +89,13 @@ public class SaveManager : MonoBehaviour
         foreach(Fort fort in player.playerFortsManager.forts)
         {
             SaveFort(fort, quickSaveWriter, playerKey, i);    
+            i++;      
+        }
+
+        i = 0;
+        foreach(City city in player.playerCitiesManager.cities)
+        {
+            SaveCity(city, quickSaveWriter, playerKey, i);    
             i++;      
         }
 
@@ -119,11 +128,23 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Commit();
     }
 
+    private void SaveCity(City city, QuickSaveWriter quickSaveWriter, string playerKey, int index)
+    {
+        Debug.Log("Saving city");
+        string cityKey = playerKey + "city" + index;
+        quickSaveWriter.Write<Vector3>(cityKey + "position", city.cityTiles.FirstOrDefault().transform.position);
+        quickSaveWriter.Write<string>(cityKey + "name", city.Name);
+        quickSaveWriter.Write<int>(cityKey + "level", city.Level);
+        quickSaveWriter.Write<string>(cityKey + "unitInProduction", city.UnitInProduction.name);
+        quickSaveWriter.Write<int>(cityKey + "unitInProductionTurnsLeft", city.UnitInProductionTurnsLeft);
+        quickSaveWriter.Commit();
+    }
+
     public void CreateSaveFilesFile() {
         try {
             QuickSaveReader quickSaveReader = QuickSaveReader.Create("SavesList");
             return;
-        } catch (QuickSaveException e) {
+        } catch (QuickSaveException) {
             QuickSaveWriter quickSaveWriter = QuickSaveWriter.Create("SavesList");
             quickSaveWriter.Write<int>("numberOfSavedGames", 0);
             quickSaveWriter.Commit();

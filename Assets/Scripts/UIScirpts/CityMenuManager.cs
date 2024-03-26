@@ -15,11 +15,13 @@ public class CityMenuManager : MonoBehaviour
 
     private Text cityNameText;
     private GameObject unitsContainer;
+    private List<GameObject> unitEntriesInList;
 
 
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
+        this.unitEntriesInList = new List<GameObject>();
         this.cityNameText = CityMenu.transform.Find("Info/CityName/Text").GetComponent<Text>();
         this.unitsContainer = CityMenu.transform.Find("Scroll View/Viewport/Content").gameObject;
     }
@@ -70,6 +72,15 @@ public class CityMenuManager : MonoBehaviour
         }
     }
 
+    public void SelectProductionUnit(string name)
+    {
+        GameObject clickedEntry = unitEntriesInList.Find(entry => entry.name == name);
+        GameObject prefab = gameManager.getUnitPrefabByName(name);
+        UnitController unit = prefab.GetComponent<UnitController>();
+
+        SelectProductionUnit(clickedEntry, unit, prefab);
+    }
+
     public void SelectProductionUnit(GameObject clickedEntry, UnitController unitController, GameObject prefab) {
         city.SetUnitInProduction(unitController, prefab);
         SetEntryColorToSelected(clickedEntry);
@@ -89,7 +100,7 @@ public class CityMenuManager : MonoBehaviour
     }
 
     private void FillUnitsList(GameObject[] unitPrefabs) {
-        foreach(Transform child in unitsContainer.transform)
+        foreach (Transform child in unitsContainer.transform)
         {
              Destroy(child.gameObject);
         }
@@ -123,6 +134,8 @@ public class CityMenuManager : MonoBehaviour
                 GameObject  button = newEntry.transform.Find("button").gameObject;
                 Button buttonEvent = button.GetComponent<Button>();
                 buttonEvent.onClick.AddListener(delegate { ClickSelectProductionUnit(newEntry, unit, prefab); });
+
+                unitEntriesInList.Add(newEntry);
                 i -= 80;
             }
     }
