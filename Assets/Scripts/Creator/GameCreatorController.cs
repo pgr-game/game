@@ -12,7 +12,7 @@ public class GameCreatorController : MonoBehaviour
     public TMP_Dropdown mapDropdown;
     public Slider numberOfPlayersSlider;
     public TMP_Text numberOfPlayersText;
-
+    public TMP_Dropdown difficultyDropdown;
     void Start()
     {
         gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
@@ -23,6 +23,10 @@ public class GameCreatorController : MonoBehaviour
 
         numberOfPlayersSlider.onValueChanged.AddListener(delegate {
             NumberOfPlayersSliderValueChanged(numberOfPlayersSlider);
+        });
+
+        difficultyDropdown.onValueChanged.AddListener(delegate {
+            DifficultyLevelDropdownValueChanged(difficultyDropdown);
         });
     }
 
@@ -39,12 +43,19 @@ public class GameCreatorController : MonoBehaviour
         numberOfPlayersText.text = change.value.ToString();
     }
 
+    void DifficultyLevelDropdownValueChanged(TMP_Dropdown change)
+    {
+        gameSettings.GetComponent<GameSettings>().difficulty = change.options[change.value].text;
+    }
+
+    // This method is called when the form is loaded
     public void OnFormLoad() {
         if(gameSettings==null) {
             Start();
         }
         gameSettings.mapName = "RiverDelta";
         gameSettings.numberOfPlayers = 2;
+        gameSettings.difficulty = "Medium";
     }
 
 
