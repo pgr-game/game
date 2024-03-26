@@ -6,7 +6,7 @@ public class GameSettings : MonoBehaviour
 {
     public string mapName;
     public int numberOfPlayers;
-    public Color[] playerColors;
+    public Color32[] playerColors;
     public Vector3[] playerPositions;
     public string difficulty;
     public string[] citiesNames;
