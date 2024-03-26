@@ -188,7 +188,10 @@ public class LoadManager : MonoBehaviour
 
         CityLoadData cityLoadData = new CityLoadData(
             quickSaveReader.Read<Vector3>(cityKey + "position"),
-            quickSaveReader.Read<string>(cityKey + "name")
+            quickSaveReader.Read<string>(cityKey + "name"),
+            quickSaveReader.Read<int>(cityKey + "level"),
+            quickSaveReader.Read<string>(cityKey + "unitInProduction"),
+            quickSaveReader.Read<int>(cityKey + "unitInProductionTurnsLeft")
         );
 
         return cityLoadData;

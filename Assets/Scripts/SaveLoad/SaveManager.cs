@@ -134,6 +134,9 @@ public class SaveManager : MonoBehaviour
         string cityKey = playerKey + "city" + index;
         quickSaveWriter.Write<Vector3>(cityKey + "position", city.cityTiles.FirstOrDefault().transform.position);
         quickSaveWriter.Write<string>(cityKey + "name", city.Name);
+        quickSaveWriter.Write<int>(cityKey + "level", city.Level);
+        quickSaveWriter.Write<string>(cityKey + "unitInProduction", city.UnitInProduction.name);
+        quickSaveWriter.Write<int>(cityKey + "unitInProductionTurnsLeft", city.UnitInProductionTurnsLeft);
         quickSaveWriter.Commit();
     }
 

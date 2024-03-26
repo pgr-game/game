@@ -23,11 +23,11 @@ public class PlayerCitiesManager
         {
             foreach (var city in cityLoadData)
             {
-                ClaimStartingCity(city.name, city.position);
+                ClaimStartingCity(city.name, city.position, city);
             }
         } else
         {
-            ClaimStartingCity(startingCityName, playerManager.transform.position);
+            ClaimStartingCity(startingCityName, playerManager.transform.position, null);
         }
     }
 
@@ -35,10 +35,10 @@ public class PlayerCitiesManager
         cities.Add(city);
     }
 
-    void ClaimStartingCity(string startingCityName, Vector3 position) {
+    void ClaimStartingCity(string startingCityName, Vector3 position, CityLoadData cityLoadData) {
         List<CityTile> startingCityTiles = mapManager.GetCityTilesInPosition(position);
         if(startingCityTiles.Count != 0) {
-            mapManager.InitCity(startingCityTiles, this.playerManager, startingCityName);
+            mapManager.InitCity(startingCityTiles, this.playerManager, startingCityName, cityLoadData);
         }
     }
 

@@ -74,14 +74,14 @@ public class MapManager : MonoBehaviour
                     if(isPlayerStart) {
                         continue;
                     } else {
-                        InitCity(cityTiles, null, null); //eventually get a name from list of neutral names
+                        InitCity(cityTiles, null, null, null); //eventually get a name from list of neutral names
                     }
                 }
             }
         }
     }
 
-    public void InitCity(List<CityTile> cityTiles, PlayerManager playerManager, string name) {
+    public void InitCity(List<CityTile> cityTiles, PlayerManager playerManager, string name, CityLoadData cityLoadData) {
         City city = new City();
         city.cityTiles = new List<CityTile>();
         city.turnCreated = gameManager.turnNumber;
@@ -96,6 +96,15 @@ public class MapManager : MonoBehaviour
         }
 
         city.InitCityUI(null, this.CityUIPrefab, name);
+
+        if (cityLoadData != null)
+        {
+            gameManager.cityMenuManager.setValues(city);
+            gameManager.cityMenuManager.SelectProductionUnit(cityLoadData.unitInProduction);
+            // + 1 is necessary because there is always a turn skip after city init
+            city.UnitInProductionTurnsLeft = cityLoadData.unitInProductionTurnsLeft + 1;
+            city.UI.SetTurnsLeft(cityLoadData.unitInProductionTurnsLeft + 1);
+        }
     }
 
     //private void InitCityUI(PlayerManager player) {
