@@ -12,6 +12,7 @@ public class UnitStatsUIController : MonoBehaviour
     public GameObject unitDefenseText;
     public GameObject unitBox;
     public GameObject xpSlider;
+    public GameObject maxLvlText;
     void Start()
     {
         HideUnitBox();
@@ -31,8 +32,18 @@ public class UnitStatsUIController : MonoBehaviour
 
         unitDefenseText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.defense.ToString();
 
-
-        xpSlider.GetComponent<Slider>().value= (float)unitController.experience/ (float)System.Math.Pow(2, unitController.level);
+        if (unitController.level >= 5 )
+        {
+            maxLvlText.SetActive(true);
+            xpSlider.SetActive(false);
+        }
+        else
+        {
+            maxLvlText.SetActive(false);
+            xpSlider.SetActive(true);
+            xpSlider.GetComponent<Slider>().value = (float)unitController.experience / (float)System.Math.Pow(2, unitController.level);
+        }
+        
 
     }
 

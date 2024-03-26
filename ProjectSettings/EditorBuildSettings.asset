@@ -9,6 +9,15 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 1be3880b70b82134998c5f071dfaed4a
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/RiverDelta.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Mountains.unity
+    guid: df3dac9976c806f489f52170f10d70e3
+  - enabled: 1
+    path: Assets/Scenes/Lakes.unity
+    guid: fd487fcbb7fa7ec41b9808f545380c6d
+  - enabled: 1
+    path: Assets/Scenes/BigSea.unity
+    guid: 46be01d869c5c7a4ebe4a09f65808d3e
   m_configObjects: {}
