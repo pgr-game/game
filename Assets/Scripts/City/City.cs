@@ -16,7 +16,12 @@ public class City
     public int turnCreated;
     public CityUIController UI;
 
+    public int health;
+    public int maxHealth;
+    private List<UnitController> garrisonUnits;
+
     public void InitCityUI(PlayerManager player, GameObject CityUIPrefab, string name) {
+        garrisonUnits = new List<UnitController>();
         uiAnchor = MapManager.CalculateMidpoint(cityTiles.Select(cityTile => cityTile.transform.position).ToList());
         UI = UnityEngine.Object.Instantiate(CityUIPrefab, uiAnchor, Quaternion.identity).GetComponent<CityUIController>();
         UI.Init();
@@ -33,7 +38,8 @@ public class City
         if(UnitInProductionTurnsLeft != 0) {
             UnitInProductionTurnsLeft = UnitInProductionTurnsLeft - 1;
             if(UnitInProductionTurnsLeft == 0) {
-                Owner.InstantiateUnit(UnitInProduction, null);
+                UnitController newUnit = Owner.InstantiateUnit(UnitInProduction, null);
+                AddToGarrison(newUnit);
                 UnitInProductionTurnsLeft = UnitInProduction.GetProductionTurns();
                 
             }
@@ -47,5 +53,31 @@ public class City
         this.UnitInProductionTurnsLeft = unit.GetProductionTurns();
         UI.SetUnitInProduction(unitInProductionPrefab);
         UI.SetTurnsLeft(UnitInProductionTurnsLeft);
+    }
+
+    public void AddToGarrison(UnitController unit)
+    {
+        garrisonUnits.Add(unit);
+        UpdateHealth();
+    }
+
+    public void RemoveFromGarrison(UnitController unit)
+    {
+        garrisonUnits.Remove(unit);
+        UpdateHealth();
+    }
+
+    public void UpdateHealth()
+    {
+        health = 0;
+        maxHealth = 0;
+
+        foreach (var unit in garrisonUnits)
+        {
+            health += unit.currentHealth;
+            maxHealth += unit.maxHealth;
+        }
+
+        UI.SetHP(health, maxHealth);
     }
 }

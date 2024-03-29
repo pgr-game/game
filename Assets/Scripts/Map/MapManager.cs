@@ -34,6 +34,16 @@ public class MapManager : MonoBehaviour
         {
             Debug.Log("Can't find MapView. Random errors can occur");
         }
+
+        GameObject[] cityTiles = GameObject.FindGameObjectsWithTag("CityTile");
+        foreach (GameObject cityTileObject in cityTiles)
+        {
+            CityTile cityTileComponent = cityTileObject.GetComponent<CityTile>();
+            if (cityTileComponent != null)
+            {
+                cityTileComponent.Initialize(gameManager);
+            }
+        }
     }
 
 

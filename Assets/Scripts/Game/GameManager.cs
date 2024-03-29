@@ -71,16 +71,6 @@ public class GameManager : MonoBehaviour
 
         InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames);
         players[activePlayerIndex].StartTurn();
-
-        GameObject[] cityTiles = GameObject.FindGameObjectsWithTag("CityTile");
-        foreach (GameObject cityTileObject in cityTiles)
-        {
-            CityTile cityTileComponent = cityTileObject.GetComponent<CityTile>();
-            if (cityTileComponent != null)
-            {
-                cityTileComponent.Initialize(this);
-            }
-        }
         
     }
 

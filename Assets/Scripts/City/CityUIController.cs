@@ -11,6 +11,7 @@ public class CityUIController : MonoBehaviour
     private Image PlayerColorImage;
     private Image HPImage;
     private TMP_Text HPText;
+    private TMP_Text NoGarrisonText;
     private Image unitInProductionImage;
     private TMP_Text unitInProductionTurnsText;
     // Start is called before the first frame update
@@ -20,8 +21,8 @@ public class CityUIController : MonoBehaviour
         this.levelObject = transform.Find("Level").GetComponent<TMP_Text>();
         this.PlayerColorImage = transform.Find("Backdrop/Image").GetComponent<Image>();
         this.HPImage = transform.Find("HP/Filler").GetComponent<Image>();
-        this.HPText = transform.Find("HP/Text").GetComponent<TMP_Text>();
-        this.HPText = transform.Find("HP/Text").GetComponent<TMP_Text>();
+        this.HPText = transform.Find("HP/HealthText").GetComponent<TMP_Text>();
+        this.NoGarrisonText = transform.Find("HP/NoGarrisonText").GetComponent<TMP_Text>();
         this.unitInProductionImage = transform.Find("UnitImage").GetComponent<Image>();
         this.unitInProductionTurnsText = transform.Find("TurnsLeft").GetComponent<TMP_Text>();
     }
@@ -35,8 +36,18 @@ public class CityUIController : MonoBehaviour
     }
 
     public void SetHP(int HP, int MaxHP) {
-        HPImage.fillAmount = (float)HP/(float)MaxHP;
-        HPText.text = HP+"/"+MaxHP+" HP";
+        if(MaxHP > 0)
+        {
+            HPText.text = HP + "/" + MaxHP + " HP";
+            NoGarrisonText.text = "";
+            HPImage.fillAmount = (float)HP / (float)MaxHP;
+        }
+        else
+        {
+            HPText.text = "";
+            NoGarrisonText.text = "NO GARRISON!";
+            HPImage.fillAmount = (float)0 / (float)1;
+        }
     }
 
     public void SetColor(Color32 color) {

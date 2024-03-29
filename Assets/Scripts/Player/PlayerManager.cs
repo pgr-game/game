@@ -146,15 +146,27 @@ public class PlayerManager : MonoBehaviour
         }
         else 
         {
+            // instantiate new without loading health, movement left etc.
             foreach(UnitController unit in startingResources.units) 
             {
                 InstantiateUnit(unit, null);
             }
         }
+
+        //add units to city garrison
+        foreach(UnitController unit in allyUnits) 
+        {
+            var path = mapManager.MapEntity.PathTiles(unit.transform.position, unit.transform.position, 1);
+            var tile = path.Last();
+            if (tile.CityTilePresent)
+            {
+                tile.CityTilePresent.city.AddToGarrison(unit);
+            }
+        }
         
     }
 
-    public void InstantiateUnit(UnitController unitController, UnitLoadData unitLoadData) {
+    public UnitController InstantiateUnit(UnitController unitController, UnitLoadData unitLoadData) {
         Vector3 position = transform.position;
         if(unitLoadData != null) {
             position = unitLoadData.position;
@@ -173,6 +185,7 @@ public class PlayerManager : MonoBehaviour
         UnitController newUnit = Instantiate(unitController, position, Quaternion.identity).GetComponent<UnitController>();
         allyUnits.Add(newUnit);
         newUnit.Init(this, mapManager, gameManager, gameManager.unitStatsUIController);
+        return newUnit;
     }
 
     void InitCities(string startingCityName, List<CityLoadData> cityLoadData) {
