@@ -176,6 +176,12 @@ public class UnitController : MonoBehaviour
         TileEntity oldTile = this.mapManager.MapEntity.Tile(this.unitMove.hexPosition);
         oldTile.UnitPresent = null;
         killer.GainXP(this.level);
+
+        if(oldTile.CityTilePresent && oldTile.CityTilePresent.city.Owner == owner)
+        {
+            oldTile.CityTilePresent.city.RemoveFromGarrison(this);
+        }
+
         Destroy(gameObject);
     }
 

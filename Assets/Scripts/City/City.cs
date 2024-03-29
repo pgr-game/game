@@ -92,12 +92,11 @@ public class City
 
     public void ReceiveDamage(int incomingDamage, UnitController attacker)
     {
-        foreach (var unit in garrisonUnits)
+        for (int i = 0; i < garrisonUnits.Count; i++)
         {
-            unit.ReceiveDamage(incomingDamage / garrisonUnits.Count, attacker);
+            garrisonUnits[i].ReceiveDamage(incomingDamage / garrisonUnits.Count, attacker);
         }
 
-        garrisonUnits.RemoveAll(u => u is null);
         UpdateHealth();
 
         if (this.health <= 0)

@@ -80,6 +80,7 @@ public class UnitMove : MonoBehaviour
             // attack enemy city
             if (tile.CityTilePresent is not null && tile.CityTilePresent.city.Owner != unitController.owner)
             {
+                attackedCity = true;
                 SubClass(tile, clickPos, true);
                 this.unitController.Attack(tile.CityTilePresent.city);
             }
