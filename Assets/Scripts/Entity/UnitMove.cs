@@ -75,18 +75,19 @@ public class UnitMove : MonoBehaviour
             if (tile == null) return;
 
             CityTile movedFromCityTile = mapManager.MapEntity.Tile(transform.position).CityTilePresent;
+            bool attackedCity = false;
 
+            // attack enemy city
+            if (tile.CityTilePresent is not null && tile.CityTilePresent.city.Owner != unitController.owner)
+            {
+                SubClass(tile, clickPos, true);
+                this.unitController.Attack(tile.CityTilePresent.city);
+            }
             // attack
-            if (tile.UnitPresent is not null && tile.UnitPresent.owner != this.unitController.owner && !this.unitController.attacked)
+            else if (tile.UnitPresent is not null && tile.UnitPresent.owner != this.unitController.owner && !this.unitController.attacked)
             {
                 SubClass(tile, clickPos, true);
                 this.unitController.Attack(tile.UnitPresent);
-            }
-            // attack enemy city
-            else if (tile.CityTilePresent is not null && tile.CityTilePresent.city.Owner != unitController.owner)
-            {
-                Debug.Log("Attack city");
-                SubClass(tile, clickPos, false);
             }
             // move to empty tile
             else if (tile.UnitPresent is null)
@@ -103,7 +104,7 @@ public class UnitMove : MonoBehaviour
             //moved out of city
                 movedFromCityTile.city.RemoveFromGarrison(unitController);
             }
-            if (movedFromCityTile is null && tile.CityTilePresent)
+            if (movedFromCityTile is null && tile.CityTilePresent && !attackedCity)
             {
                 //moved into city
                 tile.CityTilePresent.city.AddToGarrison(unitController);

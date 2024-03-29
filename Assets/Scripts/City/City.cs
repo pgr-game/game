@@ -1,3 +1,4 @@
+using RedBjorn.ProtoTiles;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,7 @@ public class City
         if(UnitInProductionTurnsLeft != 0) {
             UnitInProductionTurnsLeft = UnitInProductionTurnsLeft - 1;
             if(UnitInProductionTurnsLeft == 0) {
-                UnitController newUnit = Owner.InstantiateUnit(UnitInProduction, null);
+                UnitController newUnit = Owner.InstantiateUnit(UnitInProduction, null, cityTiles.FirstOrDefault().transform.position);
                 AddToGarrison(newUnit);
                 UnitInProductionTurnsLeft = UnitInProduction.GetProductionTurns();
                 
@@ -57,8 +58,11 @@ public class City
 
     public void AddToGarrison(UnitController unit)
     {
-        garrisonUnits.Add(unit);
-        UpdateHealth();
+        if (unit.owner == Owner)
+        {
+            garrisonUnits.Add(unit);
+            UpdateHealth();
+        }
     }
 
     public void RemoveFromGarrison(UnitController unit)
@@ -79,5 +83,37 @@ public class City
         }
 
         UI.SetHP(health, maxHealth);
+    }
+
+    public int GetDefense()
+    {
+        return 1;
+    }
+
+    public void ReceiveDamage(int incomingDamage, UnitController attacker)
+    {
+        foreach (var unit in garrisonUnits)
+        {
+            unit.ReceiveDamage(incomingDamage / garrisonUnits.Count, attacker);
+        }
+
+        garrisonUnits.RemoveAll(u => u is null);
+        UpdateHealth();
+
+        if (this.health <= 0)
+        {
+            this.Death(attacker);
+        }
+    }
+
+    public void Death(UnitController killer)
+    {
+        Owner.playerCitiesManager.cities.Remove(this);
+        killer.owner.playerCitiesManager.cities.Add(this);
+        Owner = killer.owner;
+        UI.SetColor(Owner.color);
+        killer.owner.AddGold(Level * 100);
+        killer.GainXP(this.Level);
+        UpdateHealth();
     }
 }

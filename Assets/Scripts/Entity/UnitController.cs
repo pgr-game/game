@@ -138,12 +138,24 @@ public class UnitController : MonoBehaviour
             int damage = this.attack - enemy.GetDefense();
             if (damage < 0) damage = 0;
             this.attacked = true;
-            enemy.reciveDamage(damage,this);
+            enemy.ReceiveDamage(damage,this);
         }
         this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
     }
 
-    public void reciveDamage(int incomingDamage, UnitController attacker)
+    public void Attack(City enemy)
+    {
+        if (!this.attacked)
+        {
+            int damage = this.attack - enemy.GetDefense();
+            if (damage < 0) damage = 0;
+            this.attacked = true;
+            enemy.ReceiveDamage(damage, this);
+        }
+        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
+    }
+
+    public void ReceiveDamage(int incomingDamage, UnitController attacker)
     {
         this.currentHealth = this.currentHealth - incomingDamage;
         GameObject unitUI = this.transform.Find("UnitDefaultBar(Clone)").gameObject;

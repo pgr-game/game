@@ -141,7 +141,7 @@ public class PlayerManager : MonoBehaviour
 
             foreach(var ud in unitControllerAndLoadData)
             {
-                InstantiateUnit(ud.UnitController, ud.UnitLoadData);
+                InstantiateUnit(ud.UnitController, ud.UnitLoadData, transform.position);
             }
         }
         else 
@@ -149,7 +149,7 @@ public class PlayerManager : MonoBehaviour
             // instantiate new without loading health, movement left etc.
             foreach(UnitController unit in startingResources.units) 
             {
-                InstantiateUnit(unit, null);
+                InstantiateUnit(unit, null, transform.position);
             }
         }
 
@@ -166,8 +166,7 @@ public class PlayerManager : MonoBehaviour
         
     }
 
-    public UnitController InstantiateUnit(UnitController unitController, UnitLoadData unitLoadData) {
-        Vector3 position = transform.position;
+    public UnitController InstantiateUnit(UnitController unitController, UnitLoadData unitLoadData, Vector3 position) {
         if(unitLoadData != null) {
             position = unitLoadData.position;
             unitController.maxHealth = unitLoadData.maxHealth;
