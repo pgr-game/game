@@ -2594,8 +2594,8 @@ RectTransform:
   - {fileID: 1092756229}
   m_Father: {fileID: 74995676}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.53, y: 0}
-  m_AnchorMax: {x: 0.53, y: 1}
+  m_AnchorMin: {x: 0.6, y: 0}
+  m_AnchorMax: {x: 0.6, y: 1}
   m_AnchoredPosition: {x: -4.5, y: 0.5}
   m_SizeDelta: {x: 24.1, y: 4.1}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4487,7 +4487,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.53
+  m_FillAmount: 0.6
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -6641,6 +6641,10 @@ PrefabInstance:
     - target: {fileID: 8606241540321354705, guid: cdb4cc2d8830e86438f33a0c0daf0556, type: 3}
       propertyPath: m_Name
       value: Scroll View Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 8606241540321354705, guid: cdb4cc2d8830e86438f33a0c0daf0556, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
