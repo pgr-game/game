@@ -52,7 +52,7 @@ public class City
         this.UnitInProduction = unit;
         this.unitInProductionPrefab = unitInProductionPrefab;
         this.UnitInProductionTurnsLeft = unit.GetProductionTurns();
-        UI.SetUnitInProduction(unitInProductionPrefab);
+        UI.SetUnitInProduction(Owner.gameManager.getUnitSprite(unit.unitType));
         UI.SetTurnsLeft(UnitInProductionTurnsLeft);
     }
 
@@ -62,12 +62,15 @@ public class City
         {
             garrisonUnits.Add(unit);
             UpdateHealth();
+            Sprite sprite = Owner.gameManager.getUnitSprite(unit.unitType);
+            UI.AddGarrisonedUnitIcon(sprite, unit.unitType);
         }
     }
 
     public void RemoveFromGarrison(UnitController unit)
     {
         garrisonUnits.Remove(unit);
+        UI.RemoveGarrisonedUnitIcon(unit.unitType);
         UpdateHealth();
     }
 

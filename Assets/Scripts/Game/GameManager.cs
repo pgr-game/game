@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
     // Unit types
     private const int amountOfUnitTypes = 7;
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
+    public Sprite[] unitSprites = new Sprite[amountOfUnitTypes];
 
     // UI elements
     public UnitStatsUIController unitStatsUIController;
@@ -49,6 +50,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        InitStaticVariables();
+
         gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
         string saveRoot = SaveRoot.saveRoot;
         SceneLoadData sceneLoadData = new SceneLoadData();
@@ -72,6 +75,14 @@ public class GameManager : MonoBehaviour
         InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames);
         players[activePlayerIndex].StartTurn();
         
+    }
+
+    private void InitStaticVariables()
+    {
+        for (int i = 0; i < unitPrefabs.Length; i++)
+        {
+            unitSprites[i] = unitPrefabs[i].transform.Find("Sprite").GetComponent<SpriteRenderer>().sprite;
+        }
     }
 
     public SceneLoadData LoadDataFromSettingsCreator() {
@@ -238,5 +249,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject getUnitPrefab(UnitTypes unitType) {
         return unitPrefabs[(int)unitType];
+    }
+    public Sprite getUnitSprite(UnitTypes unitType)
+    {
+        return unitSprites[(int)unitType];
     }
 }

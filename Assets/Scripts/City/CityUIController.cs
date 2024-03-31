@@ -6,25 +6,21 @@ using TMPro;
 
 public class CityUIController : MonoBehaviour
 {
-    private TMP_Text nameObject;
-    private TMP_Text levelObject;
-    private Image PlayerColorImage;
-    private Image HPImage;
-    private TMP_Text HPText;
-    private TMP_Text NoGarrisonText;
-    private Image unitInProductionImage;
-    private TMP_Text unitInProductionTurnsText;
+    public TMP_Text nameObject;
+    public TMP_Text levelObject;
+    public Image PlayerColorImage;
+    public Image HPImage;
+    public TMP_Text HPText;
+    public TMP_Text NoGarrisonText;
+    public Image unitInProductionImage;
+    public TMP_Text unitInProductionTurnsText;
+    public HorizontalLayoutGroup garrisonUnitIconsContainer;
+
+    public List<UnitIconController> garrisonUnitIcons;
+    public GameObject unitIconPrefab;
     // Start is called before the first frame update
     public void Init()
     {
-        this.nameObject = transform.Find("Name").GetComponent<TMP_Text>();
-        this.levelObject = transform.Find("Level").GetComponent<TMP_Text>();
-        this.PlayerColorImage = transform.Find("Backdrop/Image").GetComponent<Image>();
-        this.HPImage = transform.Find("HP/Filler").GetComponent<Image>();
-        this.HPText = transform.Find("HP/HealthText").GetComponent<TMP_Text>();
-        this.NoGarrisonText = transform.Find("HP/NoGarrisonText").GetComponent<TMP_Text>();
-        this.unitInProductionImage = transform.Find("UnitImage").GetComponent<Image>();
-        this.unitInProductionTurnsText = transform.Find("TurnsLeft").GetComponent<TMP_Text>();
     }
 
     public void SetName(string name) {
@@ -62,8 +58,39 @@ public class CityUIController : MonoBehaviour
         unitInProductionTurnsText.text = turnsLeft.ToString();
     }
 
-    public void SetUnitInProduction(GameObject unitPrefab) {
-        Sprite sprite = unitPrefab.transform.Find("Sprite").GetComponent<SpriteRenderer>().sprite;
+    public void SetUnitInProduction(Sprite sprite) {
         SetUnitInProductionImage(sprite);
+    }
+
+    public void AddGarrisonedUnitIcon(Sprite icon, UnitTypes unitType)
+    {
+        UnitIconController unitIcon = garrisonUnitIcons.Find(u => u.name == unitType.ToString());
+        if (unitIcon)
+        {
+            unitIcon.IncrementCount();
+        }
+        else
+        {
+            GameObject newIconObject = Instantiate(unitIconPrefab, garrisonUnitIconsContainer.transform.position + new Vector3(0, 0, 0), Quaternion.identity, garrisonUnitIconsContainer.transform);
+            UnitIconController newIcon = newIconObject.GetComponent<UnitIconController>();
+            newIcon.IncrementCount();
+            newIcon.SetImage(icon);
+            newIcon.name = unitType.ToString();
+            garrisonUnitIcons.Add(newIcon);
+        }
+    }
+
+    public void RemoveGarrisonedUnitIcon(UnitTypes unitType)
+    {
+        UnitIconController unitIcon = garrisonUnitIcons.Find(u => u.name == unitType.ToString());
+        if (unitIcon && unitIcon.count > 1)
+        {
+            unitIcon.DecrementCount();
+        }
+        else
+        {
+            Destroy(unitIcon.gameObject);
+            garrisonUnitIcons.Remove(unitIcon);
+        }
     }
 }
