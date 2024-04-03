@@ -72,9 +72,20 @@ public class UnitMove : MonoBehaviour
             var clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
             var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, RangeLeft);
             var tile = path.Last();
-            if(tile == null) return;
+            if (tile == null) return;
+
+            CityTile movedFromCityTile = mapManager.MapEntity.Tile(transform.position).CityTilePresent;
+            bool attackedCity = false;
+
+            // attack enemy city
+            if (tile.CityTilePresent is not null && tile.CityTilePresent.city.Owner != unitController.owner)
+            {
+                attackedCity = true;
+                SubClass(tile, clickPos, true);
+                this.unitController.Attack(tile.CityTilePresent.city);
+            }
             // attack
-            if(tile.UnitPresent is not null && tile.UnitPresent.owner != this.unitController.owner && !this.unitController.attacked)
+            else if (tile.UnitPresent is not null && tile.UnitPresent.owner != this.unitController.owner && !this.unitController.attacked)
             {
                 SubClass(tile, clickPos, true);
                 this.unitController.Attack(tile.UnitPresent);
@@ -89,7 +100,17 @@ public class UnitMove : MonoBehaviour
             {
                 SubClass(tile, clickPos, false);
             }
-        }
+
+            if(movedFromCityTile is not null && (!tile.CityTilePresent || tile.CityTilePresent.city != movedFromCityTile.city)) {
+            //moved out of city
+                movedFromCityTile.city.RemoveFromGarrison(unitController);
+            }
+            if (movedFromCityTile is null && tile.CityTilePresent && !attackedCity)
+            {
+                //moved into city
+                tile.CityTilePresent.city.AddToGarrison(unitController);
+            }
+    }
 
         private void SubClass(TileEntity tile,Vector3 clickPos,bool attackMove)
         {
@@ -114,7 +135,7 @@ public class UnitMove : MonoBehaviour
             PathHide();
 
 
-        Move(path, () =>
+            Move(path, () =>
             {
                 Path.IsEnabled = true;
                 AreaShow();
