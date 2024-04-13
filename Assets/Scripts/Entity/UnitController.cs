@@ -84,7 +84,6 @@ public class UnitController : MonoBehaviour
 
     private void UpdateUnitUI()
     {
-        this.gameManager.soundManager.GetComponent<SoundManager>().PlayKillSound();
         GameObject myUI = gameObject.transform.Find("UnitInfoBarDefault(Clone)").gameObject;
 
         GameObject unitAttack = myUI.transform.Find("AttackValue").gameObject;
@@ -99,7 +98,6 @@ public class UnitController : MonoBehaviour
 
     public void Activate()
     {
-        this.gameManager.soundManager.GetComponent<SoundManager>().PlayKillSound();
         unitMove.Activate();
         UpdateUnitUI();
         this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
