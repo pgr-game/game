@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public MapManager mapManager;
     public SaveManager saveManager;
     public LoadManager loadManager;
+    public GameObject soundManager;
     public CityMenuManager cityMenuManager;
     public PauseMenu pauseMenu;
     public GameObject playerPrefab;
@@ -49,6 +50,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        soundManager = Instantiate(soundManager, new Vector3(0,0,0), Quaternion.identity);
+
         gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
         string saveRoot = SaveRoot.saveRoot;
         SceneLoadData sceneLoadData = new SceneLoadData();
