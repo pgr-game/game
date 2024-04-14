@@ -48746,6 +48746,26 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: NextPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 1421380968864611073, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1043727866}
+    - target: {fileID: 1421380968864611073, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Save
+      objectReference: {fileID: 0}
+    - target: {fileID: 1421380968864611073, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SaveManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3216131637355549033, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1043727868}
+    - target: {fileID: 3216131637355549033, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: QuitGame
+      objectReference: {fileID: 0}
     - target: {fileID: 4422459506408218354, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -48830,6 +48850,46 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI
       objectReference: {fileID: 0}
+    - target: {fileID: 6158640300422042690, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1043727868}
+    - target: {fileID: 6158640300422042690, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ResumeGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 6770394590564797792, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1043727868}
+    - target: {fileID: 6770394590564797792, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToMainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 6810117451858173727, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1043727868}
+    - target: {fileID: 6810117451858173727, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: QuickSave
+      objectReference: {fileID: 0}
+    - target: {fileID: 6810117451858173727, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PauseMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287220080241631498, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1043727868}
+    - target: {fileID: 7287220080241631498, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OpenSaveNameInput
+      objectReference: {fileID: 0}
+    - target: {fileID: 8836280521306314001, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 1043727869}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

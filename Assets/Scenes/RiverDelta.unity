@@ -50507,6 +50507,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1991390624}
+    - target: {fileID: 1194645006335653441, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NextPlayer
+      objectReference: {fileID: 0}
     - target: {fileID: 1421380968864611073, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
