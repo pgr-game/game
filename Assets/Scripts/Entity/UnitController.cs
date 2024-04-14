@@ -28,6 +28,8 @@ public class UnitController : MonoBehaviour
     public GameObject lvlUPMenu;
     public UnitStatsUIController unitStatsUIController;
 
+    public List<AudioClip> moveSounds= new List<AudioClip>();
+
     public GameObject fortButton;
 
     public bool attacked;

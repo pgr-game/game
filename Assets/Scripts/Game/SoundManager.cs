@@ -8,9 +8,16 @@ public class SoundManager : MonoBehaviour
     // Start is called before the first frame update
     public void PlayKillSound()
     {
-        this.gameObject.SetActive(true);
         AudioSource audio = GetComponent<AudioSource>();
         audio.clip = killSound;
+        audio.Play();
+    }
+
+    public void PlayMoveSound(UnitController unit)
+    {
+        int n = Random.Range(0,unit.moveSounds.Count);
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.clip = unit.moveSounds[n];
         audio.Play();
     }
 }
