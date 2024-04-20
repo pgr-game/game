@@ -6,24 +6,21 @@ using TMPro;
 
 public class CityUIController : MonoBehaviour
 {
-    private TMP_Text nameObject;
-    private TMP_Text levelObject;
-    private Image PlayerColorImage;
-    private Image HPImage;
-    private TMP_Text HPText;
-    private Image unitInProductionImage;
-    private TMP_Text unitInProductionTurnsText;
+    public TMP_Text nameObject;
+    public TMP_Text levelObject;
+    public Image PlayerColorImage;
+    public Image HPImage;
+    public TMP_Text HPText;
+    public TMP_Text NoGarrisonText;
+    public Image unitInProductionImage;
+    public TMP_Text unitInProductionTurnsText;
+    public HorizontalLayoutGroup garrisonUnitIconsContainer;
+
+    public List<UnitIconController> garrisonUnitIcons;
+    public GameObject unitIconPrefab;
     // Start is called before the first frame update
     public void Init()
     {
-        this.nameObject = transform.Find("Name").GetComponent<TMP_Text>();
-        this.levelObject = transform.Find("Level").GetComponent<TMP_Text>();
-        this.PlayerColorImage = transform.Find("Backdrop/Image").GetComponent<Image>();
-        this.HPImage = transform.Find("HP/Filler").GetComponent<Image>();
-        this.HPText = transform.Find("HP/Text").GetComponent<TMP_Text>();
-        this.HPText = transform.Find("HP/Text").GetComponent<TMP_Text>();
-        this.unitInProductionImage = transform.Find("UnitImage").GetComponent<Image>();
-        this.unitInProductionTurnsText = transform.Find("TurnsLeft").GetComponent<TMP_Text>();
     }
 
     public void SetName(string name) {
@@ -35,8 +32,18 @@ public class CityUIController : MonoBehaviour
     }
 
     public void SetHP(int HP, int MaxHP) {
-        HPImage.fillAmount = (float)HP/(float)MaxHP;
-        HPText.text = HP+"/"+MaxHP+" HP";
+        if(MaxHP > 0)
+        {
+            HPText.text = HP + "/" + MaxHP + " HP";
+            NoGarrisonText.text = "";
+            HPImage.fillAmount = (float)HP / (float)MaxHP;
+        }
+        else
+        {
+            HPText.text = "";
+            NoGarrisonText.text = "NO GARRISON!";
+            HPImage.fillAmount = (float)0 / (float)1;
+        }
     }
 
     public void SetColor(Color32 color) {
@@ -51,8 +58,39 @@ public class CityUIController : MonoBehaviour
         unitInProductionTurnsText.text = turnsLeft.ToString();
     }
 
-    public void SetUnitInProduction(GameObject unitPrefab) {
-        Sprite sprite = unitPrefab.transform.Find("Sprite").GetComponent<SpriteRenderer>().sprite;
+    public void SetUnitInProduction(Sprite sprite) {
         SetUnitInProductionImage(sprite);
+    }
+
+    public void AddGarrisonedUnitIcon(Sprite icon, UnitTypes unitType)
+    {
+        UnitIconController unitIcon = garrisonUnitIcons.Find(u => u.name == unitType.ToString());
+        if (unitIcon)
+        {
+            unitIcon.IncrementCount();
+        }
+        else
+        {
+            GameObject newIconObject = Instantiate(unitIconPrefab, garrisonUnitIconsContainer.transform.position + new Vector3(0, 0, 0), Quaternion.identity, garrisonUnitIconsContainer.transform);
+            UnitIconController newIcon = newIconObject.GetComponent<UnitIconController>();
+            newIcon.IncrementCount();
+            newIcon.SetImage(icon);
+            newIcon.name = unitType.ToString();
+            garrisonUnitIcons.Add(newIcon);
+        }
+    }
+
+    public void RemoveGarrisonedUnitIcon(UnitTypes unitType)
+    {
+        UnitIconController unitIcon = garrisonUnitIcons.Find(u => u.name == unitType.ToString());
+        if (unitIcon && unitIcon.count > 1)
+        {
+            unitIcon.DecrementCount();
+        }
+        else
+        {
+            Destroy(unitIcon.gameObject);
+            garrisonUnitIcons.Remove(unitIcon);
+        }
     }
 }
