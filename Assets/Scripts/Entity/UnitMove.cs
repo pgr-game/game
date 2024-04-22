@@ -114,6 +114,7 @@ public class UnitMove : MonoBehaviour
 
         private void SubClass(TileEntity tile,Vector3 clickPos,bool attackMove)
         {
+        this.mapManager.gameManager.soundManager.GetComponent<SoundManager>().PlayMoveSound(this.unitController);
             TileEntity oldTile = mapManager.MapEntity.Tile(hexPosition);
             oldTile.UnitPresent = null;
             unitController.owner.ResetUnitPresentOnTile(oldTile, this.unitController);

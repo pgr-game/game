@@ -28,6 +28,8 @@ public class UnitController : MonoBehaviour
     public GameObject lvlUPMenu;
     public UnitStatsUIController unitStatsUIController;
 
+    public List<AudioClip> moveSounds= new List<AudioClip>();
+
     public GameObject fortButton;
 
     public bool attacked;
@@ -84,7 +86,7 @@ public class UnitController : MonoBehaviour
 
     private void UpdateUnitUI()
     {
-        GameObject myUI = gameObject.transform.Find("UnitDefaultBar(Clone)").gameObject;
+        GameObject myUI = gameObject.transform.Find("UnitInfoBarDefault(Clone)").gameObject;
 
         GameObject unitAttack = myUI.transform.Find("AttackValue").gameObject;
         TMP_Text attackText = unitAttack.GetComponent<TMP_Text>();
@@ -158,7 +160,7 @@ public class UnitController : MonoBehaviour
     public void ReceiveDamage(int incomingDamage, UnitController attacker)
     {
         this.currentHealth = this.currentHealth - incomingDamage;
-        GameObject unitUI = this.transform.Find("UnitDefaultBar(Clone)").gameObject;
+        GameObject unitUI = this.transform.Find("UnitInfoBarDefault(Clone)").gameObject;
         GameObject damageUI = Instantiate(damageRecivedUI, unitUI.transform.position, Quaternion.identity, unitUI.transform);
         damageUI.transform.Find("Damage").gameObject.GetComponent<TextMeshProUGUI>().text = incomingDamage.ToString();
         damageUI.GetComponent<DamageAnimation>().angle = this.transform.position - attacker.transform.position;
@@ -166,6 +168,7 @@ public class UnitController : MonoBehaviour
         this.UpdateUnitUI();
         if (this.currentHealth <= 0)
         {
+            this.gameManager.soundManager.GetComponent<SoundManager>().PlayKillSound();
             this.Death(attacker);
         }
     }
