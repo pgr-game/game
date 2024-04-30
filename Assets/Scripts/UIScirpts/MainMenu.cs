@@ -5,6 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    private void Start()
+    {
+        SaveRoot.saveRoot = null;
+        SaveRoot.mapName = null;
+    }
     public void QuitGame()
     {
         Application.Quit(); 

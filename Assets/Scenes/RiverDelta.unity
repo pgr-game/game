@@ -46428,6 +46428,14 @@ MonoBehaviour:
   - {fileID: 7234204313763260200, guid: e45ecb898920ff842801bad3cc8bb233, type: 3}
   - {fileID: 5969487377251852545, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
   - {fileID: 3286708026827661072, guid: 4ed85a2d63bdf1b47aa30c2058185ac4, type: 3}
+  unitSprites:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   unitStatsUIController: {fileID: 2037950195}
   nextTurnButtonImage: {fileID: 203378221}
   UI: {fileID: 2037950189}
@@ -50523,6 +50531,10 @@ PrefabInstance:
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1991390626}
+    - target: {fileID: 4144312716789443177, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetTempSaveRoot
+      objectReference: {fileID: 0}
     - target: {fileID: 4422459506408218354, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
       propertyPath: m_Pivot.x
       value: 0
