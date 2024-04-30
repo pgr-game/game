@@ -56,6 +56,26 @@ PrefabInstance:
       propertyPath: attackRange
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: moveSounds.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: moveSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: d42d849f47f8ea84cb32653ec59cd453, type: 3}
+    - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: moveSounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: cc60d4d56de90ff428e8aacb97771bc4, type: 3}
+    - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: moveSounds.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: e49b68949b6c0cb458ca8381a951b843, type: 3}
+    - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: moveSounds.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 6f96b238856393042924c9bf20ef496c, type: 3}
     - target: {fileID: 7233426354256217250, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: m_Sprite
       value: 

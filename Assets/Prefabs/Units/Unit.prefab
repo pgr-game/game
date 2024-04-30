@@ -207,6 +207,29 @@ MonoBehaviour:
   owner: {fileID: 0}
   mapManager: {fileID: 0}
   unitMove: {fileID: -2897094208848902475}
+  unitType: 0
+  maxHealth: 0
+  currentHealth: 0
+  attack: 0
+  attackRange: 0
+  baseProductionCost: 0
+  turnsToProduce: 0
+  turnProduced: 0
+  level: 1
+  defense: 0
+  gameManager: {fileID: 0}
+  unitUI: {fileID: 0}
+  damageRecivedUI: {fileID: 0}
+  lvlUPMenu: {fileID: 0}
+  unitStatsUIController: {fileID: 0}
+  moveSounds:
+  - {fileID: 8300000, guid: 2699dcea9c6de004b9ee44c17ab1f243, type: 3}
+  - {fileID: 8300000, guid: 7d28cb5ec2dff234fa0bb776e0e77b8a, type: 3}
+  fortButton: {fileID: 0}
+  attacked: 0
+  experience: 0
+  canPlaceFort: 0
+  turnsSinceFortPlaced: 10
 --- !u!114 &-2897094208848902475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,11 +244,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 5
   Range: 3
+  RangeLeft: 0
   RotationNode: {fileID: 6633708624170358914}
   AreaPrefab: {fileID: 114964435729023602, guid: fe2319e9d6e840f409af77b3e7a85259, type: 3}
   PathPrefab: {fileID: 114413117004689456, guid: 4eac60a74696c8142b18f93d4453e87d, type: 3}
   mapManager: {fileID: 0}
+  unitController: {fileID: 0}
   Area: {fileID: 0}
+  hexPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &9216468578034891680
 GameObject:
   m_ObjectHideFlags: 0

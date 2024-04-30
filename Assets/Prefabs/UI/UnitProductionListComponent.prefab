@@ -160,7 +160,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1814479342345258, guid: cc85fa46c1f2f7546bf14034f9d306c9, type: 3}
       propertyPath: m_Name
-      value: UnitListComponent Variant
+      value: UnitProductionListComponent
       objectReference: {fileID: 0}
     - target: {fileID: 114859761744102944, guid: cc85fa46c1f2f7546bf14034f9d306c9, type: 3}
       propertyPath: m_Type

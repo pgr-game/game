@@ -66,6 +66,7 @@ namespace RedBjorn.ProtoTiles.Example
 
         public void Move(List<TileEntity> path, Action onCompleted)
         {
+
             if (path != null)
             {
                 if (MovingCoroutine != null)
