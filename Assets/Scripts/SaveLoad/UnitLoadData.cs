@@ -6,7 +6,7 @@ public class UnitLoadData
 {
     public UnitLoadData(Vector3 position, string unitType, int maxHealth, int currentHealth, 
     int attack, int attackRange, int baseProductionCost, int turnsToProduce, 
-    int turnProduced, int level, int experience)
+    int turnProduced, int level, int experience, float rangeLeft, bool attacked)
     {
         this.position = position;
         this.unitType = unitType;
@@ -19,6 +19,8 @@ public class UnitLoadData
         this.turnProduced = turnProduced;
         this.level = level;
         this.experience = experience;
+        this.rangeLeft = rangeLeft;
+        this.attacked = attacked;
     }
     public Vector3 position { get; private set; }
     public string unitType;
@@ -31,4 +33,6 @@ public class UnitLoadData
     public int turnProduced;
     public int level;
     public int experience;
+    public float rangeLeft;
+    public bool attacked;
 }

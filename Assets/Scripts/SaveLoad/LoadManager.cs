@@ -168,7 +168,9 @@ public class LoadManager : MonoBehaviour
             quickSaveReader.Read<int>(unitKey + "turnsToProduce"),
             quickSaveReader.Read<int>(unitKey + "turnProduced"),
             quickSaveReader.Read<int>(unitKey + "level"),
-            quickSaveReader.Read<int>(unitKey + "experience")
+            quickSaveReader.Read<int>(unitKey + "experience"),
+            quickSaveReader.Read<float>(unitKey + "rangeLeft"),
+            quickSaveReader.Read<bool>(unitKey + "attacked")
         );
 
         return unitLoadData;

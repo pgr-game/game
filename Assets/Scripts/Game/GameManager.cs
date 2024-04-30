@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
         cityMenuManager.Init(this);
 
         InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames);
-        players[activePlayerIndex].StartTurn();
+        players[activePlayerIndex].StartFirstTurn();
         
     }
 
@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviour
         this.playerPositions = sceneLoadData.playerPositions;
         this.numberOfPlayers = sceneLoadData.numberOfPlayers;
         this.turnNumber = sceneLoadData.turnNumber;
-        this.activePlayerIndex = sceneLoadData.activePlayerIndex
+        this.activePlayerIndex = sceneLoadData.activePlayerIndex;
         DisplayTurnNumber(turnNumber);
     }
 
