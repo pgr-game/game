@@ -167,7 +167,8 @@ public class PlayerManager : MonoBehaviour
     }
 
     public UnitController InstantiateUnit(UnitController unitController, UnitLoadData unitLoadData, Vector3 position) {
-        if(unitLoadData != null) {
+        float? rangeLeft = null;
+        if (unitLoadData != null) {
             position = unitLoadData.position;
             unitController.maxHealth = unitLoadData.maxHealth;
             unitController.currentHealth = unitLoadData.currentHealth;
@@ -179,11 +180,13 @@ public class PlayerManager : MonoBehaviour
             unitController.level = unitLoadData.level;
             unitController.turnsToProduce = unitLoadData.turnsToProduce;
             unitController.experience = unitLoadData.experience;
+            rangeLeft = unitLoadData.rangeLeft;
+            unitController.attacked = unitLoadData.attacked;
         }
 
         UnitController newUnit = Instantiate(unitController, position, Quaternion.identity).GetComponent<UnitController>();
         allyUnits.Add(newUnit);
-        newUnit.Init(this, mapManager, gameManager, gameManager.unitStatsUIController);
+        newUnit.Init(this, mapManager, gameManager, gameManager.unitStatsUIController, rangeLeft);
         return newUnit;
     }
 
@@ -249,6 +252,13 @@ public class PlayerManager : MonoBehaviour
         // here we can do some more advanced calculations, for example based on level of city
         int goldForCities = this.playerCitiesManager.GetNumberOfCities()*2;
         goldIncome += goldForCities;
+    }
+
+    public void StartFirstTurn()
+    {
+        //first turn after game start or load. Healing, forts and reset range disabled
+        SetGoldText(gold.ToString());
+        SetGoldIncome();
     }
 
     public void StartTurn() {

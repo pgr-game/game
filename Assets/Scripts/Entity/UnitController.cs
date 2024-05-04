@@ -37,13 +37,13 @@ public class UnitController : MonoBehaviour
     public bool canPlaceFort;
     public int turnsSinceFortPlaced = 10;
 
-    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController) {
+    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController, float? rangeLeft) {
         this.owner = playerManager;
         this.mapManager = mapManager;
         this.unitStatsUIController = unitStatsUIController;
         CreateUI();
         ApplyColor();
-        unitMove.Init(mapManager,this);
+        unitMove.Init(mapManager, this, rangeLeft);
         this.gameManager = gameManager;
         if(currentHealth == 0) {
             currentHealth = maxHealth;
@@ -57,6 +57,7 @@ public class UnitController : MonoBehaviour
             level = 1;
         }
         canPlaceFort = true;
+        UpdateUnitUI();
     }
 
     private void CreateUI()

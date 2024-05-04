@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
         cityMenuManager.Init(this);
 
         InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames);
-        players[activePlayerIndex].StartTurn();
+        players[activePlayerIndex].StartFirstTurn();
         
     }
 
@@ -151,6 +151,9 @@ public class GameManager : MonoBehaviour
         }
         this.playerPositions = sceneLoadData.playerPositions;
         this.numberOfPlayers = sceneLoadData.numberOfPlayers;
+        this.turnNumber = sceneLoadData.turnNumber;
+        this.activePlayerIndex = sceneLoadData.activePlayerIndex;
+        DisplayTurnNumber(turnNumber);
     }
 
     private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames)
@@ -187,7 +190,7 @@ public class GameManager : MonoBehaviour
         players[activePlayerIndex].gameObject.SetActive(true);
         if(activePlayerIndex == 0) {
             turnNumber++;
-            turnText.GetComponent<TMPro.TextMeshProUGUI>().text = turnNumber.ToString();
+            DisplayTurnNumber(turnNumber);
         }
         SetPlayerUIColor(players[activePlayerIndex].color);
         players[activePlayerIndex].StartTurn();
@@ -196,6 +199,11 @@ public class GameManager : MonoBehaviour
 
     private void SetPlayerUIColor(Color color) {
         nextTurnButtonImage.color = color;
+    }
+
+    private void DisplayTurnNumber(int turnNumber)
+    {
+        turnText.GetComponent<TMPro.TextMeshProUGUI>().text = turnNumber.ToString();
     }
 
     private bool IsInitialDataCorrect(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors) 

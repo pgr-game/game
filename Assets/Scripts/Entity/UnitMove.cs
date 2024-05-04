@@ -53,10 +53,17 @@ public class UnitMove : MonoBehaviour
 
         }
 
-        public void Init(MapManager mapManager, UnitController unitController)
+        public void Init(MapManager mapManager, UnitController unitController, float? rangeLeft)
         {
             this.unitController = unitController;
-            RangeLeft = Range;
+            if(rangeLeft != null) {
+                Debug.Log(rangeLeft);
+                RangeLeft = (float)rangeLeft;
+            }
+            else
+            {
+                RangeLeft = Range;
+            }
             var position = transform.position;
             var tile = mapManager.MapEntity.Tile(position);
             tile.UnitPresent = this.unitController;

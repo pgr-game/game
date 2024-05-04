@@ -5,4 +5,5 @@ using UnityEngine;
 public static class SaveRoot
 {
     public static string saveRoot;
+    public static string mapName;
 }

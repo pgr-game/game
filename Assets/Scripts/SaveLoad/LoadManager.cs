@@ -24,9 +24,14 @@ public class LoadManager : MonoBehaviour
 
         for(int i = 0; i < numberOfSavedGames; i++) {
             string saveString = quickSaveReader.Read<string>("saveString"+i);
+            string mapName = "";
+            if (quickSaveReader.Exists("mapName" + i))
+            {
+                mapName = quickSaveReader.Read<string>("mapName" + i);
+            }
             string saveDate = quickSaveReader.Read<string>("saveDate"+i);
 
-            saveGameDescriptions.Add(new SaveGameDescription(saveString, saveDate));
+            saveGameDescriptions.Add(new SaveGameDescription(saveString, mapName, saveDate));
         }
 
         return saveGameDescriptions;
@@ -163,7 +168,9 @@ public class LoadManager : MonoBehaviour
             quickSaveReader.Read<int>(unitKey + "turnsToProduce"),
             quickSaveReader.Read<int>(unitKey + "turnProduced"),
             quickSaveReader.Read<int>(unitKey + "level"),
-            quickSaveReader.Read<int>(unitKey + "experience")
+            quickSaveReader.Read<int>(unitKey + "experience"),
+            quickSaveReader.Read<float>(unitKey + "rangeLeft"),
+            quickSaveReader.Read<bool>(unitKey + "attacked")
         );
 
         return unitLoadData;

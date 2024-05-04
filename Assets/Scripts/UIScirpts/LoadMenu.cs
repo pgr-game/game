@@ -36,6 +36,10 @@ public class LoadMenu : MonoBehaviour
             TMP_Text nameText = saveName.GetComponent<TMP_Text>();
             nameText.text = saveGameDescription.saveString;
 
+            GameObject mapNameObject = newEntry.transform.Find("mapName").gameObject;
+            TMP_Text mapNameText = mapNameObject.GetComponent<TMP_Text>();
+            mapNameText.text = saveGameDescription.mapName.ToString();
+
             GameObject saveDate = newEntry.transform.Find("date").gameObject;
             TMP_Text saveText = saveDate.GetComponent<TMP_Text>();
             saveText.text = saveGameDescription.saveDate.ToString();
@@ -66,9 +70,11 @@ public class LoadMenu : MonoBehaviour
 
     public void SelectProductionUnit(GameObject clickedEntry) {
         string saveString = clickedEntry.transform.Find("name").gameObject.GetComponent<TMP_Text>().text;
+        string mapNameString = clickedEntry.transform.Find("mapName").gameObject.GetComponent<TMP_Text>().text;
         string dateString = clickedEntry.transform.Find("date").gameObject.GetComponent<TMP_Text>().text;
-        selectedSaveGameDescription = new SaveGameDescription(saveString, dateString);
+        selectedSaveGameDescription = new SaveGameDescription(saveString, mapNameString, dateString);
         SetEntryColorToSelected(clickedEntry);
         SaveRoot.saveRoot = saveString;
+        SaveRoot.mapName = mapNameString;
     }
 }

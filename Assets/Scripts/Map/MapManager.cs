@@ -110,10 +110,13 @@ public class MapManager : MonoBehaviour
         if (cityLoadData != null)
         {
             gameManager.cityMenuManager.setValues(city);
-            gameManager.cityMenuManager.SelectProductionUnit(cityLoadData.unitInProduction);
-            // + 1 is necessary because there is always a turn skip after city init
-            city.UnitInProductionTurnsLeft = cityLoadData.unitInProductionTurnsLeft + 1;
-            city.UI.SetTurnsLeft(cityLoadData.unitInProductionTurnsLeft + 1);
+            if(cityLoadData.unitInProduction != null && cityLoadData.unitInProduction != "")
+            {
+                gameManager.cityMenuManager.SelectProductionUnit(cityLoadData.unitInProduction);
+                // + 1 is necessary because there is always a turn skip after city init
+                city.UnitInProductionTurnsLeft = cityLoadData.unitInProductionTurnsLeft + 1;
+                city.UI.SetTurnsLeft(cityLoadData.unitInProductionTurnsLeft + 1);
+            }
         }
     }
 

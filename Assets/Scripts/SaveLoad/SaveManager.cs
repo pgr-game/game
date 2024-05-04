@@ -54,6 +54,7 @@ public class SaveManager : MonoBehaviour
         QuickSaveWriter quickSaveWriter = QuickSaveWriter.Create("SavesList");
         quickSaveWriter.Write<int>("numberOfSavedGames", numberOfSavedGames + 1);
         quickSaveWriter.Write<string>("saveString"+numberOfSavedGames, saveRoot);
+        quickSaveWriter.Write<string>("mapName"+numberOfSavedGames, gameManager.gameSettings.mapName);
         quickSaveWriter.Write<string>("saveDate"+numberOfSavedGames, DateTime.Now.ToString());
         quickSaveWriter.Commit();
     }
@@ -116,6 +117,8 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>(unitKey + "turnProduced", unit.turnProduced);
         quickSaveWriter.Write<int>(unitKey + "level", unit.level);
         quickSaveWriter.Write<int>(unitKey + "experience", unit.experience);
+        quickSaveWriter.Write<float>(unitKey + "rangeLeft", unit.unitMove.RangeLeft);
+        quickSaveWriter.Write<bool>(unitKey + "attacked", unit.attacked);
         quickSaveWriter.Commit();
     }
 
@@ -135,7 +138,7 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<Vector3>(cityKey + "position", city.cityTiles.FirstOrDefault().transform.position);
         quickSaveWriter.Write<string>(cityKey + "name", city.Name);
         quickSaveWriter.Write<int>(cityKey + "level", city.Level);
-        quickSaveWriter.Write<string>(cityKey + "unitInProduction", city.UnitInProduction.name);
+        quickSaveWriter.Write<string>(cityKey + "unitInProduction", city.UnitInProduction ? city.UnitInProduction.name : "");
         quickSaveWriter.Write<int>(cityKey + "unitInProductionTurnsLeft", city.UnitInProductionTurnsLeft);
         quickSaveWriter.Commit();
     }
