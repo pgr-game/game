@@ -354,7 +354,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 0.42
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -12381,6 +12381,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4422459506408218354}
     m_Modifications:
+    - target: {fileID: 952843543903516982, guid: 37b7b349e9ac23b42a5b72958940f930, type: 3}
+      propertyPath: ProgressCricle
+      value: 
+      objectReference: {fileID: 244726808596475135}
     - target: {fileID: 5622396831750603561, guid: 37b7b349e9ac23b42a5b72958940f930, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 0

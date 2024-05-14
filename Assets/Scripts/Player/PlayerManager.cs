@@ -7,6 +7,11 @@ using RedBjorn.ProtoTiles.Example;
 
 public class PlayerManager : MonoBehaviour
 {
+    //Evolution Tree Progress
+    public Dictionary<int, List<string>> powerEvolution = new Dictionary<int, List<string>>();
+    public Dictionary<int, List<string>> strategyEvolution = new Dictionary<int, List<string>>();
+    public (int, string) researchNode = (-1, "NONE");
+
     //assigned by game manager
     public MapManager mapManager;
     public StartingResources startingResources;
