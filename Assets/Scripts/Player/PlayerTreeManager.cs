@@ -18,8 +18,12 @@ public class PlayerTreeManager : MonoBehaviour
     public GameObject ProgressCricle;
     private List<string> powerNodeNames = new List<string>();
     private List<int> powerNodeLinks = new List<int>();
+    private List<int> powerTurnsToUnlock = new List<int>();
+
     private List<string> strategyNodeNames = new List<string>();
     private List<int> strategyNodeLinks = new List<int>();
+    private List<int> startegyTurnsToUnlock = new List<int>();
+
 
     private bool panelActive = false;
     private static int powerEvolutionCount = 4;
@@ -29,6 +33,7 @@ public class PlayerTreeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //ist of names 
         powerNodeNames.Add("POWER");
         powerNodeNames.Add("UNIT LEVELUP");
         powerNodeNames.Add("CHARIOT");
@@ -40,6 +45,12 @@ public class PlayerTreeManager : MonoBehaviour
         powerNodeLinks.Add(1); //from  Node 2
         powerNodeLinks.Add(1); //from  Node 3
         powerNodeLinks.Add(2); // from  Node 4
+        //list of turns needed to reasrch each node
+        powerTurnsToUnlock.Add(3);
+        powerTurnsToUnlock.Add(3);
+        powerTurnsToUnlock.Add(4);
+        powerTurnsToUnlock.Add(5);
+        powerTurnsToUnlock.Add(5);
 
 
 
@@ -52,6 +63,11 @@ public class PlayerTreeManager : MonoBehaviour
         strategyNodeLinks.Add(0); //from  Node 1
         strategyNodeLinks.Add(1); //from  Node 2
         strategyNodeLinks.Add(1); //from  Node 3
+        //list of turns needed to reasrch each node
+        startegyTurnsToUnlock.Add(3);
+        startegyTurnsToUnlock.Add(4);
+        startegyTurnsToUnlock.Add(4);
+        startegyTurnsToUnlock.Add(5);
     }
 
     public void populateEvolutionTrees(PlayerManager playerManager)
@@ -67,12 +83,9 @@ public class PlayerTreeManager : MonoBehaviour
             List<string> list = new List<string>();
             list.Add(powerNodeLinks[i].ToString());//previos node id
             list.Add(powerNodeNames[i]); // node name
-            if (i == 0)
-                list.Add("true");
-            else
-                list.Add("false"); // Node state default 0 - not researched
-            list.Add("3");//turns to research
-            list.Add("3");
+            list.Add("false"); // Node state default 0 - not researched
+            list.Add(powerTurnsToUnlock[i].ToString());//turns to research
+            list.Add(powerTurnsToUnlock[i].ToString());
             playerManager.powerEvolution.Add(i, list);
         }
 
@@ -81,12 +94,9 @@ public class PlayerTreeManager : MonoBehaviour
             List<string> list = new List<string>();
             list.Add(strategyNodeLinks[i].ToString());
             list.Add(strategyNodeNames[i]);
-            if (i == 0)
-                list.Add("true");
-            else
-                list.Add("false"); // Node state default 0 - not researched
-            list.Add("3");//turns to research
-            list.Add("3");
+            list.Add("false"); // Node state default 0 - not researched
+            list.Add(startegyTurnsToUnlock[i].ToString());//turns to research
+            list.Add(startegyTurnsToUnlock[i].ToString());
             playerManager.strategyEvolution.Add(i, list);
         }
     }
@@ -94,7 +104,7 @@ public class PlayerTreeManager : MonoBehaviour
     {
         this.gameManager = game;
     }
-    private void updateColorsOfTree(GameObject branchRoot, Dictionary<int, List<string>> nodeDict, string nodeBaseName, int numberOfNodes, (int,string) currResearch)
+    private void updateColorsOfTree(GameObject branchRoot, Dictionary<int, List<string>> nodeDict, string nodeBaseName, int numberOfNodes, (int, string) currResearch)
     {
         for (int i = 0; i <= numberOfNodes; i++)
         {
@@ -104,15 +114,15 @@ public class PlayerTreeManager : MonoBehaviour
             Color newColor;
             if (nodeBaseName.Contains(currResearch.Item2) && i == currResearch.Item1)
             {//Node under current research
-                newColor = new Color(0.5f, 1, 0.5f,1);
-               
+                newColor = new Color(0.5f, 1, 0.5f, 1);
+
             }
             else if (bool.Parse(nodeDict[i][2])) // if object is reaserched
             {
                 newColor = new Color(1, 1, 0.65f, 1);
                 researchTimeLeft = "RESEARCHED";
             }
-            else if(bool.Parse(nodeDict[Int32.Parse(nodeDict[i][0])][2]))
+            else if (bool.Parse(nodeDict[Int32.Parse(nodeDict[i][0])][2]) || (i == 0))//i==0 in special case it is root node
             {//if previous node is reserached and this one is avialable to research
                 newColor = new Color(1, 0.92f, 0.016f, 1);
             }
@@ -163,10 +173,11 @@ public class PlayerTreeManager : MonoBehaviour
         Dictionary<int, List<string>> strategyEvolvCurrPLayer = gameManager.activePlayer.strategyEvolution;
 
 
-        if (!bool.Parse(powerEvolvCurrPLayer[evolutionID][2])&& bool.Parse(powerEvolvCurrPLayer[Int32.Parse(powerEvolvCurrPLayer[evolutionID][0])][2]))
+        if ((!bool.Parse(powerEvolvCurrPLayer[evolutionID][2]) && bool.Parse(powerEvolvCurrPLayer[Int32.Parse(powerEvolvCurrPLayer[evolutionID][0])][2])) ||
+            evolutionID == 0 && !bool.Parse(powerEvolvCurrPLayer[evolutionID][2]))//in case node is root node
         {
             //not researched selcted node yet && previous Node is reserched
-            gameManager.activePlayer.researchNode = (evolutionID,"Power");
+            gameManager.activePlayer.researchNode = (evolutionID, "Power");
             (int, string) currResearch = gameManager.activePlayer.researchNode;
             updatePowerBranch(powerEvolvCurrPLayer, currResearch);
             updateStrategyBranch(strategyEvolvCurrPLayer, currResearch);
@@ -181,7 +192,8 @@ public class PlayerTreeManager : MonoBehaviour
         Dictionary<int, List<string>> powerEvolvCurrPLayer = gameManager.activePlayer.powerEvolution;
         Dictionary<int, List<string>> strategyEvolvCurrPLayer = gameManager.activePlayer.strategyEvolution;
 
-        if (!bool.Parse(strategyEvolvCurrPLayer[evolutionID][2]) && bool.Parse(strategyEvolvCurrPLayer[Int32.Parse(strategyEvolvCurrPLayer[evolutionID][0])][2]))
+        if ((!bool.Parse(strategyEvolvCurrPLayer[evolutionID][2]) && bool.Parse(strategyEvolvCurrPLayer[Int32.Parse(strategyEvolvCurrPLayer[evolutionID][0])][2]))|| 
+            evolutionID == 0 && !bool.Parse(strategyEvolvCurrPLayer[evolutionID][2]))//in case node is root node)
         {
             //not researched selcted node yet && previous Node is reserched
             gameManager.activePlayer.researchNode = (evolutionID, "Strategy");
@@ -190,7 +202,7 @@ public class PlayerTreeManager : MonoBehaviour
             updatePowerBranch(powerEvolvCurrPLayer, currResearch);
             float turnsResearched = float.Parse(strategyEvolvCurrPLayer[currResearch.Item1][3]);
             float totalTurnsToResearch = float.Parse(strategyEvolvCurrPLayer[currResearch.Item1][4]);
-            updateProgressCircle((totalTurnsToResearch - turnsResearched)/ totalTurnsToResearch);
+            updateProgressCircle((totalTurnsToResearch - turnsResearched) / totalTurnsToResearch);
         }
     }
 
@@ -224,7 +236,7 @@ public class PlayerTreeManager : MonoBehaviour
         {
             researchHelper(strategyEvolvCurrPLayer, currResearch);
         }
-        else if(currResearch.Item2.Equals("Power"))
+        else if (currResearch.Item2.Equals("Power"))
         {
             researchHelper(powerEvolvCurrPLayer, currResearch);
         }
