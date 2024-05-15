@@ -191,6 +191,10 @@ public class UnitController : MonoBehaviour
 
     public void GainXP(int ammountGot)
     {
+        if (!this.gameManager.playerTreeManager.isNodeResearched(1, "Power"))
+        {//lvl up not researched so no lvl uping
+            return;
+        }
         experience += ammountGot;
         if (experience >= System.Math.Pow(2, level) && this.level < 5)
         {

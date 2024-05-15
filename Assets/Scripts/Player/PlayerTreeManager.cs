@@ -250,4 +250,20 @@ public class PlayerTreeManager : MonoBehaviour
     {
         ProgressCricle.gameObject.GetComponent<Image>().fillAmount = ammount;
     }
+
+    public bool isNodeResearched(int nodeID,string branchType)
+    {
+        Dictionary<int, List<string>> powerEvolvCurrPLayer = gameManager.activePlayer.powerEvolution;
+        Dictionary<int, List<string>> strategyEvolvCurrPLayer = gameManager.activePlayer.strategyEvolution;
+
+        if (branchType.Equals("Strategy"))
+        {
+            return bool.Parse(strategyEvolvCurrPLayer[nodeID][2]);
+        }
+        else if (branchType.Equals("Power"))
+        {
+            return bool.Parse(powerEvolvCurrPLayer[nodeID][2]);
+        }
+        return false;
+    }
 }
