@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     public PauseMenu pauseMenu;
     public GameObject playerPrefab;
     public GameSettings gameSettings;
+    public PlayerTreeManager playerTreeManager;
 
     // Turn elements
     public int turnNumber = 1;
@@ -51,6 +52,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
+        playerTreeManager.addGameManager(this);
         InitStaticVariables();
         soundManager = Instantiate(soundManager, new Vector3(0,0,0), Quaternion.identity);
         gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
@@ -163,12 +166,14 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < numberOfPlayers; i++) {
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
             players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], i);
-            if(i == activePlayerIndex) {
+            this.playerTreeManager.populateEvolutionTrees(players[i]);
+            if (i == activePlayerIndex) {
                 players[i].gameObject.SetActive(true);
             }
             else {
                 players[i].gameObject.SetActive(false);
             }
+            
         }
         activePlayer = players[activePlayerIndex];
         SetPlayerUIColor(players[activePlayerIndex].color);
@@ -195,6 +200,7 @@ public class GameManager : MonoBehaviour
         SetPlayerUIColor(players[activePlayerIndex].color);
         players[activePlayerIndex].StartTurn();
         Debug.Log("Player " + activePlayerIndex + " turn");
+        playerTreeManager.reserachProgress();
     }
 
     private void SetPlayerUIColor(Color color) {
