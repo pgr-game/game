@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor.PackageManager.UI;
@@ -16,6 +17,7 @@ public class PlayerTreeManager : MonoBehaviour
     public GameObject rootOfTreeCanvas;
     public GameManager gameManager;
     public GameObject ProgressCricle;
+    private Dictionary<string,int> unitIDS= new Dictionary<string,int>();
     private List<string> powerNodeNames = new List<string>();
     private List<int> powerNodeLinks = new List<int>();
     private List<int> powerTurnsToUnlock = new List<int>();
@@ -39,6 +41,10 @@ public class PlayerTreeManager : MonoBehaviour
         powerNodeNames.Add("CHARIOT");
         powerNodeNames.Add("ELEPHANT");
         powerNodeNames.Add("CATAPULT");
+
+        unitIDS.Add("CHARIOT", 2);
+        unitIDS.Add("ELEPHANT", 3);
+        unitIDS.Add("CATAPULT", 4);
         // creating list with ids which node is linked to 
         powerNodeLinks.Add(0); //root node not used
         powerNodeLinks.Add(0); //from Node 1
@@ -265,5 +271,17 @@ public class PlayerTreeManager : MonoBehaviour
             return bool.Parse(powerEvolvCurrPLayer[nodeID][2]);
         }
         return false;
+    }
+
+    public bool isUnitUnlocked(string unitName)
+    {
+        if(unitIDS.ContainsKey(unitName.ToUpper()))
+        {
+            return isNodeResearched(unitIDS[unitName.ToUpper()], "Power");
+        }
+        else
+        {
+            return true;
+        }
     }
 }
