@@ -70,7 +70,7 @@ public class PlayerManager : MonoBehaviour
                     HandleCityClick(cityTile.city);
                 }
             }
-            if (Input.GetKeyDown(KeyCode.B) && selected != null) {
+            if (Input.GetKeyDown(KeyCode.B) && selected != null && this.gameManager.playerTreeManager.isNodeResearched(1,"Strategy")) {
                 if(!selected.GetComponent<UnitController>().CanPlaceFortOnTile()) {
                     Debug.Log("Fort can't be placed here");     // maybe add dialog box in the future
                     return;
