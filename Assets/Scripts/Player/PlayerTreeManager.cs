@@ -35,8 +35,13 @@ public class PlayerTreeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //ist of names 
-        powerNodeNames.Add("POWER");
+        if (powerNodeNames.Count != 0 || powerNodeLinks.Count != 0
+    || strategyNodeNames.Count != 0 || strategyNodeLinks.Count != 0)
+        {
+            return;
+        }
+            //ist of names 
+            powerNodeNames.Add("POWER");
         powerNodeNames.Add("UNIT LEVELUP");
         powerNodeNames.Add("CHARIOT");
         powerNodeNames.Add("ELEPHANT");
