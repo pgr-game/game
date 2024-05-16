@@ -129,6 +129,7 @@ GameObject:
   - component: {fileID: 4983505441445479054}
   - component: {fileID: 3133105980512007016}
   - component: {fileID: -2897094208848902475}
+  - component: {fileID: 3416050078212497185}
   m_Layer: 0
   m_Name: Unit
   m_TagString: Untagged
@@ -207,6 +208,7 @@ MonoBehaviour:
   owner: {fileID: 0}
   mapManager: {fileID: 0}
   unitMove: {fileID: -2897094208848902475}
+  unitUI: {fileID: 3416050078212497185}
   unitType: 0
   maxHealth: 0
   currentHealth: 0
@@ -218,9 +220,6 @@ MonoBehaviour:
   level: 1
   defense: 0
   gameManager: {fileID: 0}
-  unitUI: {fileID: 0}
-  damageRecivedUI: {fileID: 0}
-  lvlUPMenu: {fileID: 0}
   unitStatsUIController: {fileID: 0}
   moveSounds:
   - {fileID: 8300000, guid: 2699dcea9c6de004b9ee44c17ab1f243, type: 3}
@@ -252,6 +251,21 @@ MonoBehaviour:
   unitController: {fileID: 0}
   Area: {fileID: 0}
   hexPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &3416050078212497185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4825141584707445255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9db6b0e91f759c74bb0ea8a9bca4336e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitUIPrefab: {fileID: 0}
+  damageReceivedUIPrefab: {fileID: 0}
+  lvlUPMenuPrefab: {fileID: 0}
 --- !u!1 &9216468578034891680
 GameObject:
   m_ObjectHideFlags: 0
