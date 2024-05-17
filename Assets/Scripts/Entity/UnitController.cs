@@ -63,14 +63,16 @@ public class UnitController : MonoBehaviour
     {
         unitMove.Activate();
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
-        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
-        this.unitStatsUIController.ShowUnitBox();
+        unitStatsUIController.activeUnit = this;
+        unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        unitStatsUIController.ShowUnitBox();
     }
 
     public void Deactivate() 
     {
         unitMove.Deactivate();
-        this.unitStatsUIController.HideUnitBox();
+        unitStatsUIController.activeUnit = null;
+        unitStatsUIController.HideUnitBox();
 
     }
 
@@ -276,12 +278,19 @@ public class UnitController : MonoBehaviour
 
     void OnMouseOver()
     {
-        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
-        this.unitStatsUIController.ShowUnitBox();
+        unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        unitStatsUIController.ShowUnitBox();
     }
 
     void OnMouseExit()
     {
-        this.unitStatsUIController.HideUnitBox();
+        if(!unitStatsUIController.activeUnit)
+        {
+            unitStatsUIController.HideUnitBox();
+        }
+        else
+        {
+            unitStatsUIController.UpdateUnitStatisticsWindow(unitStatsUIController.activeUnit);
+        }
     }
 }
