@@ -387,6 +387,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rootOfTreeCanvas: {fileID: 5335366197942698682}
+  gameManager: {fileID: 0}
+  ProgressCricle: {fileID: 0}
 --- !u!1001 &577579534468808796
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -684,7 +686,7 @@ PrefabInstance:
     - target: {fileID: 2491942808582942203, guid: 50dcae57f1ffcb9478d8ba424bdb0838, type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: d04e0a9d92047fd4c8521404a4381a41, type: 2}
+      objectReference: {fileID: 11400000, guid: ee200a9ea0b9d485caf169e8d23d2ddb, type: 2}
     - target: {fileID: 2491942808582942203, guid: 50dcae57f1ffcb9478d8ba424bdb0838, type: 3}
       propertyPath: m_fontColor.b
       value: 0
@@ -700,7 +702,7 @@ PrefabInstance:
     - target: {fileID: 2491942808582942203, guid: 50dcae57f1ffcb9478d8ba424bdb0838, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 2924444690018959725, guid: d04e0a9d92047fd4c8521404a4381a41, type: 2}
+      objectReference: {fileID: 1834652261382941289, guid: ee200a9ea0b9d485caf169e8d23d2ddb, type: 2}
     - target: {fileID: 2491942808582942203, guid: 50dcae57f1ffcb9478d8ba424bdb0838, type: 3}
       propertyPath: m_fontColor32.rgba
       value: 4278190080
@@ -874,6 +876,14 @@ PrefabInstance:
     - target: {fileID: 2491942808582942203, guid: 50dcae57f1ffcb9478d8ba424bdb0838, type: 3}
       propertyPath: m_text
       value: UNIT LEVELUP
+      objectReference: {fileID: 0}
+    - target: {fileID: 2491942808582942203, guid: 50dcae57f1ffcb9478d8ba424bdb0838, type: 3}
+      propertyPath: m_margin.x
+      value: 5.4761314
+      objectReference: {fileID: 0}
+    - target: {fileID: 2491942808582942203, guid: 50dcae57f1ffcb9478d8ba424bdb0838, type: 3}
+      propertyPath: m_margin.z
+      value: 5.476122
       objectReference: {fileID: 0}
     - target: {fileID: 3010426491815621339, guid: 50dcae57f1ffcb9478d8ba424bdb0838, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -2589,7 +2599,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2581505890297246384, guid: cf08b37507a4dfa4b9149afc8dcfbfd5, type: 3}
       propertyPath: m_PresetInfoIsWorld
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3058418166185810355, guid: cf08b37507a4dfa4b9149afc8dcfbfd5, type: 3}
       propertyPath: m_Color.b
