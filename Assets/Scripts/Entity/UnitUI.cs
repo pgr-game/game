@@ -15,9 +15,6 @@ public class UnitUI : MonoBehaviour
     GameObject infoBar;
     GameObject lvlUpMenu;
 
-    TMP_Text nameText;
-    TMP_Text attackText;
-    Image frameValue;
     Image hpMeterValue;
     Color hpColor;
 
@@ -37,28 +34,27 @@ public class UnitUI : MonoBehaviour
     {
         unitUIObject = Instantiate(unitUIPrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity, gameObject.transform);
         infoBar = this.transform.Find("UnitInfoBarDefault(Clone)").gameObject;
-
         unitUIObject.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
-        GameObject unitName = unitUIObject.transform.Find("UnitName").gameObject;
-        nameText = unitName.GetComponent<TMP_Text>();
-        nameText.text = unitController.unitType.ToString();
-
-        GameObject unitAttack = unitUIObject.transform.Find("AttackValue").gameObject;
-        attackText = unitAttack.GetComponent<TMP_Text>();
-        attackText.text = unitController.attack.ToString();
-
-        GameObject frame = unitUIObject.transform.Find("Frame").gameObject;
-        frameValue = frame.GetComponent<Image>();
-        frameValue.color = color;
+        Color hpColor = color;
+        hpColor.a = 0.8f;
 
         GameObject hpMeter = unitUIObject.transform.Find("HpMeter").gameObject;
         hpMeterValue = hpMeter.GetComponent<Image>();
         hpMeterValue.fillAmount = 1.0f;
-
-        Color hpColor = color;
-        hpColor.a = 0.5f;
         hpMeterValue.color = hpColor;
+
+        hpColor.a = 0.3f;
+
+        GameObject HpMeterBackground = unitUIObject.transform.Find("HpMeterBackground").gameObject;
+        Image HpMeterBackgroundValue = HpMeterBackground.GetComponent<Image>();
+        HpMeterBackgroundValue.color = hpColor;
+
+        hpColor.a = 0.5f;
+
+        GameObject HpMeterRim = unitUIObject.transform.Find("HpMeterRim").gameObject;
+        Image HpMeterRimValue = HpMeterRim.GetComponent<Image>();
+        HpMeterRimValue.color = hpColor;
     }
 
     private void ApplyColor()
