@@ -1,4 +1,5 @@
 using RedBjorn.ProtoTiles;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,6 +13,7 @@ public class UnitController : MonoBehaviour
     public PlayerManager owner;
     public MapManager mapManager;
     public UnitMove unitMove;
+    public UnitUI unitUI;
     public UnitTypes unitType;
     public int maxHealth;
     public int currentHealth;
@@ -23,9 +25,6 @@ public class UnitController : MonoBehaviour
     public int level = 1;
     public int defense;
     public GameManager gameManager;
-    public GameObject unitUI;
-    public GameObject damageRecivedUI;
-    public GameObject lvlUPMenu;
     public UnitStatsUIController unitStatsUIController;
 
     public List<AudioClip> moveSounds= new List<AudioClip>();
@@ -41,9 +40,9 @@ public class UnitController : MonoBehaviour
         this.owner = playerManager;
         this.mapManager = mapManager;
         this.unitStatsUIController = unitStatsUIController;
-        CreateUI();
-        ApplyColor();
+        unitUI.Init(this, owner.color, unitType, attack);
         unitMove.Init(mapManager, this, rangeLeft);
+
         this.gameManager = gameManager;
         if(currentHealth == 0) {
             currentHealth = maxHealth;
@@ -57,52 +56,13 @@ public class UnitController : MonoBehaviour
             level = 1;
         }
         canPlaceFort = true;
-        UpdateUnitUI();
-    }
-
-    private void CreateUI()
-    {
-        GameObject myUI = Instantiate(unitUI, transform.position + new Vector3(0, 2, 0), Quaternion.identity, gameObject.transform);
-
-        
-        myUI.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
-
-        GameObject unitName = myUI.transform.Find("UnitName").gameObject;
-        TMP_Text nameText = unitName.GetComponent<TMP_Text>();
-        nameText.text = unitType.ToString();
-
-        GameObject unitAttack = myUI.transform.Find("AttackValue").gameObject;
-        TMP_Text attackText = unitAttack.GetComponent<TMP_Text>();
-        attackText.text = attack.ToString();
-
-        GameObject hpMeter = myUI.transform.Find("HpMeter").gameObject;
-        Image hpMeterValue = hpMeter.GetComponent<Image>();
-        float value = 1;
-        hpMeterValue.fillAmount = value;
-
-        GameObject dejm = myUI.transform.Find("Frame").gameObject;
-        Image dejmimage = dejm.GetComponent<Image>();
-        dejmimage.color = this.owner.color;
-    }
-
-    private void UpdateUnitUI()
-    {
-        GameObject myUI = gameObject.transform.Find("UnitInfoBarDefault(Clone)").gameObject;
-
-        GameObject unitAttack = myUI.transform.Find("AttackValue").gameObject;
-        TMP_Text attackText = unitAttack.GetComponent<TMP_Text>();
-        attackText.text = attack.ToString();
-
-        GameObject hpMeter = myUI.transform.Find("HpMeter").gameObject;
-        Image hpMeterValue = hpMeter.GetComponent<Image>();
-        float value = (float)currentHealth/(float)maxHealth;
-        hpMeterValue.fillAmount = value;
+        unitUI.UpdateUnitUI(currentHealth, maxHealth);
     }
 
     public void Activate()
     {
         unitMove.Activate();
-        UpdateUnitUI();
+        unitUI.UpdateUnitUI(currentHealth, maxHealth);
         this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
         this.unitStatsUIController.ShowUnitBox();
     }
@@ -112,16 +72,6 @@ public class UnitController : MonoBehaviour
         unitMove.Deactivate();
         this.unitStatsUIController.HideUnitBox();
 
-    }
-
-    private void ApplyColor()
-    {
-        GameObject body = transform.Find("RotationNode/Body").gameObject;
-        if(body == null) {
-            Debug.Log("Unit body not found, likely the prefab structure was changed!");
-            return;
-        }
-        body.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", owner.color);
     }
 
     public int GetDefense() {
@@ -161,18 +111,17 @@ public class UnitController : MonoBehaviour
     public void ReceiveDamage(int incomingDamage, UnitController attacker)
     {
         this.currentHealth = this.currentHealth - incomingDamage;
-        GameObject unitUI = this.transform.Find("UnitInfoBarDefault(Clone)").gameObject;
-        GameObject damageUI = Instantiate(damageRecivedUI, unitUI.transform.position, Quaternion.identity, unitUI.transform);
-        damageUI.transform.Find("Damage").gameObject.GetComponent<TextMeshProUGUI>().text = incomingDamage.ToString();
-        damageUI.GetComponent<DamageAnimation>().angle = this.transform.position - attacker.transform.position;
 
-        this.UpdateUnitUI();
+        unitUI.ShowDamageEffect(currentHealth, attacker.transform.position);
+        unitUI.UpdateUnitUI(currentHealth, maxHealth);
+
         if (this.currentHealth <= 0)
         {
             this.gameManager.soundManager.GetComponent<SoundManager>().PlayKillSound();
             this.Death(attacker);
         }
     }
+
     public void Death(UnitController killer) {
         owner.allyUnits.Remove(this);
         gameManager.units.Remove(this);
@@ -200,57 +149,41 @@ public class UnitController : MonoBehaviour
         {
             level++;
             experience = 0;
-            this.UpgradeUnit();
+            unitMove.Deactivate();
+            if(this.level == 2)
+            {
+                // instantiating at level 2 as some units will die before it
+                // and not need the instantiated menu
+                unitUI.InitUpgradeUnitMenu(UpgradeAttack(), UpgradeHealth(), UpgradeDefence());
+            }
+            unitUI.ShowUpgradeUnitMenu();
         }
     }
 
-    public void UpgradeUnit()
+    public Action UpgradeAttack()
     {
-        //TODO this not work work me sad. still displays are and path (for some reason onyl sonetimes)
-        this.unitMove.Deactivate();
-
-        GameObject unitUI = this.transform.Find("UnitDefaultBar(Clone)").gameObject;
-        GameObject lvlUP = Instantiate(lvlUPMenu, this.transform.position, Quaternion.identity, unitUI.transform);
-        lvlUP.transform.position += new Vector3(0,0,-2);
-        lvlUP.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-
-        GameObject buttons = lvlUP.transform.Find("Buttons").gameObject;
-
-        GameObject defButton = buttons.transform.Find("DefenceAddButton").gameObject;
-        UnityEngine.UI.Button button = defButton.GetComponent<UnityEngine.UI.Button>();
-        button.onClick.AddListener(delegate { UbgradeDefence(lvlUP); });
-
-        GameObject HPButton = buttons.transform.Find("HPAddButton").gameObject;
-        button = HPButton.GetComponent<UnityEngine.UI.Button>();
-        button.onClick.AddListener(delegate { UbgradeHealth(lvlUP); });
-
-        GameObject attackButton = buttons.transform.Find("AttackAddButton").gameObject;
-        button = attackButton.GetComponent<UnityEngine.UI.Button>();
-        button.onClick.AddListener(delegate { UbgradeAttack(lvlUP); });
-
+        attack += 5;
+        unitUI.HideUpgradeUnitMenu();
+        unitUI.UpdateUnitUI(currentHealth, maxHealth);
+        unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        return null;
     }
-
-    public void UbgradeAttack(GameObject lvlUPMenu)
+    public Action UpgradeHealth()
     {
-        this.attack += 5;
-        Destroy(lvlUPMenu);
-        UpdateUnitUI();
-        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        maxHealth += 5;
+        currentHealth += 5;
+        unitUI.HideUpgradeUnitMenu();
+        unitUI.UpdateUnitUI(currentHealth, maxHealth);
+        unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        return null;
     }
-    public void UbgradeHealth(GameObject lvlUPMenu)
+    public Action UpgradeDefence()
     {
-        this.maxHealth += 5;
-        this.currentHealth += 5;
-        Destroy(lvlUPMenu);
-        UpdateUnitUI();
-        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
-    }
-    public void UbgradeDefence(GameObject lvlUPMenu)
-    {
-        this.defense += 2;
-        Destroy(lvlUPMenu);
-        UpdateUnitUI();
-        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        defense += 2;
+        unitUI.HideUpgradeUnitMenu();
+        unitUI.UpdateUnitUI(currentHealth, maxHealth);
+        unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        return null;
     }
 
     public int CalculateGoldValue() {
@@ -325,7 +258,7 @@ public class UnitController : MonoBehaviour
             if (currentHealth == maxHealth) return;
             currentHealth += (int)(0.2f * maxHealth);
             if (currentHealth > maxHealth) currentHealth = maxHealth;
-            UpdateUnitUI();
+            unitUI.UpdateUnitUI(currentHealth, maxHealth);
             this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
         }
     }
@@ -339,5 +272,16 @@ public class UnitController : MonoBehaviour
         if(tile.FortPresent.turnsUntilBuilt == 0) {
             tile.FortPresent.BuildComplete();
         }
+    }
+
+    void OnMouseOver()
+    {
+        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        this.unitStatsUIController.ShowUnitBox();
+    }
+
+    void OnMouseExit()
+    {
+        this.unitStatsUIController.HideUnitBox();
     }
 }

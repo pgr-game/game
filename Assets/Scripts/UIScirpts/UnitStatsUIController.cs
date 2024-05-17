@@ -13,6 +13,8 @@ public class UnitStatsUIController : MonoBehaviour
     public GameObject unitBox;
     public GameObject xpSlider;
     public GameObject maxLvlText;
+    public GameObject unitOwnerColor;
+    public GameObject healthBackground;
     void Start()
     {
         HideUnitBox();
@@ -28,9 +30,13 @@ public class UnitStatsUIController : MonoBehaviour
 
         unitLevelText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.level.ToString();
 
-        unitHealthText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.currentHealth.ToString();
+        unitHealthText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.currentHealth.ToString()+"/"+ unitController.maxHealth.ToString();
 
         unitDefenseText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.defense.ToString();
+
+        unitOwnerColor.GetComponent<Image>().color = unitController.owner.color;
+
+        healthBackground.GetComponent<Image>().color = unitController.owner.color;
 
         if (unitController.level >= 5 )
         {

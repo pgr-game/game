@@ -155,7 +155,7 @@ PrefabInstance:
     - target: {fileID: 3133105980512007016, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
       propertyPath: unitUI
       value: 
-      objectReference: {fileID: 2208920105237640497, guid: 98989dfcc4eb220438faae05f5e6c7ea, type: 3}
+      objectReference: {fileID: 1443655372506586378}
     - target: {fileID: 3133105980512007016, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
       propertyPath: unitUi
       value: 
@@ -230,10 +230,33 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 143430592383320160, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4914133012778537865}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4825141584707445255, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1443655372506586378}
   m_SourcePrefab: {fileID: 100100000, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
 --- !u!4 &1286948456935129958 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 143430592383320160, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
   m_PrefabInstance: {fileID: 1162414210038465286}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5969487377251852545 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4825141584707445255, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
+  m_PrefabInstance: {fileID: 1162414210038465286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1443655372506586378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5969487377251852545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9db6b0e91f759c74bb0ea8a9bca4336e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitUIPrefab: {fileID: 2208920105237640497, guid: 98989dfcc4eb220438faae05f5e6c7ea, type: 3}
+  damageReceivedUIPrefab: {fileID: 8418249694806479903, guid: d76f6c21670a5794db7889e3d1b3006e, type: 3}
+  lvlUPMenuPrefab: {fileID: 1896118921665356655, guid: 8db0cc2a3bfe80b4da1a37c714f9a015, type: 3}
