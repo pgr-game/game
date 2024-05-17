@@ -269,11 +269,12 @@ public class UnitController : MonoBehaviour
 
     void OnMouseOver()
     {
-        Debug.Log("Mouse is over GameObject.");
+        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        this.unitStatsUIController.ShowUnitBox();
     }
 
     void OnMouseExit()
     {
-        Debug.Log("Mouse is no longer on GameObject.");
+        this.unitStatsUIController.HideUnitBox();
     }
 }
