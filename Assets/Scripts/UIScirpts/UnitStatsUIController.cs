@@ -15,6 +15,8 @@ public class UnitStatsUIController : MonoBehaviour
     public GameObject maxLvlText;
     public GameObject unitOwnerColor;
     public GameObject healthBackground;
+
+    public UnitController activeUnit;
     void Start()
     {
         HideUnitBox();
