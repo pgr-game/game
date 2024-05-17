@@ -28,6 +28,7 @@ public class UnitMove : MonoBehaviour
         public UnitController unitController;
         public AreaOutline Area;
         PathDrawer Path;
+        private int longPathNumberOfTurns = 1;
         Coroutine MovingCoroutine;
 
         private bool active = false;
@@ -161,6 +162,10 @@ public class UnitMove : MonoBehaviour
                 MovingCoroutine = StartCoroutine(Moving(path, onCompleted));
                 var amountOfSteps = (int)Math.Ceiling((double)path.Count / 2);
                 RangeLeft -= amountOfSteps;
+                if(RangeLeft == 0)
+                {
+                    unitController.Deactivate();
+                }
             }
             else
             {
@@ -242,8 +247,10 @@ public class UnitMove : MonoBehaviour
                 var tile = mapManager.MapEntity.Tile(MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane()));
                 if (tile != null && tile.Vacant)
                 {
-                    var path = mapManager.MapEntity.PathPoints(transform.position, mapManager.MapEntity.WorldPosition(tile.Position), RangeLeft);
+                    var path = mapManager.MapEntity.PathPoints(transform.position, mapManager.MapEntity.WorldPosition(tile.Position), 100000);
+                    longPathNumberOfTurns = (int)(path.Count/RangeLeft);
                     Path.Show(path, mapManager.MapEntity);
+                    Path.Init(unitController.owner.color, unitController.owner.color, longPathNumberOfTurns);
                     Path.ActiveState();
                     Area.ActiveState();
                 }

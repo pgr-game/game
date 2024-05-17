@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace RedBjorn.ProtoTiles.Example
@@ -7,24 +8,44 @@ namespace RedBjorn.ProtoTiles.Example
     {
         public LineDrawer Line;
         public SpriteRenderer Tail;
+        public TextMeshProUGUI TailText;
         public Color ActiveColor;
         public Color InactiveColor;
+        public Gradient ActiveGradient;
+        public Gradient InactiveGradient;
 
         public bool IsEnabled { get; set; }
 
+        public void Init(Color ActiveColor, Color InactiveColor, int longPathNumberOfTurns)
+        {
+            this.ActiveColor = ActiveColor;
+            this.InactiveColor = InactiveColor;
+            ActiveGradient = new Gradient();
+            ActiveGradient.SetKeys(
+                new GradientColorKey[] { new GradientColorKey(ActiveColor, 0.0f), new GradientColorKey(ActiveColor, 1.0f) },
+                new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
+            );
+            InactiveGradient = new Gradient();
+            InactiveGradient.SetKeys(
+                new GradientColorKey[] { new GradientColorKey(InactiveColor, 0.0f), new GradientColorKey(InactiveColor, 1.0f) },
+                new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
+            );
+            TailText.text = longPathNumberOfTurns.ToString();
+        }
+
         public void ActiveState()
         {
-            SetColor(ActiveColor);
+            SetColor(ActiveColor, ActiveGradient);
         }
 
         public void InactiveState()
         {
-            SetColor(InactiveColor);
+            SetColor(InactiveColor, InactiveGradient);
         }
 
-        void SetColor(Color color)
+        void SetColor(Color color, Gradient gradient)
         {
-            Line.Line.material.color = color;
+            Line.Line.colorGradient = gradient;
             Tail.color = color;
         }
 
