@@ -125,7 +125,7 @@ public class UnitController : MonoBehaviour
     }
 
     public int GetDefense() {
-        if(CanHealOrGetDefenceBonus()) {
+        if(CanHealOrGetDefenceBonus() && this.gameManager.playerTreeManager.isNodeResearched(2, "Strategy")) {
             if(defense == 0) {
                 return 1;
             }
@@ -191,6 +191,10 @@ public class UnitController : MonoBehaviour
 
     public void GainXP(int ammountGot)
     {
+        if (!this.gameManager.playerTreeManager.isNodeResearched(1, "Power"))
+        {//lvl up not researched so no lvl uping
+            return;
+        }
         experience += ammountGot;
         if (experience >= System.Math.Pow(2, level) && this.level < 5)
         {
@@ -316,11 +320,14 @@ public class UnitController : MonoBehaviour
     }
 
     public void Heal() {
-        if(currentHealth == maxHealth) return;
-        currentHealth += (int)(0.2f*maxHealth);
-        if(currentHealth > maxHealth) currentHealth = maxHealth;
-        UpdateUnitUI();
-        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        if (this.gameManager.playerTreeManager.isNodeResearched(3, "Strategy"))
+        {
+            if (currentHealth == maxHealth) return;
+            currentHealth += (int)(0.2f * maxHealth);
+            if (currentHealth > maxHealth) currentHealth = maxHealth;
+            UpdateUnitUI();
+            this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        }
     }
 
     public void CommitToBuildingFort() {
