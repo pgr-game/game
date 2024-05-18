@@ -10,6 +10,7 @@ using UnityEngine.UIElements;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.IO;
+using UnityEngine.Tilemaps;
 
 public class UnitMove : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class UnitMove : MonoBehaviour
     public float RangeLeft;
     public Transform RotationNode;
     public AreaOutline AreaPrefab;
-    public PathDrawer PathPrefab;
+    public PathDrawer PathPrefab;   
 
     public MapManager mapManager;
     public UnitController unitController;
@@ -29,6 +30,10 @@ public class UnitMove : MonoBehaviour
 
     private bool active = false;
     private bool justActivated = false;
+    public bool isAutoMove = false;
+
+    private TileEntity longPathTile;
+    private Vector3 longPathClickPosition;
 
     public Vector3Int hexPosition;
 
@@ -38,7 +43,7 @@ public class UnitMove : MonoBehaviour
         {
             if (MyInput.GetOnWorldUp(mapManager.MapEntity.Settings.Plane()))
             {
-                HandleWorldClick();
+                HandleWorldClick(null, new Vector3());
             }
             PathUpdate();
         }
@@ -74,11 +79,39 @@ public class UnitMove : MonoBehaviour
     }
 
     // TODO: probably need changing when we implement multiple units on a tile
-    void HandleWorldClick()
+    void HandleWorldClick(TileEntity tile, Vector3 clickPos)
     {
-        var clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
-        var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, RangeLeft);
-        var tile = path.Last();
+        if (tile == null || clickPos == null)
+        {
+            // manual movement
+            clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
+            var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
+            tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
+            if (path.Count-1 > RangeLeft)
+            {
+                // clicked out of range, set long path
+                longPathTile = path.Last();
+                longPathClickPosition = clickPos;
+                isAutoMove = true;
+            }
+            else
+            {
+                // no need for long path, tile is within reach
+                isAutoMove = false;
+            }
+        }
+        else if(RangeLeft == 0) 
+        { 
+            return;
+        }
+        else
+        {
+            // this is automatic movement at the end of turn
+            var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
+            tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
+            PathHide();
+        }
+
         if (tile == null) return;
 
         CityTile movedFromCityTile = mapManager.MapEntity.Tile(transform.position).CityTilePresent;
@@ -210,6 +243,13 @@ public class UnitMove : MonoBehaviour
         }
     }
 
+    public void TryAutoMove()
+    {
+        if (!isAutoMove || longPathTile == null || longPathClickPosition == null) return;
+
+        HandleWorldClick(longPathTile, longPathClickPosition);
+    }
+
     void AreaShow()
     {
         AreaHide();
@@ -223,13 +263,14 @@ public class UnitMove : MonoBehaviour
 
     void PathCreate()
     {
-        if (!Path)
+        if (Path)
         {
-            Path = Spawner.Spawn(PathPrefab, Vector3.zero, Quaternion.identity);
-            Path.Show(new List<Vector3>() { }, mapManager.MapEntity);
-            Path.InactiveState();
-            Path.IsEnabled = true;
+            Destroy(Path);
         }
+        Path = Spawner.Spawn(PathPrefab, Vector3.zero, Quaternion.identity);
+        Path.Show(new List<Vector3>() { }, mapManager.MapEntity);
+        Path.InactiveState();
+        Path.IsEnabled = true;
     }
 
     public void PathHide()
@@ -247,8 +288,21 @@ public class UnitMove : MonoBehaviour
             var tile = mapManager.MapEntity.Tile(MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane()));
             if (tile != null && tile.Vacant)
             {
-                var path = mapManager.MapEntity.PathPoints(transform.position, mapManager.MapEntity.WorldPosition(tile.Position), 100000);
-                longPathNumberOfTurns = (int)(path.Count / RangeLeft);
+                var path = mapManager.MapEntity.PathPoints(transform.position, mapManager.MapEntity.WorldPosition(tile.Position), float.MaxValue);
+                int pathLength = path.Count - 1; // path length is the number of steps minus one (because the first step is the current position)
+                int longPathNumberOfTurns;
+
+                if (RangeLeft > 0)
+                {
+                    // If there is remaining range left in the current turn
+                    longPathNumberOfTurns = (int)Math.Ceiling((pathLength - RangeLeft) / (float)Range) + 1;
+                }
+                else
+                {
+                    // If there is no remaining range left in the current turn
+                    longPathNumberOfTurns = (int)Math.Ceiling(pathLength / (float)Range);
+                }
+
                 Path.Show(path, mapManager.MapEntity);
                 Path.Init(unitController.owner.color, unitController.owner.color, longPathNumberOfTurns);
                 Path.ActiveState();

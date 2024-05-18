@@ -181,6 +181,10 @@ public class GameManager : MonoBehaviour
 
     public void NextPlayer()
     {
+        foreach(UnitController unit in players[activePlayerIndex].allyUnits)
+        {
+            unit.unitMove.TryAutoMove();
+        }
         players[activePlayerIndex].DeactivateUnitsRange();
         players[activePlayerIndex].gameObject.SetActive(false);
         GameObject unitList = UI.transform.Find("UnitList").gameObject;
