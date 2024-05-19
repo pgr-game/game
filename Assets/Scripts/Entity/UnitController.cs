@@ -280,11 +280,13 @@ public class UnitController : MonoBehaviour
     {
         unitStatsUIController.UpdateUnitStatisticsWindow(this);
         unitStatsUIController.ShowUnitBox();
+        unitMove.ShowLongPath();
     }
 
     void OnMouseExit()
     {
-        if(!unitStatsUIController.activeUnit)
+        unitMove.HideLongPath();
+        if (!unitStatsUIController.activeUnit)
         {
             unitStatsUIController.HideUnitBox();
         }
