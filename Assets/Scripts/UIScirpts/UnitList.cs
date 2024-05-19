@@ -84,8 +84,9 @@ public class UnitList : MonoBehaviour
     public void goToPosition(UnitController unitData)
     {
         Vector3 tilePosition=unitData.mapManager.MapEntity.WorldPosition(unitData.unitMove.hexPosition);
-
         Camera.main.transform.position = new Vector3(tilePosition.x, tilePosition.y, Camera.main.transform.position.z);
 
+        gameManager.activePlayer.SelectUnitFromList(unitData);
+        unitList.SetActive(false);
     }
 }

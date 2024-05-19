@@ -98,7 +98,7 @@ public class PlayerManager : MonoBehaviour
         return null;
     }
 
-    private void HandleUnitClick(UnitController currentUnit) {
+    public void HandleUnitClick(UnitController currentUnit) {
         if(currentUnit.owner != this) {
             return;
         }
@@ -305,6 +305,12 @@ public class PlayerManager : MonoBehaviour
                 return;
             }
         });
+    }
+
+    public void SelectUnitFromList(UnitController selectedUnit) {
+        if(selected) selected.GetComponent<UnitController>().Deactivate();
+        selected = selectedUnit.gameObject;
+        selectedUnit.Activate();
     }
 
 }
