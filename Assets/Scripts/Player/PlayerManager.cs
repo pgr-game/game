@@ -108,7 +108,10 @@ public class PlayerManager : MonoBehaviour
             newSelected = null;
             currentUnit.Deactivate();
         }
-        else if(currentUnit && !selected) {
+        else if(currentUnit) {
+            if(selected) {
+                selected.GetComponent<UnitController>().Deactivate();
+            }
             //select if nothing else is selected
             selected = newSelected;
             currentUnit.Activate();
@@ -302,6 +305,12 @@ public class PlayerManager : MonoBehaviour
                 return;
             }
         });
+    }
+
+    public void SelectUnitFromList(UnitController selectedUnit) {
+        if(selected) selected.GetComponent<UnitController>().Deactivate();
+        selected = selectedUnit.gameObject;
+        selectedUnit.Activate();
     }
 
 }
