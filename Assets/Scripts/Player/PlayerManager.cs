@@ -98,7 +98,7 @@ public class PlayerManager : MonoBehaviour
         return null;
     }
 
-    public void HandleUnitClick(UnitController currentUnit) {
+    private void HandleUnitClick(UnitController currentUnit) {
         if(currentUnit.owner != this) {
             return;
         }
