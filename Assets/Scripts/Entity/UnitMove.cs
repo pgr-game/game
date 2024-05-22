@@ -84,7 +84,7 @@ public class UnitMove : MonoBehaviour
     {
         if (tile == null || clickPos == null)
         {
-            // manual movement
+            // manual movement (get click position from mouse position now)
             Destroy(LongPath);
             longPathPoints = null;
             clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
@@ -198,7 +198,7 @@ public class UnitMove : MonoBehaviour
             {
                 StopCoroutine(MovingCoroutine);
             }
-            MovingCoroutine = StartCoroutine(Moving(path, onCompleted));
+            MovingCoroutine = StartCoroutine(MovingAnimation(path, onCompleted));
             var amountOfSteps = (int)Math.Ceiling((double)path.Count / 2);
             RangeLeft -= amountOfSteps;
             if(longPathPoints.Count > amountOfSteps)
@@ -220,7 +220,7 @@ public class UnitMove : MonoBehaviour
         }
     }
 
-    IEnumerator Moving(List<TileEntity> path, Action onCompleted)
+    IEnumerator MovingAnimation(List<TileEntity> path, Action onCompleted)
     {
         var nextIndex = 0;
         transform.position = mapManager.MapEntity.Settings.Projection(transform.position);
@@ -318,16 +318,7 @@ public class UnitMove : MonoBehaviour
 
     private int CalculateLongPathNumberOfTurns(int pathLength)
     {
-        if (RangeLeft > 0)
-        {
-            // If there is remaining range left in the current turn
-            return (int)Math.Ceiling((pathLength - RangeLeft) / (float)Range) + 1;
-        }
-        else
-        {
-            // If there is no remaining range left in the current turn
-            return (int)Math.Ceiling(pathLength / (float)Range);
-        }
+        return (int)Math.Ceiling(pathLength / (float)Range);
     }
 
     public void Activate()
@@ -355,7 +346,7 @@ public class UnitMove : MonoBehaviour
         // could be changed to a different prefab
         LongPath = Spawner.Spawn(PathPrefab, Vector3.zero, Quaternion.identity);
         LongPath.Show(new List<Vector3>() { }, mapManager.MapEntity);
-        LongPath.Init(unitController.owner.color, unitController.owner.color, longPathPoints != null ? longPathPoints.Count : 0);
+        LongPath.Init(unitController.owner.color, unitController.owner.color, CalculateLongPathNumberOfTurns(longPathPoints != null ? longPathPoints.Count - 1 : 0));
         LongPath.InactiveState();
         LongPath.IsEnabled = false;
     }
