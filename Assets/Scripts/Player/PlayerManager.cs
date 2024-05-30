@@ -176,6 +176,7 @@ public class PlayerManager : MonoBehaviour
 
     public UnitController InstantiateUnit(UnitController unitController, UnitLoadData unitLoadData, Vector3 position) {
         float? rangeLeft = null;
+        Vector3? longPathClickPosition = null;
         if (unitLoadData != null) {
             position = unitLoadData.position;
             unitController.maxHealth = unitLoadData.maxHealth;
@@ -190,11 +191,12 @@ public class PlayerManager : MonoBehaviour
             unitController.experience = unitLoadData.experience;
             rangeLeft = unitLoadData.rangeLeft;
             unitController.attacked = unitLoadData.attacked;
+            longPathClickPosition = unitLoadData.longPathClickPosition;
         }
 
         UnitController newUnit = Instantiate(unitController, position, Quaternion.identity).GetComponent<UnitController>();
         allyUnits.Add(newUnit);
-        newUnit.Init(this, mapManager, gameManager, gameManager.unitStatsUIController, rangeLeft);
+        newUnit.Init(this, mapManager, gameManager, gameManager.unitStatsUIController, rangeLeft, longPathClickPosition);
         return newUnit;
     }
 

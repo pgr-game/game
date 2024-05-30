@@ -33,7 +33,7 @@ public class UnitMove : MonoBehaviour
     public bool isAutoMove = false;
 
     private TileEntity longPathTile;
-    private Vector3 longPathClickPosition;
+    public Vector3 longPathClickPosition;
     List<Vector3> longPathPoints;
 
     public Vector3Int hexPosition;
@@ -44,7 +44,7 @@ public class UnitMove : MonoBehaviour
         {
             if (MyInput.GetOnWorldUp(mapManager.MapEntity.Settings.Plane()))
             {
-                HandleWorldClick(null, new Vector3());
+                HandleWorldClick();
             }
             PathUpdate();
         }
@@ -58,17 +58,25 @@ public class UnitMove : MonoBehaviour
 
     }
 
-    public void Init(MapManager mapManager, UnitController unitController, float? rangeLeft)
+    public void Init(MapManager mapManager, UnitController unitController, float? rangeLeft, Vector3? longPathClickPosition)
     {
         this.unitController = unitController;
         if (rangeLeft != null)
         {
-            Debug.Log(rangeLeft);
             RangeLeft = (float)rangeLeft;
         }
         else
         {
             RangeLeft = Range;
+        }
+        if(longPathClickPosition != null)
+        {
+            //load long path and auto move
+            var path = mapManager.MapEntity.PathTiles(transform.position, (Vector3)longPathClickPosition, float.MaxValue);
+            longPathTile = path[Math.Min((int)RangeLeft, path.Count - 1)];
+            longPathPoints = path.Select(x => mapManager.MapEntity.WorldPosition(x)).ToList();
+            longPathPoints.Add(mapManager.MapEntity.WorldPosition(longPathTile));
+            isAutoMove = true;
         }
         var position = transform.position;
         var tile = mapManager.MapEntity.Tile(position);
@@ -80,32 +88,35 @@ public class UnitMove : MonoBehaviour
     }
 
     // TODO: probably need changing when we implement multiple units on a tile
-    void HandleWorldClick(TileEntity tile, Vector3 clickPos)
+    void HandleWorldClick()
     {
-        if (tile == null || clickPos == null)
+        // manual movement (get click position from mouse position now)
+        Destroy(LongPath);
+        longPathPoints = null;
+        Vector3 clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
+        var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
+        TileEntity tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
+        if (path.Count - 1 > RangeLeft)
         {
-            // manual movement (get click position from mouse position now)
-            Destroy(LongPath);
-            longPathPoints = null;
-            clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
-            var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
-            tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
-            if (path.Count-1 > RangeLeft)
-            {
-                // clicked out of range, set long path
-                longPathTile = path.Last();
-                longPathPoints = path.Select(x => mapManager.MapEntity.WorldPosition(x)).ToList();
-                longPathPoints.Add(mapManager.MapEntity.WorldPosition(tile));
-                longPathClickPosition = clickPos;
-                isAutoMove = true;
-            }
-            else
-            {
-                // no need for long path, tile is within reach
-                isAutoMove = false;
-            }
+            // clicked out of range, set long path
+            longPathTile = path.Last();
+            longPathPoints = path.Select(x => mapManager.MapEntity.WorldPosition(x)).ToList();
+            longPathPoints.Add(mapManager.MapEntity.WorldPosition(tile));
+            longPathClickPosition = clickPos;
+            isAutoMove = true;
         }
-        else if(RangeLeft == 0) 
+        else
+        {
+            // no need for long path, tile is within reach
+            isAutoMove = false;
+        }
+
+        DetermineMoveType(tile, clickPos);
+    }
+
+    private void DetermineMoveType(TileEntity tile, Vector3 clickPos)
+    {
+        if (RangeLeft == 0)
         {
             // automatic movement is finished, could trigger some event here
             return;
@@ -117,8 +128,8 @@ public class UnitMove : MonoBehaviour
             tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
             PathHide();
         }
-
         if (tile == null) return;
+
 
         CityTile movedFromCityTile = mapManager.MapEntity.Tile(transform.position).CityTilePresent;
         bool attackedCity = false;
@@ -258,7 +269,7 @@ public class UnitMove : MonoBehaviour
     {
         if (!isAutoMove || longPathTile == null || longPathClickPosition == null) return;
 
-        HandleWorldClick(longPathTile, longPathClickPosition);
+        DetermineMoveType(longPathTile, longPathClickPosition);
     }
 
     void AreaShow()

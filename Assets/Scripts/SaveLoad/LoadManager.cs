@@ -170,7 +170,8 @@ public class LoadManager : MonoBehaviour
             quickSaveReader.Read<int>(unitKey + "level"),
             quickSaveReader.Read<int>(unitKey + "experience"),
             quickSaveReader.Read<float>(unitKey + "rangeLeft"),
-            quickSaveReader.Read<bool>(unitKey + "attacked")
+            quickSaveReader.Read<bool>(unitKey + "attacked"),
+            quickSaveReader.Read<Vector3>(unitKey + "longPathClickPosition")
         );
 
         return unitLoadData;

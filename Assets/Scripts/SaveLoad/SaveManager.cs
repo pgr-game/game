@@ -119,6 +119,7 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>(unitKey + "experience", unit.experience);
         quickSaveWriter.Write<float>(unitKey + "rangeLeft", unit.unitMove.RangeLeft);
         quickSaveWriter.Write<bool>(unitKey + "attacked", unit.attacked);
+        quickSaveWriter.Write<Vector3>(unitKey + "longPathClickPosition", unit.unitMove.longPathClickPosition);
         quickSaveWriter.Commit();
     }
 
