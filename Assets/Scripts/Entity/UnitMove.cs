@@ -201,11 +201,11 @@ public class UnitMove : MonoBehaviour
             MovingCoroutine = StartCoroutine(MovingAnimation(path, onCompleted));
             var amountOfSteps = (int)Math.Ceiling((double)path.Count / 2);
             RangeLeft -= amountOfSteps;
-            if(longPathPoints.Count > amountOfSteps)
+            if(longPathPoints != null && longPathPoints.Count > amountOfSteps)
             {
                 longPathPoints.RemoveRange(0, amountOfSteps);
             }
-            if (isAutoMove)
+            if (longPathPoints != null && isAutoMove)
             {
                 LongPath.SetNumberOfTurns(CalculateLongPathNumberOfTurns(longPathPoints.Count - amountOfSteps));
             }
