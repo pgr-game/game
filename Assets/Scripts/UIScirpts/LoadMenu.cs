@@ -16,6 +16,7 @@ public class LoadMenu : MonoBehaviour
     {
         loadManager.CreateSaveFilesFile();
         List<SaveGameDescription> saveGameDescriptions = loadManager.LoadSaveGameDecriptions();
+        saveGameDescriptions.Reverse();
         FillLoadList(saveGameDescriptions);
     }
 

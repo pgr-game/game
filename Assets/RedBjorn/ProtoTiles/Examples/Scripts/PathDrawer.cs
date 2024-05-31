@@ -30,6 +30,11 @@ namespace RedBjorn.ProtoTiles.Example
                 new GradientColorKey[] { new GradientColorKey(InactiveColor, 0.0f), new GradientColorKey(InactiveColor, 1.0f) },
                 new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
             );
+            SetNumberOfTurns(longPathNumberOfTurns);
+        }
+
+        public void SetNumberOfTurns(int longPathNumberOfTurns)
+        {
             TailText.text = longPathNumberOfTurns.ToString();
         }
 
