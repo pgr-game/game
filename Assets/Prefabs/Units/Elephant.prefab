@@ -29,12 +29,24 @@ PrefabInstance:
       value: 0.557
       objectReference: {fileID: 0}
     - target: {fileID: 3701409341896165458, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: m_Height
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3701409341896165458, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: m_Radius
-      value: 0.64912736
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3701409341896165458, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: m_Center.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3701409341896165458, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: m_Center.y
-      value: 0.59194124
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3701409341896165458, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: m_Direction
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3783203255126780123, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: m_Name

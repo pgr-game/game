@@ -5722,6 +5722,7 @@ MonoBehaviour:
   maxLvlText: {fileID: 643449736804515193}
   unitOwnerColor: {fileID: 7924946295081680058}
   healthBackground: {fileID: 706057761703188758}
+  activeUnit: {fileID: 0}
 --- !u!1 &5940101742059179683
 GameObject:
   m_ObjectHideFlags: 0
@@ -12256,6 +12257,22 @@ PrefabInstance:
     - target: {fileID: 2982312556623606565, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3493645573676341183, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3493645573676341183, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5365672070592282108}
+    - target: {fileID: 3493645573676341183, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Deactivate
+      objectReference: {fileID: 0}
+    - target: {fileID: 3493645573676341183, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: CityMenuManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5544688390400928735, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
       propertyPath: m_AnchorMax.x

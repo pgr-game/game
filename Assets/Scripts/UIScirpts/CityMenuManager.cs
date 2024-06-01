@@ -8,7 +8,6 @@ using UI.Dialogs;
 public class CityMenuManager : MonoBehaviour
 {
     private GameManager gameManager;
-    public GameObject CityMenu;
     public RectTransform dialogContainer;
     public GameObject UnitEntryPrefab;
     public City city;
@@ -18,22 +17,27 @@ public class CityMenuManager : MonoBehaviour
     private List<GameObject> unitEntriesInList;
 
 
+
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
         this.unitEntriesInList = new List<GameObject>();
-        this.cityNameText = CityMenu.transform.Find("Info/CityName/Text").GetComponent<Text>();
-        this.unitsContainer = CityMenu.transform.Find("Scroll View/Viewport/Content").gameObject;
-    }
-
-    public void Activate()
-    {
-        CityMenu.SetActive(true);
+        this.cityNameText = this.gameObject.transform.Find("Info/CityName/Text").GetComponent<Text>();
+        this.unitsContainer = this.gameObject.transform.Find("Scroll View/Viewport/Content").gameObject;
     }
 
     public void Deactivate()
     {
-        CityMenu.SetActive(false);
+        this.gameObject.SetActive(false);
+        PauseMenu.isPaused = false;
+        Time.timeScale = 1f;
+    }
+
+    public void Activate()
+    {
+        this.gameObject.SetActive(true);
+        PauseMenu.isPaused = true;
+        Time.timeScale = 0f;
     }
 
     public void setValues(City city)

@@ -194,19 +194,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4983505441445479054, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
       propertyPath: m_Height
-      value: 2.2411945
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4983505441445479054, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
       propertyPath: m_Radius
-      value: 0.6117298
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 4983505441445479054, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
       propertyPath: m_Center.x
-      value: 0.1117298
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4983505441445479054, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
       propertyPath: m_Center.y
-      value: 0.87940276
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983505441445479054, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
+      propertyPath: m_Direction
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6065591897587641577, guid: 5ccf13b47718c0d4d956c0a95c71da07, type: 3}
       propertyPath: Range
