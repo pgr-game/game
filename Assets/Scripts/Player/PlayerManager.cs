@@ -126,7 +126,7 @@ public class PlayerManager : MonoBehaviour
         if(city.Owner != this) {
             return;
         }
-        if(gameManager.cityMenuManager.city == city) {
+        if(gameManager.cityMenuManager.city == city && gameManager.cityMenuManager.gameObject.activeSelf) {
             gameManager.cityMenuManager.setValues(null);
             gameManager.cityMenuManager.Deactivate();
             isInMenu = false;

@@ -8,7 +8,7 @@ using UI.Dialogs;
 public class CityMenuManager : MonoBehaviour
 {
     private GameManager gameManager;
-    public GameObject CityMenu;
+    private GameObject CityMenu;
     public RectTransform dialogContainer;
     public GameObject UnitEntryPrefab;
     public City city;
@@ -21,6 +21,7 @@ public class CityMenuManager : MonoBehaviour
 
     public void Init(GameManager gameManager)
     {
+        CityMenu = this.gameObject;
         this.gameManager = gameManager;
         this.unitEntriesInList = new List<GameObject>();
         this.cityNameText = CityMenu.transform.Find("Info/CityName/Text").GetComponent<Text>();
@@ -29,31 +30,16 @@ public class CityMenuManager : MonoBehaviour
 
     public void Deactivate()
     {
-        if(CityMenu != null)//kto robi³ citymenu niech wypije wody // nwm co jak tak dzia³a
-        {
-            CityMenu.SetActive(false);
-        }
-        this.gameObject.SetActive(false);
+        CityMenu.SetActive(false);
         PauseMenu.isPaused = false;
         Time.timeScale = 1f;
     }
 
     public void Activate()
     {
-        this.gameObject.SetActive(true);
         CityMenu.SetActive(true);
         PauseMenu.isPaused = true;
         Time.timeScale = 0f;
-    }
-
-    public void ActivateOld()
-    {
-        CityMenu.SetActive(true);
-    }
-
-    public void DeactivateOld()
-    {
-        CityMenu.SetActive(false);
     }
 
     public void setValues(City city)

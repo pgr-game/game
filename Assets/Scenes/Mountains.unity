@@ -10351,7 +10351,6 @@ GameObject:
   - component: {fileID: 319505135}
   - component: {fileID: 319505134}
   - component: {fileID: 319505133}
-  - component: {fileID: 319505132}
   - component: {fileID: 319505131}
   - component: {fileID: 319505130}
   m_Layer: 0
@@ -10385,21 +10384,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee444ad54272a7645a1af23ee3dc5cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &319505132
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 319505129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f762f4870e22b24380de4828e0a64eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CityMenu: {fileID: 777570910}
-  dialogContainer: {fileID: 777570912}
-  UnitEntryPrefab: {fileID: 7768305636674779308, guid: 2421758fbe0bedf4ba11c99b241c1f99, type: 3}
 --- !u!114 &319505133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10433,10 +10417,11 @@ MonoBehaviour:
   saveManager: {fileID: 319505131}
   loadManager: {fileID: 319505130}
   soundManager: {fileID: 6180325172868213126, guid: d9732cf331e070245b29638b12bdfe03, type: 3}
-  cityMenuManager: {fileID: 319505132}
+  cityMenuManager: {fileID: 777570912}
   pauseMenu: {fileID: 319505133}
   playerPrefab: {fileID: 6202811586810600753, guid: 737370e2dcee64847a4ede0cb6b98416, type: 3}
   gameSettings: {fileID: 0}
+  playerTreeManager: {fileID: 0}
   turnNumber: 1
   turnText: {fileID: 1524804338}
   activePlayerIndex: 0
@@ -24222,11 +24207,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 771658382689974200, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
   m_PrefabInstance: {fileID: 777570907}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &777570912 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5126063817814227379, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+--- !u!114 &777570912 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5365672070592282108, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
   m_PrefabInstance: {fileID: 777570907}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777570910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f762f4870e22b24380de4828e0a64eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &778260446
 PrefabInstance:
   m_ObjectHideFlags: 0

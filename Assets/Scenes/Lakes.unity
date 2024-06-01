@@ -33009,7 +33009,6 @@ GameObject:
   - component: {fileID: 1043727870}
   - component: {fileID: 1043727869}
   - component: {fileID: 1043727868}
-  - component: {fileID: 1043727867}
   - component: {fileID: 1043727866}
   - component: {fileID: 1043727865}
   m_Layer: 0
@@ -33043,21 +33042,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee444ad54272a7645a1af23ee3dc5cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1043727867
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1043727864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f762f4870e22b24380de4828e0a64eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CityMenu: {fileID: 1593226866}
-  dialogContainer: {fileID: 1593226865}
-  UnitEntryPrefab: {fileID: 7768305636674779308, guid: 2421758fbe0bedf4ba11c99b241c1f99, type: 3}
 --- !u!114 &1043727868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33091,10 +33075,11 @@ MonoBehaviour:
   saveManager: {fileID: 1043727866}
   loadManager: {fileID: 1043727865}
   soundManager: {fileID: 6180325172868213126, guid: d9732cf331e070245b29638b12bdfe03, type: 3}
-  cityMenuManager: {fileID: 1043727867}
+  cityMenuManager: {fileID: 1593226865}
   pauseMenu: {fileID: 1043727868}
   playerPrefab: {fileID: 6202811586810600753, guid: 737370e2dcee64847a4ede0cb6b98416, type: 3}
   gameSettings: {fileID: 0}
+  playerTreeManager: {fileID: 0}
   turnNumber: 1
   turnText: {fileID: 1891077140}
   activePlayerIndex: 0
@@ -48937,11 +48922,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7428369925900507563, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
   m_PrefabInstance: {fileID: 1593226860}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &1593226865 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5126063817814227379, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+--- !u!114 &1593226865 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5365672070592282108, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
   m_PrefabInstance: {fileID: 1593226860}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593226866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f762f4870e22b24380de4828e0a64eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1593226866 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8611491148463607539, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}

@@ -46382,7 +46382,6 @@ GameObject:
   - component: {fileID: 1991390625}
   - component: {fileID: 1991390624}
   - component: {fileID: 1991390626}
-  - component: {fileID: 1991390627}
   - component: {fileID: 1991390629}
   - component: {fileID: 1991390628}
   m_Layer: 0
@@ -46408,10 +46407,11 @@ MonoBehaviour:
   saveManager: {fileID: 1991390629}
   loadManager: {fileID: 1991390628}
   soundManager: {fileID: 6180325172868213126, guid: d9732cf331e070245b29638b12bdfe03, type: 3}
-  cityMenuManager: {fileID: 1991390627}
+  cityMenuManager: {fileID: 987849258970583888}
   pauseMenu: {fileID: 1991390626}
   playerPrefab: {fileID: 6202811586810600753, guid: 737370e2dcee64847a4ede0cb6b98416, type: 3}
   gameSettings: {fileID: 0}
+  playerTreeManager: {fileID: 0}
   turnNumber: 1
   turnText: {fileID: 600600140}
   activePlayerIndex: 0
@@ -46472,21 +46472,6 @@ MonoBehaviour:
   optionMenu: {fileID: 2061332187}
   cityMenu: {fileID: 629583039}
   saveNameInputWindow: {fileID: 2206669921554873597}
---- !u!114 &1991390627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1991390623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f762f4870e22b24380de4828e0a64eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CityMenu: {fileID: 629583039}
-  dialogContainer: {fileID: 127000893}
-  UnitEntryPrefab: {fileID: 7768305636674779308, guid: 2421758fbe0bedf4ba11c99b241c1f99, type: 3}
 --- !u!114 &1991390628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50615,6 +50600,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5365672070592282108, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: CityMenu
+      value: 
+      objectReference: {fileID: 629583039}
+    - target: {fileID: 5365672070592282108, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: UnitEntryPrefab
+      value: 
+      objectReference: {fileID: 7768305636674779308, guid: 2421758fbe0bedf4ba11c99b241c1f99, type: 3}
+    - target: {fileID: 5365672070592282108, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: dialogContainer
+      value: 
+      objectReference: {fileID: 127000893}
     - target: {fileID: 5918970003185900430, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
       propertyPath: m_Name
       value: UI
@@ -50644,6 +50641,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+--- !u!114 &987849258970583888 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5365672070592282108, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+  m_PrefabInstance: {fileID: 987849258970583887}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629583039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f762f4870e22b24380de4828e0a64eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2206669921554873597 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 771658382689974200, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
