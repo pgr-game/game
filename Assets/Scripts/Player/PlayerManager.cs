@@ -46,6 +46,7 @@ public class PlayerManager : MonoBehaviour
         this.mapManager = mapManager;
         this.startingResources = startingResources;
         this.color = color;
+        InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
         InitForts();
         InitUnits();
@@ -198,6 +199,18 @@ public class PlayerManager : MonoBehaviour
         allyUnits.Add(newUnit);
         newUnit.Init(this, mapManager, gameManager, gameManager.unitStatsUIController, rangeLeft, longPathClickPosition);
         return newUnit;
+    }
+    void InitTree(TreeLoadData treeLoadData)
+    {
+        //call player tree manager here to init once it's implemented\
+        if (treeLoadData != null)
+        {
+            powerEvolution = treeLoadData.powerEvolution;
+            strategyEvolution = treeLoadData.strategyEvolution;
+            researchNode = treeLoadData.researchNode;
+        }
+
+        this.gameManager.playerTreeManager.populateEvolutionTrees(this);
     }
 
     void InitCities(string startingCityName, List<CityLoadData> cityLoadData) {

@@ -8,5 +8,6 @@ public class StartingResources
     public List<FortLoadData> fortLoadData;
     public List<UnitLoadData> unitLoadData;
     public List<CityLoadData> cityLoadData;
+    public TreeLoadData treeLoadData;
     public int gold;
 }
