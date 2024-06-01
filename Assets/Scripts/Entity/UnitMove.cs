@@ -69,7 +69,7 @@ public class UnitMove : MonoBehaviour
         {
             RangeLeft = Range;
         }
-        if(longPathClickPosition != null)
+        if(longPathClickPosition != null && longPathClickPosition != Vector3.zero)
         {
             //load long path and auto move
             var path = mapManager.MapEntity.PathTiles(transform.position, (Vector3)longPathClickPosition, float.MaxValue);
