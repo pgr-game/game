@@ -53,7 +53,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
-        playerTreeManager.addGameManager(this);
         InitStaticVariables();
         soundManager = Instantiate(soundManager, new Vector3(0,0,0), Quaternion.identity);
         gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
@@ -73,6 +72,7 @@ public class GameManager : MonoBehaviour
 
         LoadGameData(sceneLoadData);
 
+        playerTreeManager.Init(this);
         mapManager.Init(this);
         cityMenuManager.Init(this);
 
@@ -166,7 +166,6 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < numberOfPlayers; i++) {
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
             players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], i);
-            this.playerTreeManager.populateEvolutionTrees(players[i]);
             if (i == activePlayerIndex) {
                 players[i].gameObject.SetActive(true);
             }

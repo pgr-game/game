@@ -139,6 +139,8 @@ public class LoadManager : MonoBehaviour
             startingResources.cityLoadData.Add(LoadCityData(quickSaveReader, playerKey, i));          
         }
 
+        startingResources.treeLoadData = LoadTreeData(quickSaveReader, playerKey);
+
         return startingResources;
     }
 
@@ -170,7 +172,8 @@ public class LoadManager : MonoBehaviour
             quickSaveReader.Read<int>(unitKey + "level"),
             quickSaveReader.Read<int>(unitKey + "experience"),
             quickSaveReader.Read<float>(unitKey + "rangeLeft"),
-            quickSaveReader.Read<bool>(unitKey + "attacked")
+            quickSaveReader.Read<bool>(unitKey + "attacked"),
+            quickSaveReader.Read<Vector3>(unitKey + "longPathClickPosition")
         );
 
         return unitLoadData;
@@ -204,4 +207,34 @@ public class LoadManager : MonoBehaviour
         return cityLoadData;
     }
 
+    private TreeLoadData LoadTreeData(QuickSaveReader quickSaveReader, string playerKey)
+    {
+        string treeKey = playerKey + "tree";
+
+        var powerEvolution = new Dictionary<int, List<string>>();
+        int powerEvolutionCount = quickSaveReader.Read<int>(treeKey + "powerEvolutionCount");
+        for(int i = 0; i < powerEvolutionCount; i++)
+        {
+            powerEvolution.Add(
+                quickSaveReader.Read<int>(treeKey + "powerEvolutionKey" + i),
+                quickSaveReader.Read<List<string>>(treeKey + "powerEvolutionList" + i)
+            );
+        }
+
+        var strategyEvolution = new Dictionary<int, List<string>>();
+        int strategyEvolutionCount = quickSaveReader.Read<int>(treeKey + "strategyEvolutionCount");
+        for (int i = 0; i < strategyEvolutionCount; i++)
+        {
+            strategyEvolution.Add(
+                quickSaveReader.Read<int>(treeKey + "strategyEvolutionKey" + i),
+                quickSaveReader.Read<List<string>>(treeKey + "strategyEvolutionList" + i)
+            );
+        }
+
+        (int, string) researchNode = quickSaveReader.Read<(int, string)>(treeKey + "researchNode");
+
+        TreeLoadData treeLoadData = new TreeLoadData(powerEvolution, strategyEvolution, researchNode);
+
+        return treeLoadData;
+    }
 }

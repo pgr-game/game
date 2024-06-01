@@ -78,6 +78,8 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<string>(playerKey + "color", ColorUtility.ToHtmlStringRGBA(player.color));
         quickSaveWriter.Write<int>(playerKey + "gold", player.gold);
         quickSaveWriter.Write<int>(playerKey + "goldIncome", player.goldIncome);
+
+        SavePlayerTree(player, quickSaveWriter, playerKey);
        
         int i = 0;
         foreach(UnitController unit in player.allyUnits)
@@ -103,6 +105,31 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Commit();
     }
 
+    private void SavePlayerTree(PlayerManager playerManager, QuickSaveWriter quickSaveWriter, string playerKey)
+    {
+        string treeKey = playerKey + "tree";
+
+        quickSaveWriter.Write<int>(treeKey + "powerEvolutionCount", playerManager.powerEvolution.Count);
+        int i = 0;
+        foreach(KeyValuePair<int, List<string>> pair in playerManager.powerEvolution)
+        {
+            quickSaveWriter.Write<int>(treeKey + "powerEvolutionKey" + i, pair.Key);
+            quickSaveWriter.Write<List<string>>(treeKey + "powerEvolutionList" + i,pair.Value);
+            i++;
+        }
+
+        quickSaveWriter.Write<int>(treeKey + "strategyEvolutionCount", playerManager.strategyEvolution.Count);
+        i = 0;
+        foreach (KeyValuePair<int, List<string>> pair in playerManager.strategyEvolution)
+        {
+            quickSaveWriter.Write<int>(treeKey + "strategyEvolutionKey" + i, pair.Key);
+            quickSaveWriter.Write<List<string>>(treeKey + "strategyEvolutionList" + i, pair.Value);
+            i++;
+        }
+
+        quickSaveWriter.Write<(int, string)>(treeKey + "researchNode", playerManager.researchNode);
+    }
+
     private void SaveUnit(UnitController unit, QuickSaveWriter quickSaveWriter, string playerKey, int index)
     {
         string unitKey = playerKey + "unit" + index;
@@ -119,6 +146,7 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>(unitKey + "experience", unit.experience);
         quickSaveWriter.Write<float>(unitKey + "rangeLeft", unit.unitMove.RangeLeft);
         quickSaveWriter.Write<bool>(unitKey + "attacked", unit.attacked);
+        quickSaveWriter.Write<Vector3>(unitKey + "longPathClickPosition", unit.unitMove.longPathClickPosition);
         quickSaveWriter.Commit();
     }
 

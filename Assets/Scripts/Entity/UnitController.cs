@@ -36,12 +36,12 @@ public class UnitController : MonoBehaviour
     public bool canPlaceFort;
     public int turnsSinceFortPlaced = 10;
 
-    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController, float? rangeLeft) {
+    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController, float? rangeLeft, Vector3? longPathClickPosition) {
         this.owner = playerManager;
         this.mapManager = mapManager;
         this.unitStatsUIController = unitStatsUIController;
         unitUI.Init(this, owner.color, unitType, attack);
-        unitMove.Init(mapManager, this, rangeLeft);
+        unitMove.Init(mapManager, this, rangeLeft, longPathClickPosition);
 
         this.gameManager = gameManager;
         if(currentHealth == 0) {

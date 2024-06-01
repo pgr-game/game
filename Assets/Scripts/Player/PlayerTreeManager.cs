@@ -31,10 +31,10 @@ public class PlayerTreeManager : MonoBehaviour
     private static int powerEvolutionCount = 4;
     private static int startegyEvolutionCount = 3;
 
-    //private (int, string) researchNode = (-1, "NONE");
-    // Start is called before the first frame update
-    void Start()
+    public void Init(GameManager gameManager)
     {
+        this.gameManager = gameManager;
+
         if (powerNodeNames.Count != 0 || powerNodeLinks.Count != 0
     || strategyNodeNames.Count != 0 || strategyNodeLinks.Count != 0)
         {
@@ -83,11 +83,6 @@ public class PlayerTreeManager : MonoBehaviour
 
     public void populateEvolutionTrees(PlayerManager playerManager)
     {
-        if (powerNodeNames.Count == 0 || powerNodeLinks.Count == 0
-    || strategyNodeNames.Count == 0 || strategyNodeLinks.Count == 0)
-        {  // sometimes unity starts this without calling start first .-.
-            this.Start();
-        }
         //creating the dictionary <Node ID,Node info>
         for (int i = 0; i <= powerEvolutionCount; i++)
         {
@@ -97,7 +92,7 @@ public class PlayerTreeManager : MonoBehaviour
             list.Add("false"); // Node state default 0 - not researched
             list.Add(powerTurnsToUnlock[i].ToString());//turns to research
             list.Add(powerTurnsToUnlock[i].ToString());
-            playerManager.powerEvolution.Add(i, list);
+            playerManager.powerEvolution.TryAdd(i, list);
         }
 
         for (int i = 0; i <= startegyEvolutionCount; i++)
@@ -108,13 +103,10 @@ public class PlayerTreeManager : MonoBehaviour
             list.Add("false"); // Node state default 0 - not researched
             list.Add(startegyTurnsToUnlock[i].ToString());//turns to research
             list.Add(startegyTurnsToUnlock[i].ToString());
-            playerManager.strategyEvolution.Add(i, list);
+            playerManager.strategyEvolution.TryAdd(i, list);
         }
     }
-    public void addGameManager(GameManager game)
-    {
-        this.gameManager = game;
-    }
+
     private void updateColorsOfTree(GameObject branchRoot, Dictionary<int, List<string>> nodeDict, string nodeBaseName, int numberOfNodes, (int, string) currResearch)
     {
         for (int i = 0; i <= numberOfNodes; i++)
@@ -167,8 +159,6 @@ public class PlayerTreeManager : MonoBehaviour
 
         panelActive = !panelActive;
         this.gameObject.SetActive(panelActive);
-        if (strategyEvolvCurrPLayer.Count == 0 || powerEvolvCurrPLayer.Count == 0)
-        { this.Start(); }
         if (panelActive)
         {
             updateStrategyBranch(strategyEvolvCurrPLayer, currResearch);
@@ -264,6 +254,10 @@ public class PlayerTreeManager : MonoBehaviour
 
     public bool isNodeResearched(int nodeID,string branchType)
     {
+        if(gameManager.activePlayer == null)
+        {
+            return false;
+        }
         Dictionary<int, List<string>> powerEvolvCurrPLayer = gameManager.activePlayer.powerEvolution;
         Dictionary<int, List<string>> strategyEvolvCurrPLayer = gameManager.activePlayer.strategyEvolution;
 
