@@ -65,8 +65,9 @@ public class PlayerManager : MonoBehaviour
                 if(newSelected.GetComponent<UnitController>() && !isInMenu) {
                     UnitController currentUnit = newSelected.GetComponent<UnitController>();
                     HandleUnitClick(currentUnit);
+
                 }
-                else if(newSelected.GetComponent<CityTile>()) {
+                else if(newSelected.GetComponent<CityTile>()&&selected == null) {
                     CityTile cityTile = newSelected.GetComponent<CityTile>();
                     HandleCityClick(cityTile.city);
                 }
@@ -85,6 +86,11 @@ public class PlayerManager : MonoBehaviour
 
         } 
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), transform.TransformDirection(Vector3.forward), Color.green);
+    }
+
+    public void Deselect()
+    {
+        this.selected = null;
     }
 
     GameObject SelectObject()

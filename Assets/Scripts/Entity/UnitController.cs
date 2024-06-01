@@ -73,6 +73,7 @@ public class UnitController : MonoBehaviour
         unitMove.Deactivate();
         unitStatsUIController.activeUnit = null;
         unitStatsUIController.HideUnitBox();
+        this.owner.Deselect();
 
     }
 
