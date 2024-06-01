@@ -18,6 +18,7 @@ public class CityMenuManager : MonoBehaviour
     private List<GameObject> unitEntriesInList;
 
 
+
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
@@ -26,12 +27,31 @@ public class CityMenuManager : MonoBehaviour
         this.unitsContainer = CityMenu.transform.Find("Scroll View/Viewport/Content").gameObject;
     }
 
+    public void Deactivate()
+    {
+        if(CityMenu != null)//kto robi³ citymenu niech wypije wody // nwm co jak tak dzia³a
+        {
+            CityMenu.SetActive(false);
+        }
+        this.gameObject.SetActive(false);
+        PauseMenu.isPaused = false;
+        Time.timeScale = 1f;
+    }
+
     public void Activate()
+    {
+        this.gameObject.SetActive(true);
+        CityMenu.SetActive(true);
+        PauseMenu.isPaused = true;
+        Time.timeScale = 0f;
+    }
+
+    public void ActivateOld()
     {
         CityMenu.SetActive(true);
     }
 
-    public void Deactivate()
+    public void DeactivateOld()
     {
         CityMenu.SetActive(false);
     }
