@@ -180,6 +180,7 @@ public class GameManager : MonoBehaviour
 
     public void NextPlayer()
     {
+        this.cityMenuManager.Deactivate();
         foreach(UnitController unit in players[activePlayerIndex].allyUnits)
         {
             unit.unitMove.TryAutoMove();

@@ -33058,6 +33058,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 1593226864}
   optionMenu: {fileID: 1593226863}
   cityMenu: {fileID: 1593226866}
+  unitList: {fileID: 2039072368}
   saveNameInputWindow: {fileID: 1593226868}
 --- !u!114 &1043727869
 MonoBehaviour:
@@ -61359,6 +61360,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 7365716079596273168, guid: 3bbbc41ce13deed4b9e87e2ef7d37daf, type: 3}
   m_PrefabInstance: {fileID: 2038540165}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2039072368 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1445029022179186584, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+  m_PrefabInstance: {fileID: 1593226860}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2040228368
 PrefabInstance:

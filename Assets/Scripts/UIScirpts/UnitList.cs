@@ -17,6 +17,7 @@ public class UnitList : MonoBehaviour
         unitList.SetActive(!unitList.activeSelf);
         if (unitList.activeSelf)
         {
+            PauseMenu.isPaused = true;
             foreach (Transform child in content.transform)
             {
                 Destroy(child.gameObject);
@@ -42,6 +43,10 @@ public class UnitList : MonoBehaviour
                 buttonEvent.onClick.AddListener(delegate { goToPosition(unitData); });
                 i += 50;
             }
+        }
+        else
+        {
+            PauseMenu.isPaused = false;
         }
     }
     public void CreateUnitList()
@@ -85,7 +90,7 @@ public class UnitList : MonoBehaviour
     {
         Vector3 tilePosition=unitData.mapManager.MapEntity.WorldPosition(unitData.unitMove.hexPosition);
         Camera.main.transform.position = new Vector3(tilePosition.x, tilePosition.y, Camera.main.transform.position.z);
-
+        PauseMenu.isPaused = false;
         gameManager.activePlayer.SelectUnitFromList(unitData);
         unitList.SetActive(false);
     }

@@ -10,6 +10,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject optionMenu;
     public GameObject cityMenu;
+    public GameObject unitList;
     public static bool isPaused;
 
     public GameObject saveNameInputWindow;
@@ -30,6 +31,7 @@ public class PauseMenu : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
+            unitList.SetActive(false);
             cityMenu.SetActive(false);
             if(isPaused&& optionMenu.activeSelf==true) 
             {

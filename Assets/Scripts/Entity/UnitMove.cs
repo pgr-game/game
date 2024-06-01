@@ -54,8 +54,7 @@ public class UnitMove : MonoBehaviour
             {
                 justActivated = false;
             }
-        }
-
+        } 
     }
 
     public void Init(MapManager mapManager, UnitController unitController, float? rangeLeft, Vector3? longPathClickPosition)
