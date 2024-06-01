@@ -38319,6 +38319,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7365716079596273168, guid: 0ab1f7c3ff8692c49a3d7bcba090e7f6, type: 3}
   m_PrefabInstance: {fileID: 1278920992}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1280359851 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1445029022179186584, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+  m_PrefabInstance: {fileID: 1985123544}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1280823764
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59252,6 +59257,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 1985123548}
   optionMenu: {fileID: 1985123547}
   cityMenu: {fileID: 1985123550}
+  unitList: {fileID: 1280359851}
   saveNameInputWindow: {fileID: 1985123551}
 --- !u!114 &1991390628
 MonoBehaviour:
