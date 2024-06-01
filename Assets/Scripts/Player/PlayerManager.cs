@@ -31,6 +31,7 @@ public class PlayerManager : MonoBehaviour
     public List<UnitController> allyUnits = new List<UnitController>();
     public PlayerCitiesManager playerCitiesManager;
     public PlayerFortsManager playerFortsManager;
+    public PlayerSupplyManager playerSupplyManager;
     public GameObject fortPrefab;
 
     // currency
@@ -49,6 +50,7 @@ public class PlayerManager : MonoBehaviour
         InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
         InitForts();
+        InitSupplyLines(startingResources.supplyLoadData);
         InitUnits();
         this.gold = startingResources.gold;
         GameObject[] texts = GameObject.FindGameObjectsWithTag("currencyText");
@@ -222,6 +224,12 @@ public class PlayerManager : MonoBehaviour
     void InitCities(string startingCityName, List<CityLoadData> cityLoadData) {
         playerCitiesManager = new PlayerCitiesManager();
         playerCitiesManager.Init(this, startingCityName, cityLoadData);
+    }
+
+    void InitSupplyLines(SupplyLoadData supplyLoadData)
+    {
+        playerSupplyManager = new PlayerSupplyManager();
+        playerSupplyManager.Init(this, supplyLoadData);
     }
 
     void InitForts() {
