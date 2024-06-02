@@ -52,9 +52,10 @@ MonoBehaviour:
     rgba: 0
   index: 0
   allyUnits: []
-  pathPrefab: {fileID: 114413117004689456, guid: 4eac60a74696c8142b18f93d4453e87d, type: 3}
+  pathPrefab: {fileID: 114413117004689456, guid: b08b90c04512be143a7b595fa43b6559, type: 3}
   passableAreaPrefab: {fileID: 114964435729023602, guid: fe2319e9d6e840f409af77b3e7a85259, type: 3}
   fortPrefab: {fileID: 7362454568944323520, guid: 26ffc5ad993277348bf537bf162f852c, type: 3}
+  supplyLinePrefab: {fileID: 0}
   gold: 0
   goldText: {fileID: 0}
   goldIncome: 5

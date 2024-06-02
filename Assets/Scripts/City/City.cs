@@ -121,6 +121,6 @@ public class City
 
     public void CreateSupplyLine()
     {
-        Owner.playerSupplyManager.Create(this);
+        Owner.playerSupplyManager.OpenSupplyLineDrawer(this);
     }
 }
