@@ -9,6 +9,7 @@ using UnityEngine;
 public class PlayerSupplyManager
 {
     private PlayerManager playerManager;
+    public GameManager gameManager;
     private List<SupplyLineController> supplyLines;
 
     // Creating supply lines
@@ -16,18 +17,25 @@ public class PlayerSupplyManager
     public bool justActivated = true;
     private City originCity;
     private Vector3? drawingStartPosition;
-    private Vector3? drawingEndPosition;
     private AreaOutline passableArea;
     private PathDrawer supplyLineDrawer;
+    private Color supplyActiveColor;
+    private Color supplyInactiveColor;
 
     public void Init(PlayerManager playerManager, SupplyLoadData loadData)
     {
         this.playerManager = playerManager;
+        this.gameManager = playerManager.gameManager;
         supplyLines = new List<SupplyLineController>();
-        passableArea = Spawner.Spawn(playerManager.passableAreaPrefab, Vector3.zero, Quaternion.identity);
+        passableArea = GameObject.Instantiate(playerManager.passableAreaPrefab, Vector3.zero, Quaternion.identity);
         passableArea.Hide();
-        supplyLineDrawer = Spawner.Spawn(playerManager.pathPrefab, Vector3.zero, Quaternion.identity);
+        supplyLineDrawer = GameObject.Instantiate(playerManager.pathPrefab, Vector3.zero, Quaternion.identity);
         supplyLineDrawer.Hide();
+
+        supplyActiveColor = playerManager.color;
+        supplyActiveColor.a = supplyLineDrawer.ActiveColor.a;
+        supplyInactiveColor = playerManager.color;
+        supplyInactiveColor.a = supplyLineDrawer.InactiveColor.a;
 
         if (loadData != null)
         {
@@ -41,11 +49,6 @@ public class PlayerSupplyManager
         drawingStartPosition = originCity.cityTiles.First().transform.position;
 
         passableArea.Show(playerManager.mapManager.MapEntity.WalkableBorder((Vector3)drawingStartPosition, float.MaxValue), playerManager.mapManager.MapEntity);
-
-        Color supplyActiveColor = playerManager.color;
-        supplyActiveColor.a = supplyLineDrawer.ActiveColor.a;
-        Color supplyInactiveColor = playerManager.color;
-        supplyInactiveColor.a = supplyLineDrawer.InactiveColor.a;
 
         supplyLineDrawer.Show(new List<Vector3>() { }, playerManager.mapManager.MapEntity);
         supplyLineDrawer.Init(supplyActiveColor, supplyInactiveColor, 0);
@@ -72,20 +75,24 @@ public class PlayerSupplyManager
 
     public void CreateSupplyLine(Vector3? startPosition, Vector3 endPosition)
     {
+        DestroyOldCitySupplyLine();
         if(startPosition == null)
         {
             startPosition = drawingStartPosition;
         }
         List<TileEntity> path = playerManager.mapManager.MapEntity.PathTiles((Vector3)startPosition, endPosition, float.MaxValue);
+        PathDrawer newSupplyLineDrawer = GameObject.Instantiate(playerManager.pathPrefab, Vector3.zero, Quaternion.identity);
+        newSupplyLineDrawer.Init(supplyActiveColor, supplyInactiveColor, 0);
+        newSupplyLineDrawer.ActiveState();
+        newSupplyLineDrawer.Hide();
         SupplyLineController newSupplyLine = new SupplyLineController();
-        newSupplyLine.Init(this, originCity, path, supplyLineDrawer);
+        newSupplyLine.Init(this, originCity, path, newSupplyLineDrawer);
         supplyLines.Add(newSupplyLine);
         ClearSupplyLineCreator();
     }
 
     public void HideSupplyLineCreator()
     {
-        supplyLineDrawer.Hide();
     }
 
     public void ClearSupplyLineCreator()
@@ -94,7 +101,17 @@ public class PlayerSupplyManager
         justActivated = true;
         originCity = null;
         drawingStartPosition = null;
-        drawingEndPosition = null;
         passableArea.Hide();
+        supplyLineDrawer.Hide();
+    }
+
+    private void DestroyOldCitySupplyLine()
+    {
+        SupplyLineController overwrittenSupplyLine = supplyLines.Find(supplyLine => supplyLine.originCity ==  originCity);
+        if (overwrittenSupplyLine != null)
+        {
+            supplyLines.Remove(overwrittenSupplyLine);
+            overwrittenSupplyLine.Destroy();
+        }
     }
 }
