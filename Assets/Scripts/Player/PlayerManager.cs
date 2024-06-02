@@ -32,6 +32,10 @@ public class PlayerManager : MonoBehaviour
     public PlayerCitiesManager playerCitiesManager;
     public PlayerFortsManager playerFortsManager;
     public PlayerSupplyManager playerSupplyManager;
+
+    // Prefabs
+    public PathDrawer pathPrefab;
+    public AreaOutline passableAreaPrefab;
     public GameObject fortPrefab;
 
     // currency

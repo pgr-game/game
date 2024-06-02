@@ -3,6 +3,7 @@ using RedBjorn.ProtoTiles.Example;
 using RedBjorn.Utils;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerSupplyManager
@@ -11,16 +12,12 @@ public class PlayerSupplyManager
     private List<SupplyLineController> supplyLines;
     public AreaOutline passableArea;
 
-    // Prefabs
-    public PathDrawer pathPrefab;
-    public AreaOutline passableAreaPrefab;
-
     public void Init(PlayerManager playerManager, SupplyLoadData loadData)
     {
         this.playerManager = playerManager;
         supplyLines = new List<SupplyLineController>();
-        //passableArea = Spawner.Spawn(passableAreaPrefab, Vector3.zero, Quaternion.identity);
-        //passableArea.Hide();
+        passableArea = Spawner.Spawn(playerManager.passableAreaPrefab, Vector3.zero, Quaternion.identity);
+        passableArea.Hide();
 
         if (loadData != null)
         {
@@ -32,6 +29,6 @@ public class PlayerSupplyManager
     {
         List<TileEntity> supplyLineTiles = new List<TileEntity>();
 
-        //passableArea.Show(playerManager.mapManager.MapEntity.WalkableBorder(originCity.uiAnchor, float.MaxValue), playerManager.mapManager.MapEntity);
+        passableArea.Show(playerManager.mapManager.MapEntity.WalkableBorder(originCity.cityTiles.First().transform.position, float.MaxValue), playerManager.mapManager.MapEntity);
     }
 }
