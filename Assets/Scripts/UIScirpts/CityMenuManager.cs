@@ -50,6 +50,12 @@ public class CityMenuManager : MonoBehaviour
         }
     }
 
+    public void ClickCreateSupplyLine()
+    {
+        Deactivate();
+        city.CreateSupplyLine();
+    }
+
     public void ClickSelectProductionUnit(GameObject clickedEntry, UnitController unitController, GameObject prefab)
     {
         if (city.UnitInProduction == null)
