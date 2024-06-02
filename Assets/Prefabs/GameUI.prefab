@@ -12257,22 +12257,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3493645573676341183, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3493645573676341183, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3493645573676341183, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Deactivate
-      objectReference: {fileID: 0}
-    - target: {fileID: 3493645573676341183, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: CityMenuManager, Assembly-CSharp
-      objectReference: {fileID: 0}
     - target: {fileID: 3714123646267183894, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
       propertyPath: dialogContainer
       value: 
