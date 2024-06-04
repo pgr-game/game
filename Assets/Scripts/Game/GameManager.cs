@@ -189,12 +189,7 @@ public class GameManager : MonoBehaviour
         players[activePlayerIndex].gameObject.SetActive(false);
         GameObject unitList = UI.transform.Find("UnitList").gameObject;
         unitList.SetActive(false);
-        if (activePlayerIndex + 1 == numberOfPlayers) {
-            activePlayerIndex = 0;
-        }
-        else {
-            activePlayerIndex++;
-        }
+        activePlayerIndex = (activePlayerIndex + 1) % numberOfPlayers;
         activePlayer = players[activePlayerIndex];
         players[activePlayerIndex].gameObject.SetActive(true);
         if(activePlayerIndex == 0) {
