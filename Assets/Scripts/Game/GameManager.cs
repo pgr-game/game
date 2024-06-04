@@ -247,8 +247,8 @@ public class GameManager : MonoBehaviour
                     diedString += ", ";
                 }
             }
-            diedString += " lost this turn!";
-            Debug.Log(diedString);
+            diedString += " lost game in this turn!";
+            DisplayWhoLost(diedString);
         }
     }
 
@@ -259,11 +259,21 @@ public class GameManager : MonoBehaviour
         GameObject endGameScreen = UI.transform.Find("GameEnd").gameObject;
         endGameScreen.SetActive(true);
         endGameScreen.transform.Find("Message").GetComponent<TMPro.TextMeshProUGUI>().text = whoWon;
+        endGameScreen.transform.Find("ExitGameButton").Find("Button").Find("Text").GetComponent<TMPro.TextMeshProUGUI>().text = "EXIT TO MENU";
         endGameScreen.transform.Find("ExitGameButton").Find("Button").GetComponent<Button>().onClick.AddListener(() => { 
             SceneManager.LoadScene("MainMenu");
-
          });
-        Debug.Log(whoWon);
+    }
+
+    public void DisplayWhoLost(string message) {
+        GameObject endGameScreen = UI.transform.Find("GameEnd").gameObject;
+        endGameScreen.SetActive(true);
+        endGameScreen.transform.Find("Message").GetComponent<TMPro.TextMeshProUGUI>().text = message;
+        endGameScreen.transform.Find("ExitGameButton").Find("Button").Find("Text").GetComponent<TMPro.TextMeshProUGUI>().text = "OK";
+        endGameScreen.transform.Find("ExitGameButton").Find("Button").GetComponent<Button>().onClick.AddListener(() => { 
+            GameObject endGameScreen = UI.transform.Find("GameEnd").gameObject;
+            endGameScreen.SetActive(false);
+         });
     }
 
     public void KillPlayer(int playerIndex) {
