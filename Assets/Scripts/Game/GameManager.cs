@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using RedBjorn.ProtoTiles;
+using UnityEngine.SceneManagement;
+
 
 // TYPES OF UNITS
 public enum UnitTypes {
@@ -251,9 +253,16 @@ public class GameManager : MonoBehaviour
     }
 
     public void EndGame(int indexOfWinner) {
-        // TODO: ADD DISPLAY SCREEN WITH WINNER
         // TODO: ADD NAMES OF PLAYERS TO BE DISPLAYED
-        string whoWon = "Game ended!\n Player " + players[indexOfWinner].index+1 + " won!";
+        int idxOfWinner = players[indexOfWinner].index + 1;
+        string whoWon = "Game ended!\n Player " + idxOfWinner + " won!";
+        GameObject endGameScreen = UI.transform.Find("GameEnd").gameObject;
+        endGameScreen.SetActive(true);
+        endGameScreen.transform.Find("Message").GetComponent<TMPro.TextMeshProUGUI>().text = whoWon;
+        endGameScreen.transform.Find("ExitGameButton").Find("Button").GetComponent<Button>().onClick.AddListener(() => { 
+            SceneManager.LoadScene("MainMenu");
+
+         });
         Debug.Log(whoWon);
     }
 
