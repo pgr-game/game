@@ -202,6 +202,21 @@ public class GameManager : MonoBehaviour
         playerTreeManager.reserachProgress();
     }
 
+    public void CheckIfGameIsEnded() {
+        bool gameEnded = false;
+        bool[numberOfPlayers] playersAlive = new bool[numberOfPlayers];
+        for(int i = 0; i < numberOfPlayers; i++) {
+            playersAlive[i] = players[i].IsPlayerAlive();
+        }
+        if(playersAlive.Count(x => x) == 1) {
+            gameEnded = true;
+            int indexOfWinner = Array.IndexOf(playersAlive, true);
+        }
+        if(gameEnded) {
+            EndGame(indexOfWinner);
+        }
+    }
+
     private void SetPlayerUIColor(Color color) {
         nextTurnButtonImage.color = color;
     }

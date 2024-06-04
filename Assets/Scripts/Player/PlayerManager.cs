@@ -334,4 +334,15 @@ public class PlayerManager : MonoBehaviour
         selectedUnit.Activate();
     }
 
+    public bool IsPlayerAlive() {
+        bool isAlive = false;
+        if(allyUnits.Count > 0) {
+            isAlive = true;
+        }
+        if(playerCitiesManager.GetNumberOfCities() > 0) {
+            isAlive = true;
+        }
+        return isAlive;
+    }
+
 }
