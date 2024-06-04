@@ -18,6 +18,7 @@ public class PlayerManager : MonoBehaviour
     public GameManager gameManager;
     public bool isComputer;
     public Color32 color;
+    public string colorName;
     public int index;
 
     //selecting units and settlements
@@ -46,6 +47,7 @@ public class PlayerManager : MonoBehaviour
         this.mapManager = mapManager;
         this.startingResources = startingResources;
         this.color = color;
+        this.colorName = ColorUtility.ToHtmlStringRGBA(color);
         InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
         InitForts();
@@ -334,7 +336,7 @@ public class PlayerManager : MonoBehaviour
         selectedUnit.Activate();
     }
 
-    public bool IsPlayerAlive() {
+    public bool isAlive() {
         bool isAlive = false;
         if(allyUnits.Count > 0) {
             isAlive = true;

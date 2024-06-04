@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System.Linq;
 using RedBjorn.ProtoTiles;
 
+// TYPES OF UNITS
 public enum UnitTypes {
     Archer,
     Catapult,
@@ -181,6 +182,8 @@ public class GameManager : MonoBehaviour
     public void NextPlayer()
     {
         this.cityMenuManager.Deactivate();
+        // this needs to happen before the next player is activated, because next player may be dead
+        CheckIfGameIsEnded();
         foreach(UnitController unit in players[activePlayerIndex].allyUnits)
         {
             unit.unitMove.TryAutoMove();
@@ -198,23 +201,80 @@ public class GameManager : MonoBehaviour
         }
         SetPlayerUIColor(players[activePlayerIndex].color);
         players[activePlayerIndex].StartTurn();
-        Debug.Log("Player " + activePlayerIndex + " turn");
         playerTreeManager.reserachProgress();
     }
 
     public void CheckIfGameIsEnded() {
         bool gameEnded = false;
-        bool[numberOfPlayers] playersAlive = new bool[numberOfPlayers];
+        int indexOfWinner = -1;
+        bool[] playersAlive = new bool[numberOfPlayers];
         for(int i = 0; i < numberOfPlayers; i++) {
-            playersAlive[i] = players[i].IsPlayerAlive();
+            playersAlive[i] = players[i].isAlive();
         }
         if(playersAlive.Count(x => x) == 1) {
             gameEnded = true;
-            int indexOfWinner = Array.IndexOf(playersAlive, true);
+            indexOfWinner = Array.IndexOf(playersAlive, true);
         }
         if(gameEnded) {
             EndGame(indexOfWinner);
         }
+        else if(playersAlive.Count(x=>x) < numberOfPlayers) {
+
+            //count how many players died this turn
+            int howManyDied = numberOfPlayers - playersAlive.Count(x=>x);
+            int[] playersDied = new int[howManyDied];
+
+
+            //someone died this turn, kill them, start from the end so that deleting players from list doesnt affect order of players
+            for(int i=numberOfPlayers-1, j=0; i>=0; i--) {
+                if(!playersAlive[i]) {
+                    playersDied[j++] = players[i].index + 1;
+                    KillPlayer(i);
+                }
+            }
+
+            //display who died
+            string diedString = "Player";
+            if(howManyDied > 1) {
+                diedString += "s";
+            }
+            diedString += " ";
+            for(int i=0; i<howManyDied; i++) {
+                diedString += playersDied[i];
+                if(i < howManyDied - 1) {
+                    diedString += ", ";
+                }
+            }
+            diedString += " lost this turn!";
+            Debug.Log(diedString);
+        }
+    }
+
+    public void EndGame(int indexOfWinner) {
+        // TODO: ADD DISPLAY SCREEN WITH WINNER
+        // TODO: ADD NAMES OF PLAYERS TO BE DISPLAYED
+        string whoWon = "Game ended!\n Player " + players[indexOfWinner].index+1 + " won!";
+        Debug.Log(whoWon);
+    }
+
+    public void KillPlayer(int playerIndex) {
+        // REMOVE FROM LISTS
+        numberOfPlayers -= 1;
+        PlayerManager[] newPlayers = new PlayerManager[numberOfPlayers];
+        for (int i = 0, j = 0; i < numberOfPlayers + 1; i++) {
+            if (i != playerIndex) {
+                newPlayers[j++] = players[i];
+            }
+        }
+        players = newPlayers;
+
+        Vector3[] newPlayersPositions = new Vector3[numberOfPlayers];
+        for (int i = 0, j = 0; i < numberOfPlayers + 1; i++) {
+            if (i != playerIndex) {
+                newPlayersPositions[j++] = playerPositions[i];
+            }
+        }
+        playerPositions = newPlayersPositions;        
     }
 
     private void SetPlayerUIColor(Color color) {
