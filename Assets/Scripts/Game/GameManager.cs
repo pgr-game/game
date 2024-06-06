@@ -266,6 +266,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void DisplayWhoLost(string message) {
+        PauseMenu.isPaused = true;
         GameObject endGameScreen = UI.transform.Find("GameEnd").gameObject;
         endGameScreen.SetActive(true);
         endGameScreen.transform.Find("Message").GetComponent<TMPro.TextMeshProUGUI>().text = message;
@@ -273,7 +274,8 @@ public class GameManager : MonoBehaviour
         endGameScreen.transform.Find("ExitGameButton").Find("Button").GetComponent<Button>().onClick.AddListener(() => { 
             GameObject endGameScreen = UI.transform.Find("GameEnd").gameObject;
             endGameScreen.SetActive(false);
-         });
+            PauseMenu.isPaused = false;
+        });
     }
 
     public void KillPlayer(int playerIndex) {
