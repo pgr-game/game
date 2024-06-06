@@ -254,6 +254,7 @@ public class GameManager : MonoBehaviour
 
     public void EndGame(int indexOfWinner) {
         // TODO: ADD NAMES OF PLAYERS TO BE DISPLAYED
+        PauseMenu.isPaused = true;
         int idxOfWinner = players[indexOfWinner].index + 1;
         string whoWon = "Game ended!\n Player " + idxOfWinner + " won!";
         GameObject endGameScreen = UI.transform.Find("GameEnd").gameObject;
