@@ -5,7 +5,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using RedBjorn.ProtoTiles;
+using UnityEngine.SceneManagement;
 
+
+// TYPES OF UNITS
 public enum UnitTypes {
     Archer,
     Catapult,
@@ -181,6 +184,8 @@ public class GameManager : MonoBehaviour
     public void NextPlayer()
     {
         this.cityMenuManager.Deactivate();
+        // this needs to happen before the next player is activated, because next player may be dead
+        CheckIfGameIsEnded();
         foreach(UnitController unit in players[activePlayerIndex].allyUnits)
         {
             unit.unitMove.TryAutoMove();
@@ -189,12 +194,7 @@ public class GameManager : MonoBehaviour
         players[activePlayerIndex].gameObject.SetActive(false);
         GameObject unitList = UI.transform.Find("UnitList").gameObject;
         unitList.SetActive(false);
-        if (activePlayerIndex + 1 == numberOfPlayers) {
-            activePlayerIndex = 0;
-        }
-        else {
-            activePlayerIndex++;
-        }
+        activePlayerIndex = (activePlayerIndex + 1) % numberOfPlayers;
         activePlayer = players[activePlayerIndex];
         players[activePlayerIndex].gameObject.SetActive(true);
         if(activePlayerIndex == 0) {
@@ -203,8 +203,100 @@ public class GameManager : MonoBehaviour
         }
         SetPlayerUIColor(players[activePlayerIndex].color);
         players[activePlayerIndex].StartTurn();
-        Debug.Log("Player " + activePlayerIndex + " turn");
         playerTreeManager.reserachProgress();
+    }
+
+    public void CheckIfGameIsEnded() {
+        bool gameEnded = false;
+        int indexOfWinner = -1;
+        bool[] playersAlive = new bool[numberOfPlayers];
+        for(int i = 0; i < numberOfPlayers; i++) {
+            playersAlive[i] = players[i].isAlive();
+        }
+        if(playersAlive.Count(x => x) == 1) {
+            gameEnded = true;
+            indexOfWinner = Array.IndexOf(playersAlive, true);
+        }
+        if(gameEnded) {
+            EndGame(indexOfWinner);
+        }
+        else if(playersAlive.Count(x=>x) < numberOfPlayers) {
+
+            //count how many players died this turn
+            int howManyDied = numberOfPlayers - playersAlive.Count(x=>x);
+            int[] playersDied = new int[howManyDied];
+
+
+            //someone died this turn, kill them, start from the end so that deleting players from list doesnt affect order of players
+            for(int i=numberOfPlayers-1, j=0; i>=0; i--) {
+                if(!playersAlive[i]) {
+                    playersDied[j++] = players[i].index + 1;
+                    KillPlayer(i);
+                }
+            }
+
+            //display who died
+            string diedString = "Player";
+            if(howManyDied > 1) {
+                diedString += "s";
+            }
+            diedString += " ";
+            for(int i=0; i<howManyDied; i++) {
+                diedString += playersDied[i];
+                if(i < howManyDied - 1) {
+                    diedString += ", ";
+                }
+            }
+            diedString += " lost game in this turn!";
+            DisplayWhoLost(diedString);
+        }
+    }
+
+    public void EndGame(int indexOfWinner) {
+        // TODO: ADD NAMES OF PLAYERS TO BE DISPLAYED
+        PauseMenu.isPaused = true;
+        int idxOfWinner = players[indexOfWinner].index + 1;
+        string whoWon = "Game ended!\n Player " + idxOfWinner + " won!";
+        GameObject endGameScreen = UI.transform.Find("GameEnd").gameObject;
+        endGameScreen.SetActive(true);
+        endGameScreen.transform.Find("Message").GetComponent<TMPro.TextMeshProUGUI>().text = whoWon;
+        endGameScreen.transform.Find("ExitGameButton").Find("Button").Find("Text").GetComponent<TMPro.TextMeshProUGUI>().text = "EXIT TO MENU";
+        endGameScreen.transform.Find("ExitGameButton").Find("Button").GetComponent<Button>().onClick.AddListener(() => { 
+            SceneManager.LoadScene("MainMenu");
+         });
+    }
+
+    public void DisplayWhoLost(string message) {
+        PauseMenu.isPaused = true;
+        GameObject endGameScreen = UI.transform.Find("GameEnd").gameObject;
+        endGameScreen.SetActive(true);
+        endGameScreen.transform.Find("Message").GetComponent<TMPro.TextMeshProUGUI>().text = message;
+        endGameScreen.transform.Find("ExitGameButton").Find("Button").Find("Text").GetComponent<TMPro.TextMeshProUGUI>().text = "OK";
+        endGameScreen.transform.Find("ExitGameButton").Find("Button").GetComponent<Button>().onClick.AddListener(() => { 
+            GameObject endGameScreen = UI.transform.Find("GameEnd").gameObject;
+            endGameScreen.SetActive(false);
+            PauseMenu.isPaused = false;
+        });
+    }
+
+    public void KillPlayer(int playerIndex) {
+        // REMOVE FROM LISTS
+        numberOfPlayers -= 1;
+        PlayerManager[] newPlayers = new PlayerManager[numberOfPlayers];
+        for (int i = 0, j = 0; i < numberOfPlayers + 1; i++) {
+            if (i != playerIndex) {
+                newPlayers[j++] = players[i];
+            }
+        }
+        players = newPlayers;
+
+        Vector3[] newPlayersPositions = new Vector3[numberOfPlayers];
+        for (int i = 0, j = 0; i < numberOfPlayers + 1; i++) {
+            if (i != playerIndex) {
+                newPlayersPositions[j++] = playerPositions[i];
+            }
+        }
+        playerPositions = newPlayersPositions;        
     }
 
     private void SetPlayerUIColor(Color color) {
