@@ -21,6 +21,20 @@ public class SupplyLineController
         this.originCity = originCity;
         this.path = path;
         this.supplyLineDrawer = supplyLineDrawer;
+        TileEntity previousTile = null;
+        foreach (TileEntity tile in this.path)
+        {
+            tile.SupplyLineProvider = playerSupplyManager.playerManager;
+            if (previousTile != null) {
+                float distance  = playerSupplyManager.gameManager.mapManager.MapEntity.Distance(previousTile.Position , tile.Position);
+                var surrourndingTiles = playerSupplyManager.gameManager.mapManager.MapEntity.WalkableTiles(tile.Position, distance); //could work later for the surrouding tiles to get buff as well
+                foreach (TileEntity tileSurr in surrourndingTiles)
+                {
+                    tileSurr.SupplyLineProvider = playerSupplyManager.playerManager;
+                }
+            }
+            previousTile = tile;
+        }
 
         Vector3 pathStartWorldPosition = playerSupplyManager.gameManager.mapManager.MapEntity.WorldPosition(path.First().Position);
         Vector3 pathEndWorldPosition = playerSupplyManager.gameManager.mapManager.MapEntity.WorldPosition(path.Last().Position);
@@ -30,6 +44,21 @@ public class SupplyLineController
 
     public void Destroy()
     {
+        TileEntity previousTile = null;
+        foreach (TileEntity tile in this.path)
+        {
+            tile.SupplyLineProvider = null;
+            if (previousTile != null)
+            {
+                float distance = playerSupplyManager.gameManager.mapManager.MapEntity.Distance(previousTile.Position, tile.Position);
+                var surrourndingTiles = playerSupplyManager.gameManager.mapManager.MapEntity.WalkableTiles(tile.Position, distance); //could work later for the surrouding tiles to get buff as well
+                foreach (TileEntity tileSurr in surrourndingTiles)
+                {
+                    tileSurr.SupplyLineProvider = null;
+                }
+            }
+            previousTile = tile;
+        }
         UnityEngine.Object.Destroy(supplyLineDrawer.gameObject);
     }
 }

@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class PlayerSupplyManager
 {
-    private PlayerManager playerManager;
+    public PlayerManager playerManager;
     public GameManager gameManager;
     private List<SupplyLineController> supplyLines;
 

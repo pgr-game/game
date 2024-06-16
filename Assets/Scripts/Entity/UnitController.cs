@@ -27,7 +27,7 @@ public class UnitController : MonoBehaviour
     public GameManager gameManager;
     public UnitStatsUIController unitStatsUIController;
 
-    public List<AudioClip> moveSounds= new List<AudioClip>();
+    public List<AudioClip> moveSounds = new List<AudioClip>();
 
     public GameObject fortButton;
 
@@ -36,7 +36,8 @@ public class UnitController : MonoBehaviour
     public bool canPlaceFort;
     public int turnsSinceFortPlaced = 10;
 
-    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController, float? rangeLeft, Vector3? longPathClickPosition) {
+    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController, float? rangeLeft, Vector3? longPathClickPosition)
+    {
         this.owner = playerManager;
         this.mapManager = mapManager;
         this.unitStatsUIController = unitStatsUIController;
@@ -44,20 +45,24 @@ public class UnitController : MonoBehaviour
         unitMove.Init(mapManager, this, rangeLeft, longPathClickPosition);
 
         this.gameManager = gameManager;
-        if(currentHealth == 0) {
+        if (currentHealth == 0)
+        {
             currentHealth = maxHealth;
         }
 
-        if(turnProduced == 0) {
+        if (turnProduced == 0)
+        {
             turnProduced = this.gameManager.turnNumber;
         }
 
-        if(level == 0) {
+        if (level == 0)
+        {
             level = 1;
         }
         canPlaceFort = true;
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
     }
+
 
     public void Activate()
     {
@@ -68,7 +73,7 @@ public class UnitController : MonoBehaviour
         unitStatsUIController.ShowUnitBox();
     }
 
-    public void Deactivate() 
+    public void Deactivate()
     {
         unitMove.Deactivate();
         unitStatsUIController.activeUnit = null;
@@ -77,24 +82,51 @@ public class UnitController : MonoBehaviour
 
     }
 
-    public int GetDefense() {
-        if(CanHealOrGetDefenceBonus() && this.gameManager.playerTreeManager.isNodeResearched(2, "Strategy")) {
-            if(defense == 0) {
-                return 1;
-            }
-            return defense*2;
+    public bool IsSuppliedLined(TileEntity tile)
+    {
+        return (tile.SupplyLineProvider == this.owner);
+    }
+
+
+
+    public int GetDefense()
+    {
+        int bonusDefese = 0;
+        var tile = GetCurrentTile();
+        if (IsSuppliedLined(tile) == true)
+        {
+            bonusDefese = 1;
         }
-        return defense;
+        if (CanHealOrGetDefenceBonus() && this.gameManager.playerTreeManager.isNodeResearched(2, "Strategy"))
+        {
+            if (defense == 0)
+            {
+                bonusDefese = 1;
+            }
+            bonusDefese += defense;
+        }
+        return defense + bonusDefese;
+    }
+
+    public int GetAttack()
+    {
+        int bonusAttack = 0;
+        var tile = GetCurrentTile();
+        if (IsSuppliedLined(tile) == true)
+        {
+            bonusAttack = 1;
+        }
+        return bonusAttack + this.attack; 
     }
 
     public void Attack(UnitController enemy)
     {
         if (!this.attacked)
         {
-            int damage = this.attack - enemy.GetDefense();
+            int damage = this.GetAttack() - enemy.GetDefense();
             if (damage < 0) damage = 0;
             this.attacked = true;
-            enemy.ReceiveDamage(damage,this);
+            enemy.ReceiveDamage(damage, this);
         }
         this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
     }
@@ -103,7 +135,7 @@ public class UnitController : MonoBehaviour
     {
         if (!this.attacked)
         {
-            int damage = this.attack - enemy.GetDefense();
+            int damage = this.GetAttack() - enemy.GetDefense();
             if (damage < 0) damage = 0;
             this.attacked = true;
             enemy.ReceiveDamage(damage, this);
@@ -125,7 +157,8 @@ public class UnitController : MonoBehaviour
         }
     }
 
-    public void Death(UnitController killer) {
+    public void Death(UnitController killer)
+    {
         owner.allyUnits.Remove(this);
         gameManager.units.Remove(this);
         killer.owner.AddGold(CalculateGoldValue());
@@ -133,7 +166,7 @@ public class UnitController : MonoBehaviour
         oldTile.UnitPresent = null;
         killer.GainXP(this.level);
 
-        if(oldTile.CityTilePresent && oldTile.CityTilePresent.city.Owner == owner)
+        if (oldTile.CityTilePresent && oldTile.CityTilePresent.city.Owner == owner)
         {
             oldTile.CityTilePresent.city.RemoveFromGarrison(this);
         }
@@ -153,7 +186,7 @@ public class UnitController : MonoBehaviour
             level++;
             experience = 0;
             unitMove.Deactivate();
-            if(this.level == 2)
+            if (this.level == 2)
             {
                 // instantiating at level 2 as some units will die before it
                 // and not need the instantiated menu
@@ -189,73 +222,87 @@ public class UnitController : MonoBehaviour
         return null;
     }
 
-    public int CalculateGoldValue() {
+    public int CalculateGoldValue()
+    {
         // algorithm based on turn produced, unit type and level
-        int goldValue = this.level*2;
+        int goldValue = this.level * 2;
         goldValue += gameManager.turnNumber - this.turnProduced;
-    
-        if(unitType == UnitTypes.Archer) goldValue+=10;
-        else if(unitType == UnitTypes.Catapult) goldValue+=20;
-        else if(unitType == UnitTypes.Chariot) goldValue+=15;
-        else if(unitType == UnitTypes.Elephant) goldValue+=25;
-        else if(unitType == UnitTypes.Hoplite) goldValue+=10;
-        else if(unitType == UnitTypes.LightInfantry) goldValue+=5;
-        else if(unitType == UnitTypes.Skirmisher) goldValue+=5;
+
+        if (unitType == UnitTypes.Archer) goldValue += 10;
+        else if (unitType == UnitTypes.Catapult) goldValue += 20;
+        else if (unitType == UnitTypes.Chariot) goldValue += 15;
+        else if (unitType == UnitTypes.Elephant) goldValue += 25;
+        else if (unitType == UnitTypes.Hoplite) goldValue += 10;
+        else if (unitType == UnitTypes.LightInfantry) goldValue += 5;
+        else if (unitType == UnitTypes.Skirmisher) goldValue += 5;
 
         return goldValue;
     }
 
-    public int CalculateProductionCost(City city) {
+    public int CalculateProductionCost(City city)
+    {
         // algorithm based on unity type, city level and age
         int productionCost = this.baseProductionCost; //based on unit type
         productionCost -= city.Level;
         productionCost -= (gameManager.turnNumber - city.turnCreated);
         return productionCost;
     }
-    public int GetProductionTurns() {
+    public int GetProductionTurns()
+    {
         return turnsToProduce;
     }
 
-    public TileEntity GetCurrentTile() {
+    public TileEntity GetCurrentTile()
+    {
         return mapManager.MapEntity.Tile(unitMove.hexPosition);
     }
 
-    public bool IsInFort(TileEntity tile) {
+    public bool IsInFort(TileEntity tile)
+    {
         return (tile.FortPresent != null);
     }
 
-    public bool IsInCity(TileEntity tile) {
+    public bool IsInCity(TileEntity tile)
+    {
         return (tile.CityTilePresent != null);
     }
 
-    public bool CanPlaceFortOnTile() {
+    public bool CanPlaceFortOnTile()
+    {
         var tile = GetCurrentTile();
         return !(IsInCity(tile) || IsInFort(tile));
     }
 
-    public bool CanHealOrGetDefenceBonus() {
+    public bool CanHealOrGetDefenceBonus()
+    {
         var tile = GetCurrentTile();
-        if(IsInCity(tile)) {
+        if (IsInCity(tile))
+        {
             return (tile.CityTilePresent.city.Owner == this.owner);
         }
-        if(IsInFort(tile)) {
+        if (IsInFort(tile))
+        {
             return (tile.FortPresent.owner == this.owner && tile.FortPresent.isBuilt);
         }
         return false;
     }
 
-    public bool CanStackUnits(TileEntity tile) {
-        if(IsInCity(tile)) {
+    public bool CanStackUnits(TileEntity tile)
+    {
+        if (IsInCity(tile))
+        {
             return (tile.CityTilePresent.city.Owner == this.owner);
         }
-        if(IsInFort(tile)) {
-            if(tile.FortPresent.owner == this.owner) Debug.Log("Fort owner is the same as unit owner");
+        if (IsInFort(tile))
+        {
+            if (tile.FortPresent.owner == this.owner) Debug.Log("Fort owner is the same as unit owner");
             return (tile.FortPresent.owner == this.owner);
         }
         return false;
     }
 
-    public void Heal() {
+    public void Heal()
+    {
         if (this.gameManager.playerTreeManager.isNodeResearched(3, "Strategy"))
         {
             if (currentHealth == maxHealth) return;
@@ -266,13 +313,15 @@ public class UnitController : MonoBehaviour
         }
     }
 
-    public void CommitToBuildingFort() {
+    public void CommitToBuildingFort()
+    {
         var tile = GetCurrentTile();
-        if(!IsInFort(tile)) return;
-        if(tile.FortPresent.owner != this.owner) return;
-        if(tile.FortPresent.isBuilt) return;
+        if (!IsInFort(tile)) return;
+        if (tile.FortPresent.owner != this.owner) return;
+        if (tile.FortPresent.isBuilt) return;
         tile.FortPresent.turnsUntilBuilt--;
-        if(tile.FortPresent.turnsUntilBuilt == 0) {
+        if (tile.FortPresent.turnsUntilBuilt == 0)
+        {
             tile.FortPresent.BuildComplete();
         }
     }

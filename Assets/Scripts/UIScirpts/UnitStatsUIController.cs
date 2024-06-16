@@ -22,19 +22,26 @@ public class UnitStatsUIController : MonoBehaviour
         HideUnitBox();
     }
 
+    private void Update()
+    {
+        if (activeUnit != null)
+        {
+            this.UpdateUnitStatisticsWindow(activeUnit);
+        }
+    }
     public void UpdateUnitStatisticsWindow(UnitController unitController)
     {
         unitBox.SetActive(true);
 
         unitTypeText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.unitType.ToString();
 
-        unitAttackText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.attack.ToString();
+        unitAttackText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.GetAttack().ToString();
 
         unitLevelText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.level.ToString();
 
         unitHealthText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.currentHealth.ToString()+"/"+ unitController.maxHealth.ToString();
 
-        unitDefenseText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.defense.ToString();
+        unitDefenseText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.GetDefense().ToString();
 
         unitOwnerColor.GetComponent<Image>().color = unitController.owner.color;
 
