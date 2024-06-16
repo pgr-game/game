@@ -13442,22 +13442,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3493645573676341183, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3493645573676341183, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+    - target: {fileID: 3714123646267183894, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
+      propertyPath: dialogContainer
       value: 
-      objectReference: {fileID: 5365672070592282108}
-    - target: {fileID: 3493645573676341183, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Deactivate
-      objectReference: {fileID: 0}
-    - target: {fileID: 3493645573676341183, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: CityMenuManager, Assembly-CSharp
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5126063817814227379}
     - target: {fileID: 5544688390400928735, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -13489,35 +13477,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1460102132131780048, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5365672070592282108}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
 --- !u!224 &7854886477628666379 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1063785298343373096, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
   m_PrefabInstance: {fileID: 7188161401609345827}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8611491148463607539 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1460102132131780048, guid: 3e7f809379737254db4842972f4a1d9e, type: 3}
-  m_PrefabInstance: {fileID: 7188161401609345827}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5365672070592282108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8611491148463607539}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f762f4870e22b24380de4828e0a64eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogContainer: {fileID: 0}
-  UnitEntryPrefab: {fileID: 0}
 --- !u!1001 &7256459909676243884
 PrefabInstance:
   m_ObjectHideFlags: 0

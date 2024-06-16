@@ -23,19 +23,26 @@ namespace RedBjorn.ProtoTiles.Example
             ActiveGradient = new Gradient();
             ActiveGradient.SetKeys(
                 new GradientColorKey[] { new GradientColorKey(ActiveColor, 0.0f), new GradientColorKey(ActiveColor, 1.0f) },
-                new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
+                new GradientAlphaKey[] { new GradientAlphaKey(ActiveColor.a, 0.0f), new GradientAlphaKey(ActiveColor.a, 1.0f) }
             );
             InactiveGradient = new Gradient();
             InactiveGradient.SetKeys(
                 new GradientColorKey[] { new GradientColorKey(InactiveColor, 0.0f), new GradientColorKey(InactiveColor, 1.0f) },
-                new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
+                new GradientAlphaKey[] { new GradientAlphaKey(InactiveColor.a, 0.0f), new GradientAlphaKey(InactiveColor.a, 1.0f) }
             );
             SetNumberOfTurns(longPathNumberOfTurns);
         }
 
         public void SetNumberOfTurns(int longPathNumberOfTurns)
         {
-            TailText.text = longPathNumberOfTurns.ToString();
+            if(longPathNumberOfTurns > 0 )
+            {
+                TailText.text = longPathNumberOfTurns.ToString();
+            }
+            else
+            {
+                TailText.text = string.Empty;
+            }
         }
 
         public void ActiveState()

@@ -32,7 +32,13 @@ public class PlayerManager : MonoBehaviour
     public List<UnitController> allyUnits = new List<UnitController>();
     public PlayerCitiesManager playerCitiesManager;
     public PlayerFortsManager playerFortsManager;
+    public PlayerSupplyManager playerSupplyManager;
+
+    // Prefabs
+    public PathDrawer pathPrefab;
+    public AreaOutline passableAreaPrefab;
     public GameObject fortPrefab;
+    public GameObject supplyLinePrefab; 
 
     // currency
     public int gold;
@@ -51,6 +57,7 @@ public class PlayerManager : MonoBehaviour
         InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
         InitForts();
+        InitSupplyLines(startingResources.supplyLoadData);
         InitUnits();
         this.gold = startingResources.gold;
         GameObject[] texts = GameObject.FindGameObjectsWithTag("currencyText");
@@ -61,7 +68,24 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
         if (!PauseMenu.isPaused) 
-        { 
+        {
+            if (playerSupplyManager.drawingSupplyLine && !playerSupplyManager.justActivated)
+            {
+                playerSupplyManager.UpdateSupplyLineDrawer();
+
+                if (MyInput.GetOnWorldUp(mapManager.MapEntity.Settings.Plane()))
+                {
+                    Vector3 clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
+                    playerSupplyManager.CreateSupplyLine(null, clickPos);
+                }
+            }
+            if (playerSupplyManager.drawingSupplyLine && playerSupplyManager.justActivated)
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    playerSupplyManager.justActivated = false;
+                }
+            }
             newSelected = SelectObject();
             if(newSelected) {
                 if(newSelected.GetComponent<UnitController>() && !isInMenu) {
@@ -85,8 +109,14 @@ public class PlayerManager : MonoBehaviour
                 }
                 CreateFort();
             }
-
         } 
+        else
+        {
+            // Paused
+            playerSupplyManager.ClearSupplyLineCreator();
+            playerSupplyManager.HideSupplyLineCreator();
+        }
+        
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), transform.TransformDirection(Vector3.forward), Color.green);
     }
 
@@ -224,6 +254,12 @@ public class PlayerManager : MonoBehaviour
     void InitCities(string startingCityName, List<CityLoadData> cityLoadData) {
         playerCitiesManager = new PlayerCitiesManager();
         playerCitiesManager.Init(this, startingCityName, cityLoadData);
+    }
+
+    void InitSupplyLines(SupplyLoadData supplyLoadData)
+    {
+        playerSupplyManager = new PlayerSupplyManager();
+        playerSupplyManager.Init(this, supplyLoadData);
     }
 
     void InitForts() {

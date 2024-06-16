@@ -118,4 +118,9 @@ public class City
         killer.GainXP(this.Level);
         UpdateHealth();
     }
+
+    public void CreateSupplyLine()
+    {
+        Owner.playerSupplyManager.OpenSupplyLineDrawer(this);
+    }
 }
