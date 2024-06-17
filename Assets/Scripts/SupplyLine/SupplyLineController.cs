@@ -17,7 +17,10 @@ public class SupplyLineController
 
     public int Init(PlayerSupplyManager playerSupplyManager, City originCity, List<TileEntity> path, PathDrawer supplyLineDrawer)
     {
-
+        if (path.Count == 0)
+        {
+            return -1;
+        }
         this.playerSupplyManager = playerSupplyManager;
         this.originCity = originCity;
         this.path = path;
@@ -44,7 +47,7 @@ public class SupplyLineController
 
     public bool EnemyOnSupplyLine()
     {
-        foreach(TileEntity tile in path)
+        foreach (TileEntity tile in path)
         {
             bool enemyUnitPresent = tile.UnitPresent != null && tile.UnitPresent.owner != this.playerSupplyManager.playerManager;
             if (enemyUnitPresent)
