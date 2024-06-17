@@ -114,7 +114,6 @@ public class PlayerManager : MonoBehaviour
         {
             // Paused
             playerSupplyManager.ClearSupplyLineCreator();
-            playerSupplyManager.HideSupplyLineCreator();
         }
         
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), transform.TransformDirection(Vector3.forward), Color.green);

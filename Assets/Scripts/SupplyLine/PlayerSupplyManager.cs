@@ -135,10 +135,6 @@ public class PlayerSupplyManager
         ClearSupplyLineCreator();
     }
 
-    public void HideSupplyLineCreator()
-    {
-    }
-
     public void ClearSupplyLineCreator()
     {
         drawingSupplyLine = false;
