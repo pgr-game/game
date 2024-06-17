@@ -183,6 +183,7 @@ public class GameManager : MonoBehaviour
 
     public void NextPlayer()
     {
+        this.activePlayer.playerSupplyManager.ClearSupplyLineCreator();
         this.cityMenuManager.Deactivate();
         // this needs to happen before the next player is activated, because next player may be dead
         CheckIfGameIsEnded();

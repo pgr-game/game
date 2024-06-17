@@ -12,6 +12,8 @@ public class PlayerTreeManager : MonoBehaviour
     public GameObject rootOfTreeCanvas;
     public GameManager gameManager;
     public GameObject ProgressCricle;
+    public GameObject ProgressButtonText;
+    public GameObject ProgressBurronIcon;
     private Dictionary<string,int> unitIDS= new Dictionary<string,int>();
     private List<string> powerNodeNames = new List<string>();
     private List<int> powerNodeLinks = new List<int>();
@@ -157,9 +159,15 @@ public class PlayerTreeManager : MonoBehaviour
         if (panelActive)
         {
             updateStrategyBranch(strategyEvolvCurrPLayer, currResearch);
-
             updatePowerBranch(powerEvolvCurrPLayer, currResearch);
 
+            ProgressButtonText.SetActive(true);
+            ProgressBurronIcon.SetActive(false);
+        }
+        else
+        {
+            ProgressButtonText.SetActive(false);
+            ProgressBurronIcon.SetActive(true);
         }
     }
 

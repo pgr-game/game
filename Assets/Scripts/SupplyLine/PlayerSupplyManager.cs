@@ -115,6 +115,10 @@ public class PlayerSupplyManager
             startPosition = drawingStartPosition;
         }
         List<TileEntity> path = playerManager.mapManager.MapEntity.PathTiles((Vector3)startPosition, endPosition, float.MaxValue);
+        if (path.Count == 0)
+        {
+            return;
+        }
         if (!IfSupplyLineVaiable(path))
         {
             return;
@@ -129,10 +133,6 @@ public class PlayerSupplyManager
         newSupplyLine.Init(this, originCity, path, newSupplyLineDrawer);
         supplyLines.Add(newSupplyLine);
         ClearSupplyLineCreator();
-    }
-
-    public void HideSupplyLineCreator()
-    {
     }
 
     public void ClearSupplyLineCreator()
