@@ -85,8 +85,6 @@ public class PlayerSupplyManager
     private bool IfSupplyLineVaiable(List<TileEntity> path)
     {
         //its one anyway so ahrdcode it // i tak wina miko³aja ¿e rysowanie nie dziala
-
-
         //1tile size = 1
         float distance = 3f;//this.gameManager.mapManager.MapEntity.Distance(path.ElementAt(0), path.ElementAt(1));
         foreach (TileEntity tile in path)
@@ -99,7 +97,8 @@ public class PlayerSupplyManager
             {
                 bool enemyUnitPresent = tileSurr.UnitPresent != null && tileSurr.UnitPresent.owner != this.playerManager;
                 bool enemyCityPresent = tileSurr.CityTilePresent != null && tileSurr.CityTilePresent.owner != this.playerManager;
-                if (enemyUnitPresent || enemyCityPresent)
+                bool enemyForkPresent = tileSurr.FortPresent != null && tileSurr.FortPresent.owner != this.playerManager;
+                if (enemyUnitPresent || enemyCityPresent|| enemyForkPresent)
                 {
                     return false;
                 }
