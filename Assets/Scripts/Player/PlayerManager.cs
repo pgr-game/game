@@ -329,6 +329,7 @@ public class PlayerManager : MonoBehaviour
     }
 
     public void StartTurn() {
+        this.playerSupplyManager.CheckSupplyLines();
         allyUnits.ForEach((unit) => {
             unit.attacked = false;
             unit.unitMove.ResetRange();

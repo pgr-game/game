@@ -14,6 +14,7 @@ namespace RedBjorn.ProtoTiles
         public UnitController UnitPresent { get; set; }
         public Fort FortPresent { get; set; }
         public CityTile CityTilePresent { get; set; }
+        public PlayerManager SupplyLineProvider { get; set; }
         MapRules Rules;
 
         public int MovableArea { get { return CachedMovabeArea; } set { CachedMovabeArea = value; } }
