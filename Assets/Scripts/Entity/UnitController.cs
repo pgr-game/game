@@ -147,7 +147,7 @@ public class UnitController : MonoBehaviour
     {
         this.currentHealth = this.currentHealth - incomingDamage;
 
-        unitUI.ShowDamageEffect(currentHealth, attacker.transform.position);
+        unitUI.ShowDamageEffect(incomingDamage, attacker.transform.position);
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
 
         if (this.currentHealth <= 0)
