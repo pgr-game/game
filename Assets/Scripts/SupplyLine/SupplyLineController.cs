@@ -18,24 +18,20 @@ public class SupplyLineController
     public int Init(PlayerSupplyManager playerSupplyManager, City originCity, List<TileEntity> path, PathDrawer supplyLineDrawer)
     {
 
-
         this.playerSupplyManager = playerSupplyManager;
         this.originCity = originCity;
         this.path = path;
         this.supplyLineDrawer = supplyLineDrawer;
-        TileEntity previousTile = null;
+
+        float distance = 2f; // tile size is 1
         foreach (TileEntity tile in this.path)
         {
             tile.SupplyLineProvider = playerSupplyManager.playerManager;
-            if (previousTile != null) {
-                float distance  = playerSupplyManager.gameManager.mapManager.MapEntity.Distance(previousTile.Position , tile.Position);
-                var surrourndingTiles = playerSupplyManager.gameManager.mapManager.MapEntity.WalkableTiles(tile.Position, distance); //could work later for the surrouding tiles to get buff as well
-                foreach (TileEntity tileSurr in surrourndingTiles)
-                {
-                    tileSurr.SupplyLineProvider = playerSupplyManager.playerManager;
-                }
+            var surrourndingTiles = playerSupplyManager.gameManager.mapManager.MapEntity.WalkableTiles(tile.Position, distance); //could work later for the surrouding tiles to get buff as well
+            foreach (TileEntity tileSurr in surrourndingTiles)
+            {
+                tileSurr.SupplyLineProvider = playerSupplyManager.playerManager;
             }
-            previousTile = tile;
         }
 
         Vector3 pathStartWorldPosition = playerSupplyManager.gameManager.mapManager.MapEntity.WorldPosition(path.First().Position);
@@ -45,6 +41,19 @@ public class SupplyLineController
         return 1;
     }
 
+
+    public bool EnemyOnSupplyLine()
+    {
+        foreach(TileEntity tile in path)
+        {
+            bool enemyUnitPresent = tile.UnitPresent != null && tile.UnitPresent.owner != this.playerSupplyManager.playerManager;
+            if (enemyUnitPresent)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     public void Destroy()

@@ -43,6 +43,16 @@ public class PlayerSupplyManager
         }
     }
 
+    public void CheckSupplyLines()
+    {
+        bool ifEnemyOnSupplyLine = supplyLines.Count > 0 && supplyLines.First().EnemyOnSupplyLine();
+        if (ifEnemyOnSupplyLine)
+        {
+            DestroyOldCitySupplyLine();
+        }
+
+    }
+
     public void OpenSupplyLineDrawer(City originCity)
     {
         this.originCity = originCity;
@@ -78,12 +88,12 @@ public class PlayerSupplyManager
 
 
         //1tile size = 1
-        float distance = 2f;//this.gameManager.mapManager.MapEntity.Distance(path.ElementAt(0), path.ElementAt(1));
+        float distance = 3f;//this.gameManager.mapManager.MapEntity.Distance(path.ElementAt(0), path.ElementAt(1));
         foreach (TileEntity tile in path)
         {
 
             //float distance = this.gameManager.mapManager.MapEntity.Distance(previousTile.Position, tile.Position);
-            
+
             var surrourndingTiles = this.gameManager.mapManager.MapEntity.WalkableTiles(tile.Position, distance); //could work later for the surrouding tiles to get buff as well
             foreach (TileEntity tileSurr in surrourndingTiles)
             {
@@ -139,6 +149,10 @@ public class PlayerSupplyManager
     private void DestroyOldCitySupplyLine()
     {
         SupplyLineController overwrittenSupplyLine = supplyLines.Find(supplyLine => supplyLine.originCity == originCity);
+        if (overwrittenSupplyLine == null && supplyLines.Count() > 0)
+        {
+            overwrittenSupplyLine = supplyLines.First();
+        }
         if (overwrittenSupplyLine != null)
         {
             supplyLines.Remove(overwrittenSupplyLine);
