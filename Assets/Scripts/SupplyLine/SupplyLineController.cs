@@ -15,8 +15,10 @@ public class SupplyLineController
     private PathDrawer supplyLineDrawer;
 
 
-    public void Init(PlayerSupplyManager playerSupplyManager, City originCity, List<TileEntity> path, PathDrawer supplyLineDrawer)
+    public int Init(PlayerSupplyManager playerSupplyManager, City originCity, List<TileEntity> path, PathDrawer supplyLineDrawer)
     {
+
+
         this.playerSupplyManager = playerSupplyManager;
         this.originCity = originCity;
         this.path = path;
@@ -40,7 +42,10 @@ public class SupplyLineController
         Vector3 pathEndWorldPosition = playerSupplyManager.gameManager.mapManager.MapEntity.WorldPosition(path.Last().Position);
         var drawerPath = playerSupplyManager.gameManager.mapManager.MapEntity.PathPoints(pathStartWorldPosition, pathEndWorldPosition, float.MaxValue);
         supplyLineDrawer.Show(drawerPath, playerSupplyManager.gameManager.mapManager.MapEntity);
+        return 1;
     }
+
+
 
     public void Destroy()
     {

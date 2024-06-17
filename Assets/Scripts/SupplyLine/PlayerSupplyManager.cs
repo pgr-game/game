@@ -72,15 +72,46 @@ public class PlayerSupplyManager
             supplyLineDrawer.InactiveState();
         }
     }
+    private bool IfSupplyLineVaiable(List<TileEntity> path)
+    {
+        //its one anyway so ahrdcode it // i tak wina miko³aja ¿e rysowanie nie dziala
+
+
+        //1tile size = 1
+        float distance = 2f;//this.gameManager.mapManager.MapEntity.Distance(path.ElementAt(0), path.ElementAt(1));
+        foreach (TileEntity tile in path)
+        {
+
+            //float distance = this.gameManager.mapManager.MapEntity.Distance(previousTile.Position, tile.Position);
+            
+            var surrourndingTiles = this.gameManager.mapManager.MapEntity.WalkableTiles(tile.Position, distance); //could work later for the surrouding tiles to get buff as well
+            foreach (TileEntity tileSurr in surrourndingTiles)
+            {
+                bool enemyUnitPresent = tileSurr.UnitPresent != null && tileSurr.UnitPresent.owner != this.playerManager;
+                bool enemyCityPresent = tileSurr.CityTilePresent != null && tileSurr.CityTilePresent.owner != this.playerManager;
+                if (enemyUnitPresent || enemyCityPresent)
+                {
+                    return false;
+                }
+            }
+
+        }
+        return true;
+    }
 
     public void CreateSupplyLine(Vector3? startPosition, Vector3 endPosition)
     {
-        DestroyOldCitySupplyLine();
-        if(startPosition == null)
+        if (startPosition == null)
         {
             startPosition = drawingStartPosition;
         }
         List<TileEntity> path = playerManager.mapManager.MapEntity.PathTiles((Vector3)startPosition, endPosition, float.MaxValue);
+        if (!IfSupplyLineVaiable(path))
+        {
+            return;
+        }
+        DestroyOldCitySupplyLine();
+
         PathDrawer newSupplyLineDrawer = GameObject.Instantiate(playerManager.pathPrefab, Vector3.zero, Quaternion.identity);
         newSupplyLineDrawer.Init(supplyActiveColor, supplyInactiveColor, 0);
         newSupplyLineDrawer.ActiveState();
@@ -107,7 +138,7 @@ public class PlayerSupplyManager
 
     private void DestroyOldCitySupplyLine()
     {
-        SupplyLineController overwrittenSupplyLine = supplyLines.Find(supplyLine => supplyLine.originCity ==  originCity);
+        SupplyLineController overwrittenSupplyLine = supplyLines.Find(supplyLine => supplyLine.originCity == originCity);
         if (overwrittenSupplyLine != null)
         {
             supplyLines.Remove(overwrittenSupplyLine);
