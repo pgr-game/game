@@ -24,6 +24,17 @@ public class MapManager : MonoBehaviour
             MapView = GameObject.FindObjectOfType<MapView>();
         }
         MapEntity = new MapEntity(Map, MapView);
+
+        GameObject[] cityTiles = GameObject.FindGameObjectsWithTag("CityTile");
+        foreach (GameObject cityTileObject in cityTiles)
+        {
+            CityTile cityTileComponent = cityTileObject.GetComponent<CityTile>();
+            if (cityTileComponent != null)
+            {
+                cityTileComponent.Init(gameManager);
+            }
+        }
+
         if (MapView)
         {
             MapView.Init(MapEntity);
@@ -33,16 +44,6 @@ public class MapManager : MonoBehaviour
         else
         {
             Debug.Log("Can't find MapView. Random errors can occur");
-        }
-
-        GameObject[] cityTiles = GameObject.FindGameObjectsWithTag("CityTile");
-        foreach (GameObject cityTileObject in cityTiles)
-        {
-            CityTile cityTileComponent = cityTileObject.GetComponent<CityTile>();
-            if (cityTileComponent != null)
-            {
-                cityTileComponent.Initialize(gameManager);
-            }
         }
     }
 
@@ -105,7 +106,7 @@ public class MapManager : MonoBehaviour
             playerManager.playerCitiesManager.AddCity(city);
         }
 
-        city.InitCityUI(null, this.CityUIPrefab, name);
+        city.InitCity(this, playerManager?.color, this.CityUIPrefab, name);
 
         if (cityLoadData != null)
         {
@@ -119,12 +120,6 @@ public class MapManager : MonoBehaviour
             }
         }
     }
-
-    //private void InitCityUI(PlayerManager player) {
-        //if(PlayerManager) {
-
-        //}
-    //}
 
     CityTile CityTileFromPosition(Vector3 position) {
         if (Physics.Raycast(new Vector3(position.x, position.y, position.z - 10), Vector3.forward, out hit)) {
@@ -166,6 +161,24 @@ public class MapManager : MonoBehaviour
         foreach(CityTile foundTile in newTiles) {
                 GetCitySurroundingTiles(tiles, TileEntityFromPosition(foundTile.transform.position));
         }
+    }
+
+    public List<TileEntity> GetTilesSurroundingArea(List<TileEntity> areaTiles, int distance, bool includeAreaTiles) 
+    {
+        List<TileEntity> surroundingTiles = new List<TileEntity>();
+
+        foreach(TileEntity areaTile in areaTiles)
+        {
+            var tilesSurroundingAreaTile = MapEntity.WalkableTiles(areaTile.Position, distance);
+            surroundingTiles.AddRange(tilesSurroundingAreaTile);
+        }
+
+        if (!includeAreaTiles)
+        {
+            surroundingTiles = surroundingTiles.Except(areaTiles).ToList();
+        }
+
+        return surroundingTiles;
     }
 
     public static Vector3 CalculateMidpoint(List<Vector3> points)

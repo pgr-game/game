@@ -1,3 +1,4 @@
+using RedBjorn.ProtoTiles;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 public class CityTile : MonoBehaviour
 {
     public City city;
+    public TileEntity tile { get; private set; }
     //this is debug only and should not be used
     public PlayerManager owner;
 
@@ -21,9 +23,9 @@ public class CityTile : MonoBehaviour
         
     }
 
-    public void Initialize(GameManager gameManager) {
+    public void Init(GameManager gameManager) {
         this.gameManager = gameManager;
-        var tile = gameManager.mapManager.MapEntity.Tile(this.transform.position);
+        tile = gameManager.mapManager.MapEntity.Tile(this.transform.position);
         tile.CityTilePresent = this.GetComponent<CityTile>();
     }
 

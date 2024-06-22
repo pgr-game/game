@@ -8,6 +8,7 @@ public class City
 {
     public string Name;
     public PlayerManager Owner;
+    public MapManager mapManager;
     public int Level;
     public GameObject unitInProductionPrefab;
     public UnitController UnitInProduction;
@@ -20,35 +21,45 @@ public class City
     public int health;
     public int maxHealth;
     private List<UnitController> garrisonUnits;
+    public List<TileEntity> adjacentTiles { get; private set; }
 
-    public void InitCityUI(PlayerManager player, GameObject CityUIPrefab, string name) {
+    public void InitCity(MapManager mapManager, Color? playerColor, GameObject CityUIPrefab, string name)
+    {
+        this.mapManager = mapManager;
         garrisonUnits = new List<UnitController>();
         uiAnchor = MapManager.CalculateMidpoint(cityTiles.Select(cityTile => cityTile.transform.position).ToList());
         UI = UnityEngine.Object.Instantiate(CityUIPrefab, uiAnchor, Quaternion.identity).GetComponent<CityUIController>();
         UI.Init();
-        if(Owner) {
-            UI.SetColor(Owner.color);
+        if (playerColor != null)
+        {
+            UI.SetColor((Color)playerColor);
         }
-        if(name != null) {
+        if (name != null)
+        {
             this.Name = name;
             UI.SetName(name);
         }
+        InitAdjacentTiles();
     }
 
-    public void StartTurn() {
-        if(UnitInProductionTurnsLeft != 0) {
+    public void StartTurn()
+    {
+        if (UnitInProductionTurnsLeft != 0)
+        {
             UnitInProductionTurnsLeft = UnitInProductionTurnsLeft - 1;
-            if(UnitInProductionTurnsLeft == 0) {
+            if (UnitInProductionTurnsLeft == 0)
+            {
                 UnitController newUnit = Owner.InstantiateUnit(UnitInProduction, null, cityTiles.FirstOrDefault().transform.position);
                 AddToGarrison(newUnit);
                 UnitInProductionTurnsLeft = UnitInProduction.GetProductionTurns();
-                
+
             }
             UI.SetTurnsLeft(UnitInProductionTurnsLeft);
         }
     }
 
-    public void SetUnitInProduction(UnitController unit, GameObject unitInProductionPrefab) {
+    public void SetUnitInProduction(UnitController unit, GameObject unitInProductionPrefab)
+    {
         this.UnitInProduction = unit;
         this.unitInProductionPrefab = unitInProductionPrefab;
         this.UnitInProductionTurnsLeft = unit.GetProductionTurns();
@@ -122,5 +133,11 @@ public class City
     public void CreateSupplyLine()
     {
         Owner.playerSupplyManager.OpenSupplyLineDrawer(this);
+    }
+
+    private void InitAdjacentTiles()
+    {
+        List<TileEntity> tiles = cityTiles.Select(x => x.tile).ToList();
+        adjacentTiles = mapManager.GetTilesSurroundingArea(tiles, 1, false);
     }
 }
