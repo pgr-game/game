@@ -94,6 +94,12 @@ public class UnitMove : MonoBehaviour
         longPathPoints = null;
         Vector3 clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
         var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
+        if(path.Count == 0)
+        {
+            //clicked on impassable tile
+            isAutoMove = false;
+            return;
+        }
         TileEntity tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
         if (path.Count - 1 > RangeLeft)
         {
