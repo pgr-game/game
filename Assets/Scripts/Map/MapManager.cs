@@ -165,20 +165,20 @@ public class MapManager : MonoBehaviour
 
     public List<TileEntity> GetTilesSurroundingArea(List<TileEntity> areaTiles, int distance, bool includeAreaTiles) 
     {
-        List<TileEntity> surroundingTiles = new List<TileEntity>();
+        HashSet<TileEntity> surroundingTiles = new HashSet<TileEntity>();
 
         foreach(TileEntity areaTile in areaTiles)
         {
             var tilesSurroundingAreaTile = MapEntity.WalkableTiles(areaTile.Position, distance);
-            surroundingTiles.AddRange(tilesSurroundingAreaTile);
+            surroundingTiles.UnionWith(tilesSurroundingAreaTile);
         }
 
         if (!includeAreaTiles)
         {
-            surroundingTiles = surroundingTiles.Except(areaTiles).ToList();
+            surroundingTiles.ExceptWith(areaTiles);
         }
 
-        return surroundingTiles;
+        return surroundingTiles.ToList();
     }
 
     public static Vector3 CalculateMidpoint(List<Vector3> points)
