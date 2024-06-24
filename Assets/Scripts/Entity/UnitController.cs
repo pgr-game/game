@@ -157,13 +157,12 @@ public class UnitController : MonoBehaviour
 
     private bool CanAttackCity(City city)
     {
-        List<UnitController> adjacentUnits = city.adjacentTiles.Select(tile => tile.UnitPresent).ToList();
-        if (adjacentUnits.Any(item => (item?.unitType == UnitTypes.Catapult && item?.owner == owner)))
+        city.UpdateBesiegedStatus();
+        if(city.attackingPlayers.Contains(owner))
         {
             return true;
         }
-
-        return false;
+        else return false;
     }
 
     public void ReceiveDamage(int incomingDamage, UnitController attacker)

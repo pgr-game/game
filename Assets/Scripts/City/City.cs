@@ -22,6 +22,8 @@ public class City
     public int maxHealth;
     private List<UnitController> garrisonUnits;
     public List<TileEntity> adjacentTiles { get; private set; }
+    public bool besieged { get; private set; }
+    public List<PlayerManager> attackingPlayers { get; private set; }
 
     public void InitCity(MapManager mapManager, Color? playerColor, GameObject CityUIPrefab, string name)
     {
@@ -139,5 +141,26 @@ public class City
     {
         List<TileEntity> tiles = cityTiles.Select(x => x.tile).ToList();
         adjacentTiles = mapManager.GetTilesSurroundingArea(tiles, 1, false);
+    }
+
+    public bool IsSupplied()
+    {
+        return false;
+    }
+
+    public void UpdateBesiegedStatus()
+    {
+        attackingPlayers = new List<PlayerManager>();
+        List<Fort> adjacentForts = adjacentTiles.Select(tile => tile.FortPresent).ToList();
+        foreach (var fort in adjacentForts)
+        {
+            if(fort?.owner != Owner)
+            {
+                attackingPlayers.Add(fort?.owner);
+            }
+        }
+
+        // Add supply line check here
+        besieged = attackingPlayers.Count != 0;
     }
 }
