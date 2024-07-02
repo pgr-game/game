@@ -48,6 +48,17 @@ public class CityMenuManager : MonoBehaviour
             this.cityNameText.text = city.Name;
             FillUnitsList(gameManager.unitPrefabs);
         }
+
+        if(city.besieged)
+        {
+            foreach (var item in unitEntriesInList)
+            {
+                if(item != null)
+                {
+                    item.transform.Find("button").gameObject.GetComponent<Button>().interactable = false;
+                }
+            }
+        }
     }
 
     public void ClickCreateSupplyLine()

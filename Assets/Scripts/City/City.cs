@@ -1,4 +1,5 @@
 using RedBjorn.ProtoTiles;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ public class City
     private List<UnitController> garrisonUnits;
     public List<TileEntity> adjacentTiles { get; private set; }
     public bool besieged { get; private set; }
+    public bool supplied { get; private set; }
     public List<PlayerManager> attackingPlayers { get; private set; }
 
     public void InitCity(MapManager mapManager, Color? playerColor, GameObject CityUIPrefab, string name)
@@ -67,6 +69,18 @@ public class City
         this.UnitInProductionTurnsLeft = unit.GetProductionTurns();
         UI.SetUnitInProduction(Owner.gameManager.getUnitSprite(unit.unitType));
         UI.SetTurnsLeft(UnitInProductionTurnsLeft);
+    }
+
+    private void UpdateProductionLock()
+    {
+        if (besieged && !supplied)
+        {
+            this.UnitInProduction = null;
+            this.unitInProductionPrefab = null;
+            this.UnitInProductionTurnsLeft = 0;
+            UI.SetUnitInProduction(null);
+            UI.SetTurnsLeft(0);
+        }
     }
 
     public void AddToGarrison(UnitController unit)
@@ -143,15 +157,24 @@ public class City
         adjacentTiles = mapManager.GetTilesSurroundingArea(tiles, 1, false);
     }
 
-    public bool IsSupplied()
+    public void UpdateSuppliedStatus()
     {
-        return false;
+        supplied = cityTiles.Any(cityTile => cityTile.tile.SupplyLineProvider == Owner);
+
+        if (supplied)
+        {
+            //display supplied icon
+        }
+
+        UpdateProductionLock();
     }
 
     public void UpdateBesiegedStatus()
     {
+        UpdateSuppliedStatus();
+
         attackingPlayers = new List<PlayerManager>();
-        List<Fort> adjacentForts = adjacentTiles.Select(tile => tile.FortPresent).ToList();
+        List<Fort> adjacentForts = adjacentTiles.Select(tile => tile.FortPresent).OfType<Fort>().ToList();
         foreach (var fort in adjacentForts)
         {
             if(fort?.owner != Owner)
@@ -160,7 +183,13 @@ public class City
             }
         }
 
-        // Add supply line check here
         besieged = attackingPlayers.Count != 0;
+
+        if(besieged)
+        {
+            //display besieged icon
+        }
+
+        UpdateProductionLock();
     }
 }

@@ -9,6 +9,7 @@ public class Fort : MonoBehaviour
     public int id;
     public bool isBuilt;
     public int turnsUntilBuilt;
+    private City adjacentCity;
 
     // Photo chosen for the fort
     public int amountOfImages;
@@ -54,5 +55,20 @@ public class Fort : MonoBehaviour
     {
         isBuilt = true;
         sprite.color = new Color(1f, 1f, 1f, 1f); // Ustawienie pełnej nieprzezroczystości
+        var adjacentTiles = owner.mapManager.MapEntity.WalkableTiles(hexPosition, 1.0f);
+        foreach (var tile in adjacentTiles)
+        {
+            if(tile.CityTilePresent)
+            {
+                adjacentCity = tile.CityTilePresent.city;
+                break;
+            }
+        }
+
+        if(adjacentCity != null)
+        {
+            adjacentCity.UpdateBesiegedStatus();
+        }
+
     }
 }

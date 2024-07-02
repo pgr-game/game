@@ -34,6 +34,10 @@ public class SupplyLineController
         foreach (TileEntity tile in areaOfEffectTiles)
         {
             tile.SupplyLineProvider = playerSupplyManager.playerManager;
+            if(tile.CityTilePresent)
+            {
+                tile.CityTilePresent.city.UpdateSuppliedStatus();
+            }
         }
 
         Vector3 pathStartWorldPosition = mapManager.MapEntity.WorldPosition(path.First().Position);
@@ -63,6 +67,10 @@ public class SupplyLineController
         foreach (TileEntity tile in areaOfEffectTiles)
         {
             tile.SupplyLineProvider = null;
+            if (tile.CityTilePresent)
+            {
+                tile.CityTilePresent.city.UpdateSuppliedStatus();
+            }
         }
         UnityEngine.Object.Destroy(supplyLineDrawer.gameObject);
     }
