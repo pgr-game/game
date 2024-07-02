@@ -16,6 +16,9 @@ public class CityUIController : MonoBehaviour
     public TMP_Text unitInProductionTurnsText;
     public HorizontalLayoutGroup garrisonUnitIconsContainer;
 
+    public GameObject SuppliedStatusIcon;
+    public GameObject BesiegedStatusIcon;
+
     public List<UnitIconController> garrisonUnitIcons;
     public GameObject unitIconPrefab;
     // Start is called before the first frame update
