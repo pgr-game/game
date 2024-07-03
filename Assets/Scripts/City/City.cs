@@ -1,4 +1,4 @@
-using RedBjorn.ProtoTiles;
+﻿using RedBjorn.ProtoTiles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -79,7 +79,7 @@ public class City
             this.unitInProductionPrefab = null;
             this.UnitInProductionTurnsLeft = 0;
             UI.SetUnitInProduction(null);
-            UI.SetTurnsLeft(0);
+            UI.SetTurnsLeft(-1);
         }
     }
 
@@ -161,11 +161,7 @@ public class City
     {
         supplied = cityTiles.Any(cityTile => cityTile.tile.SupplyLineProvider == Owner);
 
-        if (supplied)
-        {
-            //display supplied icon
-        }
-
+        UI.SetSuppliedStatus(supplied);
         UpdateProductionLock();
     }
 
@@ -185,10 +181,7 @@ public class City
 
         besieged = attackingPlayers.Count != 0;
 
-        if(besieged)
-        {
-            //display besieged icon
-        }
+        UI.SetBesiegedStatus(besieged);
 
         UpdateProductionLock();
     }

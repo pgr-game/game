@@ -1589,6 +1589,7 @@ MonoBehaviour:
   BesiegedStatusIcon: {fileID: 7071018811778948432}
   garrisonUnitIcons: []
   unitIconPrefab: {fileID: 5211402715116755030, guid: 10efcfb0a0d0a794db4c9455ced26b1d, type: 3}
+  emptyUnitIcon: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!1 &2793342757542245494
 GameObject:
   m_ObjectHideFlags: 0
