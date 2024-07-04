@@ -357,7 +357,11 @@ public class UnitController : MonoBehaviour
 
     void OnMouseExit()
     {
-        unitMove.HideLongPath();
+        if(!unitMove.active)
+        {
+            unitMove.HideLongPath();
+        }
+
         if (!unitStatsUIController.activeUnit)
         {
             unitStatsUIController.HideUnitBox();
