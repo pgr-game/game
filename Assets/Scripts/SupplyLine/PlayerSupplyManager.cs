@@ -82,23 +82,18 @@ public class PlayerSupplyManager
             supplyLineDrawer.InactiveState();
         }
     }
-    private bool IfSupplyLineVaiable(List<TileEntity> path)
+    private bool IsSupplyLineViable(List<TileEntity> path)
     {
-        //its one anyway so ahrdcode it // i tak wina miko³aja ¿e rysowanie nie dziala
-        //1tile size = 1
-        float distance = 3f;//this.gameManager.mapManager.MapEntity.Distance(path.ElementAt(0), path.ElementAt(1));
+        float distance = 3f;
         foreach (TileEntity tile in path)
         {
-
-            //float distance = this.gameManager.mapManager.MapEntity.Distance(previousTile.Position, tile.Position);
-
-            var surrourndingTiles = this.gameManager.mapManager.MapEntity.WalkableTiles(tile.Position, distance); //could work later for the surrouding tiles to get buff as well
-            foreach (TileEntity tileSurr in surrourndingTiles)
+            var surroundingTiles = this.gameManager.mapManager.MapEntity.WalkableTiles(tile.Position, distance);
+            foreach (TileEntity tileSurr in surroundingTiles)
             {
                 bool enemyUnitPresent = tileSurr.UnitPresent != null && tileSurr.UnitPresent.owner != this.playerManager;
                 bool enemyCityPresent = tileSurr.CityTilePresent != null && tileSurr.CityTilePresent.owner != this.playerManager;
-                bool enemyForkPresent = tileSurr.FortPresent != null && tileSurr.FortPresent.owner != this.playerManager;
-                if (enemyUnitPresent || enemyCityPresent|| enemyForkPresent)
+                bool enemyFortPresent = tileSurr.FortPresent != null && tileSurr.FortPresent.owner != this.playerManager;
+                if (enemyUnitPresent || enemyCityPresent|| enemyFortPresent)
                 {
                     return false;
                 }
@@ -119,7 +114,7 @@ public class PlayerSupplyManager
         {
             return;
         }
-        if (!IfSupplyLineVaiable(path))
+        if (!IsSupplyLineViable(path))
         {
             return;
         }
