@@ -138,7 +138,10 @@ public class City
 
     public void Death(UnitController killer)
     {
-        Owner.playerCitiesManager.cities.Remove(this);
+        if(Owner)
+        {
+            Owner.playerCitiesManager.cities.Remove(this);
+        }
         killer.owner.playerCitiesManager.cities.Add(this);
         Owner = killer.owner;
         UI.SetColor(Owner.color);

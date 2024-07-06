@@ -49,7 +49,7 @@ public class CityMenuManager : MonoBehaviour
             FillUnitsList(gameManager.unitPrefabs);
         }
 
-        if(city.besieged)
+        if(city.besieged && !city.supplied)
         {
             foreach (var item in unitEntriesInList)
             {
