@@ -1,3 +1,4 @@
+using RedBjorn.ProtoTiles;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class Fort : MonoBehaviour
     public bool isBuilt;
     public int turnsUntilBuilt;
     private City adjacentCity;
+    private const int supplyBlockingRange = 3;
 
     // Photo chosen for the fort
     public int amountOfImages;
@@ -70,5 +72,10 @@ public class Fort : MonoBehaviour
             adjacentCity.UpdateBesiegedStatus();
         }
 
+        var tilesBlockingSupply = owner.mapManager.MapEntity.WalkableTiles(hexPosition, supplyBlockingRange);
+        foreach (var tile in tilesBlockingSupply)
+        {
+            tile.FortsBlockingSupply.Add(this);
+        }
     }
 }

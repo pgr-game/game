@@ -21,6 +21,7 @@ public class City
 
     public int health;
     public int maxHealth;
+    private const int supplyBlockingRange = 3;
     private List<UnitController> garrisonUnits;
     public List<TileEntity> adjacentTiles { get; private set; }
     public bool besieged { get; private set; }
@@ -155,6 +156,12 @@ public class City
     {
         List<TileEntity> tiles = cityTiles.Select(x => x.tile).ToList();
         adjacentTiles = mapManager.GetTilesSurroundingArea(tiles, 1, false);
+
+        List<TileEntity> tilesBlockingSupply = mapManager.GetTilesSurroundingArea(tiles, supplyBlockingRange, false);
+        foreach (var tile in tilesBlockingSupply)
+        {
+            tile.CitiesBlockingSupply.Add(this);
+        }
     }
 
     public void UpdateSuppliedStatus()

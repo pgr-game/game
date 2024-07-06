@@ -440,6 +440,18 @@ namespace RedBjorn.ProtoTiles
             return WalkableBorder(origin, range);
         }
 
+        public List<Vector3> WalkableBorder(Vector3 worldPosition, float range, HashSet<Vector3Int> tiles)
+        {
+            var origin = Tile(worldPosition);
+            var borderPoints = new List<Vector3>();
+            var borderedAreas = MapBorder.FindBorderPositions(this, tiles);
+            foreach (var point in borderedAreas)
+            {
+                borderPoints.Add(WorldPosition(point.TilePos) + Vertices[point.VerticeIndex] * TileSize);
+            }
+            return borderPoints;
+        }
+
         /// <summary>
         /// Get positions of border of walkable area
         /// </summary>
