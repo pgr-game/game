@@ -145,6 +145,7 @@ public class City
         killer.owner.AddGold(Level * 100);
         killer.GainXP(this.Level);
         UpdateHealth();
+        UpdateBesiegedStatus();
     }
 
     public void CreateSupplyLine()
