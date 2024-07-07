@@ -56,7 +56,7 @@ public class Fort : MonoBehaviour
     public void BuildComplete()
     {
         isBuilt = true;
-        sprite.color = new Color(1f, 1f, 1f, 1f); // Ustawienie pełnej nieprzezroczystości
+        sprite.color = new Color(1f, 1f, 1f, 1f);
         var adjacentTiles = owner.mapManager.MapEntity.WalkableTiles(hexPosition, 1.0f);
         foreach (var tile in adjacentTiles)
         {
@@ -77,5 +77,18 @@ public class Fort : MonoBehaviour
         {
             tile.FortsBlockingSupply.Add(this);
         }
+    }
+
+    public void Destroy(TileEntity fortTile)
+    {
+        var tilesBlockingSupply = owner.mapManager.MapEntity.WalkableTiles(hexPosition, supplyBlockingRange);
+        foreach (var tile in tilesBlockingSupply)
+        {
+            tile.FortsBlockingSupply.Remove(this);
+        }
+
+        fortTile.FortPresent = null;
+
+        owner.playerFortsManager.RemoveFort(this, adjacentCity);
     }
 }

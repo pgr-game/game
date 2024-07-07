@@ -197,10 +197,7 @@ public class UnitMove : MonoBehaviour
         unitController.owner.ResetUnitPresentOnTile(oldTile, this.unitController);
         path.Last().UnitPresent = this.unitController;
         hexPosition = path.Last().Position;
-
-        //AreaHide();
-        //LongPath.IsEnabled = false;
-        //HideLongPath();
+        DestroyFortsOnTheWay(path);
 
         if (longPathPoints != null && longPathPoints.Count > numberOfSteps)
         {
@@ -275,6 +272,17 @@ public class UnitMove : MonoBehaviour
         if (!isAutoMove || longPathTile == null || longPathClickPosition == null) return;
 
         DetermineMoveType(longPathTile, longPathClickPosition);
+    }
+
+    private void DestroyFortsOnTheWay(List<TileEntity> tiles)
+    {
+        foreach (var tile in tiles)
+        {
+            if(tile.FortPresent && tile.FortPresent.owner != unitController.owner)
+            {
+                tile.FortPresent.Destroy(tile);
+            }
+        }
     }
 
     void AreaShow()
