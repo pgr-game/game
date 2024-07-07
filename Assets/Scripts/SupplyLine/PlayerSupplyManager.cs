@@ -21,6 +21,7 @@ public class PlayerSupplyManager
     private PathDrawer supplyLineDrawer;
     private Color supplyActiveColor;
     private Color supplyInactiveColor;
+    private const int maxSupplyRange = 1000;
 
     public void Init(PlayerManager playerManager, SupplyLoadData loadData)
     {
@@ -53,12 +54,65 @@ public class PlayerSupplyManager
 
     }
 
+    private HashSet<Vector3Int> GetAvailableSupplyTiles(Vector3Int origin)
+    {
+        var surroundingTiles = gameManager.mapManager.MapEntity.WalkableTiles(origin, maxSupplyRange);
+
+        return surroundingTiles
+            .Where((tile) => IsTileViableForSupply(tile))
+            .Select((tile) => tile.Position)
+            .ToHashSet();
+    }
+
+    private bool IsTileViableForSupply(TileEntity tile)
+    {
+        bool citiesBlocking = tile.CitiesBlockingSupply.Count == 0 ? false : true;
+        bool fortsBlocking = tile.FortsBlockingSupply.Count == 0 ? false : true;
+        if (!citiesBlocking && !fortsBlocking)
+        {
+            // short-circuit the calculation for most tiles
+            return true;
+        }
+        if (citiesBlocking)
+        {
+            foreach (var city in tile.CitiesBlockingSupply)
+            {
+                if (city.Owner == playerManager)
+                {
+                    return true;
+                }
+            }
+        }
+        if (fortsBlocking)
+        {
+            foreach (var fort in tile.FortsBlockingSupply)
+            {
+                if (fort.owner == playerManager)
+                {
+                    return true;
+                }
+            }
+        }
+
+        if (!citiesBlocking && !fortsBlocking)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void OpenSupplyLineDrawer(City originCity)
     {
         this.originCity = originCity;
         drawingStartPosition = originCity.cityTiles.First().transform.position;
 
-        passableArea.Show(playerManager.mapManager.MapEntity.WalkableBorder((Vector3)drawingStartPosition, float.MaxValue), playerManager.mapManager.MapEntity);
+        var availableSupplyTiles = GetAvailableSupplyTiles(originCity.cityTiles.First().tile.Position);
+        var availableSupplyBorder = playerManager.mapManager.MapEntity.WalkableBorder((Vector3)drawingStartPosition, maxSupplyRange, availableSupplyTiles);
+
+        passableArea.Show(availableSupplyBorder, playerManager.mapManager.MapEntity);
 
         supplyLineDrawer.Show(new List<Vector3>() { }, playerManager.mapManager.MapEntity);
         supplyLineDrawer.Init(supplyActiveColor, supplyInactiveColor, 0);
@@ -82,28 +136,14 @@ public class PlayerSupplyManager
             supplyLineDrawer.InactiveState();
         }
     }
-    private bool IfSupplyLineVaiable(List<TileEntity> path)
+    private bool IsSupplyLineViable(List<TileEntity> path)
     {
-        //its one anyway so ahrdcode it // i tak wina miko³aja ¿e rysowanie nie dziala
-        //1tile size = 1
-        float distance = 3f;//this.gameManager.mapManager.MapEntity.Distance(path.ElementAt(0), path.ElementAt(1));
         foreach (TileEntity tile in path)
         {
-
-            //float distance = this.gameManager.mapManager.MapEntity.Distance(previousTile.Position, tile.Position);
-
-            var surrourndingTiles = this.gameManager.mapManager.MapEntity.WalkableTiles(tile.Position, distance); //could work later for the surrouding tiles to get buff as well
-            foreach (TileEntity tileSurr in surrourndingTiles)
+            if(!IsTileViableForSupply(tile))
             {
-                bool enemyUnitPresent = tileSurr.UnitPresent != null && tileSurr.UnitPresent.owner != this.playerManager;
-                bool enemyCityPresent = tileSurr.CityTilePresent != null && tileSurr.CityTilePresent.owner != this.playerManager;
-                bool enemyForkPresent = tileSurr.FortPresent != null && tileSurr.FortPresent.owner != this.playerManager;
-                if (enemyUnitPresent || enemyCityPresent|| enemyForkPresent)
-                {
-                    return false;
-                }
+                return false;
             }
-
         }
         return true;
     }
@@ -119,7 +159,7 @@ public class PlayerSupplyManager
         {
             return;
         }
-        if (!IfSupplyLineVaiable(path))
+        if (!IsSupplyLineViable(path))
         {
             return;
         }

@@ -87,7 +87,7 @@ public class PlayerManager : MonoBehaviour
                 }
             }
             newSelected = SelectObject();
-            if(newSelected) {
+            if(newSelected && !playerSupplyManager.drawingSupplyLine) {
                 if(newSelected.GetComponent<UnitController>() && !isInMenu) {
                     UnitController currentUnit = newSelected.GetComponent<UnitController>();
                     HandleUnitClick(currentUnit);

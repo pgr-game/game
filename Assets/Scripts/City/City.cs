@@ -21,6 +21,7 @@ public class City
 
     public int health;
     public int maxHealth;
+    private const int supplyBlockingRange = 3;
     private List<UnitController> garrisonUnits;
     public List<TileEntity> adjacentTiles { get; private set; }
     public bool besieged { get; private set; }
@@ -137,13 +138,17 @@ public class City
 
     public void Death(UnitController killer)
     {
-        Owner.playerCitiesManager.cities.Remove(this);
+        if(Owner)
+        {
+            Owner.playerCitiesManager.cities.Remove(this);
+        }
         killer.owner.playerCitiesManager.cities.Add(this);
         Owner = killer.owner;
         UI.SetColor(Owner.color);
         killer.owner.AddGold(Level * 100);
         killer.GainXP(this.Level);
         UpdateHealth();
+        UpdateBesiegedStatus();
     }
 
     public void CreateSupplyLine()
@@ -155,6 +160,12 @@ public class City
     {
         List<TileEntity> tiles = cityTiles.Select(x => x.tile).ToList();
         adjacentTiles = mapManager.GetTilesSurroundingArea(tiles, 1, false);
+
+        List<TileEntity> tilesBlockingSupply = mapManager.GetTilesSurroundingArea(tiles, supplyBlockingRange, false);
+        foreach (var tile in tilesBlockingSupply)
+        {
+            tile.CitiesBlockingSupply.Add(this);
+        }
     }
 
     public void UpdateSuppliedStatus()

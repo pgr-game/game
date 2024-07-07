@@ -24,11 +24,10 @@ public class UnitMove : MonoBehaviour
     public MapManager mapManager;
     public UnitController unitController;
     public AreaOutline Area;
-    PathDrawer Path;
     PathDrawer LongPath;
     Coroutine MovingCoroutine;
 
-    private bool active = false;
+    public bool active { get; private set; } = false;
     private bool justActivated = false;
     public bool isAutoMove = false;
 
@@ -46,7 +45,7 @@ public class UnitMove : MonoBehaviour
             {
                 HandleWorldClick();
             }
-            PathUpdate();
+            UpdateLongPath();
         }
         if (active && justActivated)
         {
@@ -89,9 +88,11 @@ public class UnitMove : MonoBehaviour
     // TODO: probably need changing when we implement multiple units on a tile
     void HandleWorldClick()
     {
+        if (LongPath)
+        {
+            Destroy(LongPath.gameObject);
+        }
         // manual movement (get click position from mouse position now)
-        Destroy(LongPath);
-        longPathPoints = null;
         Vector3 clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
         var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
         if(path.Count == 0)
@@ -124,6 +125,7 @@ public class UnitMove : MonoBehaviour
         if (RangeLeft == 0)
         {
             // automatic movement is finished, could trigger some event here
+            unitController.Deactivate();
             return;
         }
         else
@@ -131,7 +133,7 @@ public class UnitMove : MonoBehaviour
             // this is automatic movement at the end of turn
             var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
             tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
-            PathHide();
+            HideLongPath();
         }
         if (tile == null) return;
 
@@ -143,24 +145,24 @@ public class UnitMove : MonoBehaviour
         if (tile.CityTilePresent is not null && tile.CityTilePresent.city.Owner != unitController.owner)
         {
             attackedCity = true;
-            SubClass(tile, clickPos, true);
+            Move(clickPos, true);
             this.unitController.Attack(tile.CityTilePresent.city);
         }
         // attack
         else if (tile.UnitPresent is not null && tile.UnitPresent.owner != this.unitController.owner && !this.unitController.attacked)
         {
-            SubClass(tile, clickPos, true);
+            Move(clickPos, true);
             this.unitController.Attack(tile.UnitPresent);
         }
         // move to empty tile
         else if (tile.UnitPresent is null)
         {
-            SubClass(tile, clickPos, false);
+            Move(clickPos, false);
         }
         // move to tile with own fort or city 
         else if (unitController.CanStackUnits(tile))
         {
-            SubClass(tile, clickPos, false);
+            Move(clickPos, false);
         }
 
         if (movedFromCityTile is not null && (!tile.CityTilePresent || tile.CityTilePresent.city != movedFromCityTile.city))
@@ -175,13 +177,8 @@ public class UnitMove : MonoBehaviour
         }
     }
 
-    private void SubClass(TileEntity tile, Vector3 clickPos, bool attackMove)
+    private void Move(Vector3 clickPos, bool attackMove)
     {
-        this.mapManager.gameManager.soundManager.GetComponent<SoundManager>().PlayMoveSound(this.unitController);
-        TileEntity oldTile = mapManager.MapEntity.Tile(hexPosition);
-        oldTile.UnitPresent = null;
-        unitController.owner.ResetUnitPresentOnTile(oldTile, this.unitController);
-
         List<TileEntity> path;
         if (!attackMove)
         {
@@ -192,48 +189,51 @@ public class UnitMove : MonoBehaviour
             path = mapManager.MapEntity.PathTilesNextTo(transform.position, clickPos, RangeLeft);
         }
 
+        var numberOfSteps = (int)Math.Ceiling((double)path.Count / 2);
+        RangeLeft -= numberOfSteps;
+
+        TileEntity oldTile = mapManager.MapEntity.Tile(hexPosition);
+        oldTile.UnitPresent = null;
+        unitController.owner.ResetUnitPresentOnTile(oldTile, this.unitController);
         path.Last().UnitPresent = this.unitController;
         hexPosition = path.Last().Position;
-        AreaHide();
-        Path.IsEnabled = false;
-        PathHide();
 
+        //AreaHide();
+        //LongPath.IsEnabled = false;
+        //HideLongPath();
 
-        Move(path, () =>
+        if (longPathPoints != null && longPathPoints.Count > numberOfSteps)
         {
-            Path.IsEnabled = true;
+            longPathPoints.RemoveRange(0, numberOfSteps);
+        }
+        if (longPathPoints != null && isAutoMove)
+        {
+            LongPath.SetNumberOfTurns(CalculateLongPathNumberOfTurns(longPathPoints.Count - numberOfSteps));
+        }
+        if (RangeLeft == 0)
+        {
+            unitController.Deactivate();
+        }
+
+        Action onCompleted = () =>
+        {
+            CreateLongPath();
+            ActivateLongPath();
+            ShowLongPath();
             AreaShow();
-        });
+        };
+
+        DisplayMovement(path, onCompleted);
     }
 
-    public void Move(List<TileEntity> path, Action onCompleted)
-    {
-        if (path != null)
+    private void DisplayMovement(List<TileEntity> path, Action onCompleted) {
+        this.mapManager.gameManager.soundManager.GetComponent<SoundManager>().PlayMoveSound(this.unitController);
+
+        if (MovingCoroutine != null)
         {
-            if (MovingCoroutine != null)
-            {
-                StopCoroutine(MovingCoroutine);
-            }
-            MovingCoroutine = StartCoroutine(MovingAnimation(path, onCompleted));
-            var amountOfSteps = (int)Math.Ceiling((double)path.Count / 2);
-            RangeLeft -= amountOfSteps;
-            if(longPathPoints != null && longPathPoints.Count > amountOfSteps)
-            {
-                longPathPoints.RemoveRange(0, amountOfSteps);
-            }
-            if (longPathPoints != null && isAutoMove)
-            {
-                LongPath.SetNumberOfTurns(CalculateLongPathNumberOfTurns(longPathPoints.Count - amountOfSteps));
-            }
-            if (RangeLeft == 0)
-            {
-                unitController.Deactivate();
-            }
+            StopCoroutine(MovingCoroutine);
         }
-        else
-        {
-            onCompleted.SafeInvoke();
-        }
+        MovingCoroutine = StartCoroutine(MovingAnimation(path, onCompleted));
     }
 
     IEnumerator MovingAnimation(List<TileEntity> path, Action onCompleted)
@@ -288,61 +288,19 @@ public class UnitMove : MonoBehaviour
         Area.Hide();
     }
 
-    void PathCreate()
-    {
-        if (Path)
-        {
-            Destroy(Path);
-        }
-        Path = Spawner.Spawn(PathPrefab, Vector3.zero, Quaternion.identity);
-        Path.Show(new List<Vector3>() { }, mapManager.MapEntity);
-        Path.InactiveState();
-        Path.IsEnabled = true;
-    }
-
-    public void PathHide()
-    {
-        if (Path)
-        {
-            Path.Hide();
-        }
-    }
-
-    public void PathUpdate()
-    {
-        if (Path && Path.IsEnabled)
-        {
-            var tile = mapManager.MapEntity.Tile(MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane()));
-            if (tile != null && tile.Vacant)
-            {
-                var path = mapManager.MapEntity.PathPoints(transform.position, mapManager.MapEntity.WorldPosition(tile.Position), float.MaxValue);
-                int pathLength = path.Count - 1; // path length is the number of steps minus one (because the first step is the current position)
-                int longPathNumberOfTurns = CalculateLongPathNumberOfTurns(pathLength); 
-
-                Path.Show(path, mapManager.MapEntity);
-                Path.Init(unitController.owner.color, unitController.owner.color, longPathNumberOfTurns);
-                Path.ActiveState();
-                Area.ActiveState();
-            }
-            else
-            {
-                Path.InactiveState();
-                Area.InactiveState();
-            }
-        }
-    }
-
-    private int CalculateLongPathNumberOfTurns(int pathLength)
-    {
-        return (int)Math.Ceiling(pathLength / (float)Range);
-    }
-
     public void Activate()
     {
+        isAutoMove = false;
+        longPathClickPosition = Vector3.zero;
+        longPathTile = null;
+        longPathPoints = null;
+
         active = true;
         justActivated = true;
         AreaShow();
-        PathCreate();
+        CreateLongPath();
+        ShowLongPath();
+        LongPath.IsEnabled = true;
     }
 
     public void Deactivate()
@@ -350,7 +308,11 @@ public class UnitMove : MonoBehaviour
         active = false;
         justActivated = false;
         AreaHide();
-        PathHide();
+        HideLongPath();
+        if(LongPath)
+        {
+            LongPath.IsEnabled = false;
+        }
     }
 
     public void ResetRange()
@@ -359,17 +321,32 @@ public class UnitMove : MonoBehaviour
     }
     private void CreateLongPath()
     {
+        if(LongPath)
+        {
+            Destroy(LongPath.gameObject);
+        }
         // could be changed to a different prefab
         LongPath = Spawner.Spawn(PathPrefab, Vector3.zero, Quaternion.identity);
         LongPath.Show(new List<Vector3>() { }, mapManager.MapEntity);
         LongPath.Init(unitController.owner.color, unitController.owner.color, CalculateLongPathNumberOfTurns(longPathPoints != null ? longPathPoints.Count - 1 : 0));
+        DeactivateLongPath();
+    }
+
+    public void ActivateLongPath()
+    {
+        LongPath.ActiveState();
+        LongPath.IsEnabled = true;
+    }
+
+    public void DeactivateLongPath()
+    {
         LongPath.InactiveState();
         LongPath.IsEnabled = false;
     }
 
     public void ShowLongPath()
     {
-        if(LongPath == null)
+        if (LongPath == null)
         {
             CreateLongPath();
         }
@@ -378,6 +355,38 @@ public class UnitMove : MonoBehaviour
 
     public void HideLongPath()
     {
-        LongPath.Hide();
+        if (LongPath)
+        {
+            LongPath.Hide();
+        }
+    }
+
+    public void UpdateLongPath()
+    {
+        if (LongPath && LongPath.IsEnabled)
+        {
+            var tile = mapManager.MapEntity.Tile(MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane()));
+            if (tile != null && tile.Vacant)
+            {
+                var path = mapManager.MapEntity.PathPoints(transform.position, mapManager.MapEntity.WorldPosition(tile.Position), float.MaxValue);
+                int pathLength = path.Count - 1; // path length is the number of steps minus one (because the first step is the current position)
+                int longPathNumberOfTurns = CalculateLongPathNumberOfTurns(pathLength);
+
+                LongPath.Show(path, mapManager.MapEntity);
+                LongPath.Init(unitController.owner.color, unitController.owner.color, longPathNumberOfTurns);
+                LongPath.ActiveState();
+                Area.ActiveState();
+            }
+            else
+            {
+                LongPath.InactiveState();
+                Area.InactiveState();
+            }
+        }
+    }
+
+    private int CalculateLongPathNumberOfTurns(int pathLength)
+    {
+        return (int)Math.Ceiling(pathLength / (float)Range);
     }
 }

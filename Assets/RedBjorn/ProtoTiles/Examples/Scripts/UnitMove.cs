@@ -128,10 +128,11 @@ namespace RedBjorn.ProtoTiles.Example
             if (!Path)
             {
                 Path = Spawner.Spawn(PathPrefab, Vector3.zero, Quaternion.identity);
-                Path.Show(new List<Vector3>() { }, Map);
-                Path.InactiveState();
-                Path.IsEnabled = true;
             }
+
+            Path.Show(new List<Vector3>() { }, Map);
+            Path.InactiveState();
+            Path.IsEnabled = true;
         }
 
         void PathHide()
