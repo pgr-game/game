@@ -78,7 +78,7 @@ public class PlayerUnitsManager
 
         UnitController newUnit = GameObject.Instantiate(unitController, position, Quaternion.identity).GetComponent<UnitController>();
         units.Add(newUnit);
-        newUnit.Init(playerManager, playerManager.mapManager, playerManager.gameManager, playerManager.gameManager.unitStatsUIController, rangeLeft, longPathClickPosition);
+        newUnit.Init(playerManager, playerManager.mapManager, playerManager.gameManager, playerManager.gameManager.unitStatsMenuController, rangeLeft, longPathClickPosition);
         return newUnit;
     }
 

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UnitStatsUIController : MonoBehaviour
+public class UnitStatsMenuController : MonoBehaviour
 {
     public TextMeshProUGUI unitTypeText;
     public TextMeshProUGUI unitAttackText;

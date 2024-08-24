@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     public Sprite[] unitSprites = new Sprite[amountOfUnitTypes];
 
     // UI elements
-    public UnitStatsUIController unitStatsUIController;
+    public UnitStatsMenuController unitStatsMenuController;
     public Image nextTurnButtonImage;
     public GameObject UI;
     public TileTag cityTag;
