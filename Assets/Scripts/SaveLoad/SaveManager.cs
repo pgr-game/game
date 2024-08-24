@@ -71,7 +71,7 @@ public class SaveManager : MonoBehaviour
     private void SavePlayer(PlayerManager player, QuickSaveWriter quickSaveWriter) {
         string playerKey = "Player" + player.index;
         //All player data
-        quickSaveWriter.Write<int>(playerKey + "numberOfUnits", player.allyUnits.Count);
+        quickSaveWriter.Write<int>(playerKey + "numberOfUnits", player.playerUnitsManager.GetUnitCount());
         quickSaveWriter.Write<int>(playerKey + "numberOfForts", player.playerFortsManager.forts.Count);
         quickSaveWriter.Write<int>(playerKey + "numberOfCities", player.playerCitiesManager.cities.Count);
         quickSaveWriter.Write<bool>(playerKey + "isComputer", player.isComputer);
@@ -82,7 +82,7 @@ public class SaveManager : MonoBehaviour
         SavePlayerTree(player, quickSaveWriter, playerKey);
        
         int i = 0;
-        foreach(UnitController unit in player.allyUnits)
+        foreach(UnitController unit in player.playerUnitsManager.GetUnitsForSave())
         {
             SaveUnit(unit, quickSaveWriter, playerKey, i);    
             i++;      

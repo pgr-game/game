@@ -23,24 +23,24 @@ public class UnitList : MonoBehaviour
                 Destroy(child.gameObject);
             }
             int i = 0;
-            foreach (UnitController unitData in gameManager.activePlayer.allyUnits)
+            foreach (UnitListData unitData in gameManager.activePlayer.playerUnitsManager.GetUnitListData())
             {
                 GameObject newEntry = Instantiate(myPrefab, transform.position + new Vector3(100, 160 + i, 0), Quaternion.identity, content.transform);
                 GameObject unitName = newEntry.transform.Find("name").gameObject;
                 TMP_Text nameText = unitName.GetComponent<TMP_Text>();
-                nameText.text = unitData.unitType.ToString();
+                nameText.text = unitData.unitType;
 
                 GameObject unitCurrectntHp = newEntry.transform.Find("hp").gameObject;
                 TMP_Text hpText = unitCurrectntHp.GetComponent<TMP_Text>();
-                hpText.text = unitData.currentHealth.ToString();
+                hpText.text = unitData.health;
 
                 GameObject unitCurrectntAttack = newEntry.transform.Find("attack").gameObject;
                 TMP_Text attackText = unitCurrectntAttack.GetComponent<TMP_Text>();
-                attackText.text = unitData.attack.ToString();
+                attackText.text = unitData.attack;
 
                 GameObject button = newEntry.transform.Find("button").gameObject;
                 Button buttonEvent = button.GetComponent<Button>();
-                buttonEvent.onClick.AddListener(delegate { goToPosition(unitData); });
+                buttonEvent.onClick.AddListener(delegate { goToPosition(unitData.unit); });
                 i += 50;
             }
         }
@@ -58,25 +58,25 @@ public class UnitList : MonoBehaviour
             EmptyObj.transform.parent = this.gameObject.transform;
             EmptyObj.transform.localScale = new Vector3(1, 1, 1);
             int i = 100;
-            foreach (UnitController unitData in gameManager.activePlayer.allyUnits)
+            foreach (UnitListData unitData in gameManager.activePlayer.playerUnitsManager.GetUnitListData())
             {
                 GameObject newEntry = Instantiate(myPrefab, transform.position + new Vector3(100, 160 + i, 0), Quaternion.identity, EmptyObj.transform);
 
                 GameObject unitName = newEntry.transform.Find("name").gameObject;
                 TMP_Text nameText = unitName.GetComponent<TMP_Text>();
-                nameText.text = unitData.unitType.ToString();
+                nameText.text = unitData.unitType;
 
                 GameObject unitCurrectntHp = newEntry.transform.Find("hp").gameObject;
                 TMP_Text hpText = unitCurrectntHp.GetComponent<TMP_Text>();
-                hpText.text = unitData.currentHealth.ToString();
+                hpText.text = unitData.health;
 
                 GameObject unitCurrectntAttack = newEntry.transform.Find("attack").gameObject;
                 TMP_Text attackText = unitCurrectntAttack.GetComponent<TMP_Text>();
-                attackText.text = unitData.attack.ToString();
+                attackText.text = unitData.attack;
 
                 GameObject  button = newEntry.transform.Find("button").gameObject;
                 Button buttonEvent = button.GetComponent<Button>();
-                buttonEvent.onClick.AddListener(delegate { goToPosition(unitData); });
+                buttonEvent.onClick.AddListener(delegate { goToPosition(unitData.unit); });
                 i += 90;
             }
         }
@@ -86,12 +86,12 @@ public class UnitList : MonoBehaviour
             Destroy(abc);
         }
     }
-    public void goToPosition(UnitController unitData)
+    public void goToPosition(UnitController unit)
     {
-        Vector3 tilePosition=unitData.mapManager.MapEntity.WorldPosition(unitData.unitMove.hexPosition);
+        Vector3 tilePosition= gameManager.mapManager.MapEntity.WorldPosition(unit.unitMove.hexPosition);
         Camera.main.transform.position = new Vector3(tilePosition.x, tilePosition.y, Camera.main.transform.position.z);
         PauseMenu.isPaused = false;
-        gameManager.activePlayer.SelectUnitFromList(unitData);
+        gameManager.activePlayer.SelectUnitFromList(unit);
         unitList.SetActive(false);
     }
 }

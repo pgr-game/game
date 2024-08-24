@@ -11,6 +11,7 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class UnitController : MonoBehaviour
 {
+    public PlayerUnitsManager playerUnitsManager;
     public PlayerManager owner;
     public MapManager mapManager;
     public UnitMove unitMove;
@@ -40,6 +41,7 @@ public class UnitController : MonoBehaviour
     public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController, float? rangeLeft, Vector3? longPathClickPosition)
     {
         this.owner = playerManager;
+        this.playerUnitsManager = playerManager.playerUnitsManager;
         this.mapManager = mapManager;
         this.unitStatsUIController = unitStatsUIController;
         unitUI.Init(this, owner.color, unitType, attack);
@@ -181,8 +183,7 @@ public class UnitController : MonoBehaviour
 
     public void Death(UnitController killer)
     {
-        owner.allyUnits.Remove(this);
-        gameManager.units.Remove(this);
+        playerUnitsManager.RemoveUnit(this);
         killer.owner.AddGold(CalculateGoldValue());
         TileEntity oldTile = this.mapManager.MapEntity.Tile(this.unitMove.hexPosition);
         oldTile.UnitPresent = null;

@@ -54,7 +54,7 @@ public class City
             UnitInProductionTurnsLeft = UnitInProductionTurnsLeft - 1;
             if (UnitInProductionTurnsLeft == 0)
             {
-                UnitController newUnit = Owner.InstantiateUnit(UnitInProduction, null, cityTiles.FirstOrDefault().transform.position);
+                UnitController newUnit = Owner.playerUnitsManager.InstantiateUnit(UnitInProduction, null, cityTiles.FirstOrDefault().transform.position);
                 AddToGarrison(newUnit);
                 UnitInProductionTurnsLeft = UnitInProduction.GetProductionTurns();
 

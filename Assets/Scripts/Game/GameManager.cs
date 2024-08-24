@@ -187,11 +187,8 @@ public class GameManager : MonoBehaviour
         this.cityMenuManager.Deactivate();
         // this needs to happen before the next player is activated, because next player may be dead
         CheckIfGameIsEnded();
-        foreach(UnitController unit in players[activePlayerIndex].allyUnits)
-        {
-            unit.unitMove.TryAutoMove();
-        }
-        players[activePlayerIndex].DeactivateUnitsRange();
+        players[activePlayerIndex].playerUnitsManager.TryAutoMoveAll();
+        players[activePlayerIndex].playerUnitsManager.DeactivateAll();
         players[activePlayerIndex].gameObject.SetActive(false);
         GameObject unitList = UI.transform.Find("UnitList").gameObject;
         unitList.SetActive(false);
