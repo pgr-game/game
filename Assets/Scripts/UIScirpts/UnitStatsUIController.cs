@@ -1,20 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UnitStatsUIController : MonoBehaviour
 {
-    public GameObject unitTypeText;
-    public GameObject unitAttackText;
-    public GameObject unitLevelText;
-    public GameObject unitHealthText;
-    public GameObject unitDefenseText;
+    public TextMeshProUGUI unitTypeText;
+    public TextMeshProUGUI unitAttackText;
+    public TextMeshProUGUI unitLevelText;
+    public TextMeshProUGUI unitHealthText;
+    public TextMeshProUGUI unitDefenseText;
     public GameObject unitBox;
     public GameObject xpSlider;
     public GameObject maxLvlText;
-    public GameObject unitOwnerColor;
-    public GameObject healthBackground;
+    public Image unitOwnerColor;
+    public Image healthBackground;
 
     public UnitController activeUnit;
     void Start()
@@ -22,30 +23,23 @@ public class UnitStatsUIController : MonoBehaviour
         HideUnitBox();
     }
 
-    private void Update()
-    {
-        if (activeUnit != null)
-        {
-            this.UpdateUnitStatisticsWindow(activeUnit);
-        }
-    }
     public void UpdateUnitStatisticsWindow(UnitController unitController)
     {
         unitBox.SetActive(true);
 
-        unitTypeText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.unitType.ToString();
+        unitTypeText.text = unitController.unitType.ToString();
 
-        unitAttackText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.GetAttack().ToString();
+        unitAttackText.text = unitController.GetAttack().ToString();
 
-        unitLevelText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.level.ToString();
+        unitLevelText.text = unitController.level.ToString();
 
-        unitHealthText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.currentHealth.ToString()+"/"+ unitController.maxHealth.ToString();
+        unitHealthText.text = unitController.currentHealth.ToString()+"/"+ unitController.maxHealth.ToString();
 
-        unitDefenseText.GetComponent<TMPro.TextMeshProUGUI>().text = unitController.GetDefense().ToString();
+        unitDefenseText.text = unitController.GetDefense().ToString();
 
-        unitOwnerColor.GetComponent<Image>().color = unitController.owner.color;
+        unitOwnerColor.color = unitController.owner.color;
 
-        healthBackground.GetComponent<Image>().color = unitController.owner.color;
+        healthBackground.color = unitController.owner.color;
 
         if (unitController.level >= 5 )
         {
