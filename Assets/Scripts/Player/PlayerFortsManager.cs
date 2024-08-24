@@ -38,4 +38,15 @@ public class PlayerFortsManager
           //Destroy(fort);  
         } 
     }
+
+    public void RemoveFort(Fort fort, City adjacentCity)
+    {
+        forts.Remove(fort);
+        GameObject.Destroy(fort.gameObject);
+
+        if (adjacentCity != null)
+        {
+            adjacentCity.UpdateBesiegedStatus();
+        }
+    }
 }

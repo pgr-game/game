@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RedBjorn.ProtoTiles
@@ -15,6 +16,9 @@ namespace RedBjorn.ProtoTiles
         public Fort FortPresent { get; set; }
         public CityTile CityTilePresent { get; set; }
         public PlayerManager SupplyLineProvider { get; set; }
+        public List<Fort> FortsBlockingSupply { get; set; }
+        public List<City> CitiesBlockingSupply { get; set; }
+
         MapRules Rules;
 
         public int MovableArea { get { return CachedMovabeArea; } set { CachedMovabeArea = value; } }
@@ -44,6 +48,8 @@ namespace RedBjorn.ProtoTiles
             Rules = rules;
             Preset = type;
             MovableArea = Data.MovableArea;
+            FortsBlockingSupply = new List<Fort>();
+            CitiesBlockingSupply = new List<City>();
         }
 
         public override string ToString()

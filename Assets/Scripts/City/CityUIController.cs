@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,9 +15,11 @@ public class CityUIController : MonoBehaviour
     public Image unitInProductionImage;
     public TMP_Text unitInProductionTurnsText;
     public HorizontalLayoutGroup garrisonUnitIconsContainer;
-
+    public GameObject SuppliedStatusIcon;
+    public GameObject BesiegedStatusIcon;
     public List<UnitIconController> garrisonUnitIcons;
     public GameObject unitIconPrefab;
+    public Sprite emptyUnitIcon;
     // Start is called before the first frame update
     public void Init()
     {
@@ -51,11 +53,25 @@ public class CityUIController : MonoBehaviour
     }
 
     public void SetUnitInProductionImage(Sprite sprite) {
-        unitInProductionImage.sprite = sprite;
+        if(sprite == null)
+        {
+            unitInProductionImage.sprite = emptyUnitIcon;
+        }
+        else
+        {
+            unitInProductionImage.sprite = sprite;
+        }
     }
 
     public void SetTurnsLeft(int turnsLeft) {
-        unitInProductionTurnsText.text = turnsLeft.ToString();
+        if(turnsLeft == -1)
+        {
+            unitInProductionTurnsText.text = "-";
+        } 
+        else
+        {
+            unitInProductionTurnsText.text = turnsLeft.ToString();
+        }
     }
 
     public void SetUnitInProduction(Sprite sprite) {
@@ -92,5 +108,15 @@ public class CityUIController : MonoBehaviour
             Destroy(unitIcon.gameObject);
             garrisonUnitIcons.Remove(unitIcon);
         }
+    }
+
+    public void SetSuppliedStatus(bool status)
+    {
+        SuppliedStatusIcon.SetActive(status);
+    }
+
+    public void SetBesiegedStatus(bool status)
+    {
+        BesiegedStatusIcon.SetActive(status);
     }
 }

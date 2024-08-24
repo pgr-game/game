@@ -1,3 +1,4 @@
+using RedBjorn.ProtoTiles;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class Fort : MonoBehaviour
     public int id;
     public bool isBuilt;
     public int turnsUntilBuilt;
+    private City adjacentCity;
+    private const int supplyBlockingRange = 3;
 
     // Photo chosen for the fort
     public int amountOfImages;
@@ -53,6 +56,39 @@ public class Fort : MonoBehaviour
     public void BuildComplete()
     {
         isBuilt = true;
-        sprite.color = new Color(1f, 1f, 1f, 1f); // Ustawienie pełnej nieprzezroczystości
+        sprite.color = new Color(1f, 1f, 1f, 1f);
+        var adjacentTiles = owner.mapManager.MapEntity.WalkableTiles(hexPosition, 1.0f);
+        foreach (var tile in adjacentTiles)
+        {
+            if(tile.CityTilePresent)
+            {
+                adjacentCity = tile.CityTilePresent.city;
+                break;
+            }
+        }
+
+        if(adjacentCity != null)
+        {
+            adjacentCity.UpdateBesiegedStatus();
+        }
+
+        var tilesBlockingSupply = owner.mapManager.MapEntity.WalkableTiles(hexPosition, supplyBlockingRange);
+        foreach (var tile in tilesBlockingSupply)
+        {
+            tile.FortsBlockingSupply.Add(this);
+        }
+    }
+
+    public void Destroy(TileEntity fortTile)
+    {
+        var tilesBlockingSupply = owner.mapManager.MapEntity.WalkableTiles(hexPosition, supplyBlockingRange);
+        foreach (var tile in tilesBlockingSupply)
+        {
+            tile.FortsBlockingSupply.Remove(this);
+        }
+
+        fortTile.FortPresent = null;
+
+        owner.playerFortsManager.RemoveFort(this, adjacentCity);
     }
 }

@@ -10,13 +10,16 @@ using UnityEngine.Tilemaps;
 public class SupplyLineController
 {
     private PlayerSupplyManager playerSupplyManager;
+    private MapManager mapManager;
     public City originCity { get; private set; }
     private List<TileEntity> path;
     private PathDrawer supplyLineDrawer;
+    private List<TileEntity> areaOfEffectTiles;
 
 
     public int Init(PlayerSupplyManager playerSupplyManager, City originCity, List<TileEntity> path, PathDrawer supplyLineDrawer)
     {
+        mapManager = playerSupplyManager.gameManager.mapManager;
         if (path.Count == 0)
         {
             return -1;
@@ -26,21 +29,21 @@ public class SupplyLineController
         this.path = path;
         this.supplyLineDrawer = supplyLineDrawer;
 
-        float distance = 2f; // tile size is 1
-        foreach (TileEntity tile in this.path)
+        int distance = 2; // tile size is 1
+        areaOfEffectTiles = mapManager.GetTilesSurroundingArea(path, distance, true);
+        foreach (TileEntity tile in areaOfEffectTiles)
         {
             tile.SupplyLineProvider = playerSupplyManager.playerManager;
-            var surrourndingTiles = playerSupplyManager.gameManager.mapManager.MapEntity.WalkableTiles(tile.Position, distance); //could work later for the surrouding tiles to get buff as well
-            foreach (TileEntity tileSurr in surrourndingTiles)
+            if(tile.CityTilePresent)
             {
-                tileSurr.SupplyLineProvider = playerSupplyManager.playerManager;
+                tile.CityTilePresent.city.UpdateSuppliedStatus();
             }
         }
 
-        Vector3 pathStartWorldPosition = playerSupplyManager.gameManager.mapManager.MapEntity.WorldPosition(path.First().Position);
-        Vector3 pathEndWorldPosition = playerSupplyManager.gameManager.mapManager.MapEntity.WorldPosition(path.Last().Position);
-        var drawerPath = playerSupplyManager.gameManager.mapManager.MapEntity.PathPoints(pathStartWorldPosition, pathEndWorldPosition, float.MaxValue);
-        supplyLineDrawer.Show(drawerPath, playerSupplyManager.gameManager.mapManager.MapEntity);
+        Vector3 pathStartWorldPosition = mapManager.MapEntity.WorldPosition(path.First().Position);
+        Vector3 pathEndWorldPosition = mapManager.MapEntity.WorldPosition(path.Last().Position);
+        var drawerPath = mapManager.MapEntity.PathPoints(pathStartWorldPosition, pathEndWorldPosition, float.MaxValue);
+        supplyLineDrawer.Show(drawerPath, mapManager.MapEntity);
         return 1;
     }
 
@@ -61,20 +64,13 @@ public class SupplyLineController
 
     public void Destroy()
     {
-        TileEntity previousTile = null;
-        foreach (TileEntity tile in this.path)
+        foreach (TileEntity tile in areaOfEffectTiles)
         {
             tile.SupplyLineProvider = null;
-            if (previousTile != null)
+            if (tile.CityTilePresent)
             {
-                float distance = playerSupplyManager.gameManager.mapManager.MapEntity.Distance(previousTile.Position, tile.Position);
-                var surrourndingTiles = playerSupplyManager.gameManager.mapManager.MapEntity.WalkableTiles(tile.Position, distance); //could work later for the surrouding tiles to get buff as well
-                foreach (TileEntity tileSurr in surrourndingTiles)
-                {
-                    tileSurr.SupplyLineProvider = null;
-                }
+                tile.CityTilePresent.city.UpdateSuppliedStatus();
             }
-            previousTile = tile;
         }
         UnityEngine.Object.Destroy(supplyLineDrawer.gameObject);
     }

@@ -2,6 +2,7 @@ using RedBjorn.ProtoTiles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 //using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -135,12 +136,33 @@ public class UnitController : MonoBehaviour
     {
         if (!this.attacked)
         {
-            int damage = this.GetAttack() - enemy.GetDefense();
-            if (damage < 0) damage = 0;
-            this.attacked = true;
-            enemy.ReceiveDamage(damage, this);
+            if(CanAttackCity(enemy))
+            {
+                int damage = this.GetAttack() - enemy.GetDefense();
+                if (damage < 0) damage = 0;
+                this.attacked = true;
+                enemy.ReceiveDamage(damage, this);
+            }
+            else
+            {
+                //show message that no siege unit is in range
+            }
+        }
+        else
+        {
+            //show message that already attacked? Or better yet remove the city from passable area
         }
         this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
+    }
+
+    private bool CanAttackCity(City city)
+    {
+        city.UpdateBesiegedStatus();
+        if(city.attackingPlayers.Contains(owner))
+        {
+            return true;
+        }
+        else return false;
     }
 
     public void ReceiveDamage(int incomingDamage, UnitController attacker)
@@ -335,7 +357,11 @@ public class UnitController : MonoBehaviour
 
     void OnMouseExit()
     {
-        unitMove.HideLongPath();
+        if(!unitMove.active)
+        {
+            unitMove.HideLongPath();
+        }
+
         if (!unitStatsUIController.activeUnit)
         {
             unitStatsUIController.HideUnitBox();

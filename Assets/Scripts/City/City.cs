@@ -1,4 +1,5 @@
-using RedBjorn.ProtoTiles;
+﻿using RedBjorn.ProtoTiles;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ public class City
 {
     public string Name;
     public PlayerManager Owner;
+    public MapManager mapManager;
     public int Level;
     public GameObject unitInProductionPrefab;
     public UnitController UnitInProduction;
@@ -19,41 +21,67 @@ public class City
 
     public int health;
     public int maxHealth;
+    private const int supplyBlockingRange = 3;
     private List<UnitController> garrisonUnits;
+    public List<TileEntity> adjacentTiles { get; private set; }
+    public bool besieged { get; private set; }
+    public bool supplied { get; private set; }
+    public List<PlayerManager> attackingPlayers { get; private set; }
 
-    public void InitCityUI(PlayerManager player, GameObject CityUIPrefab, string name) {
+    public void InitCity(MapManager mapManager, Color? playerColor, GameObject CityUIPrefab, string name)
+    {
+        this.mapManager = mapManager;
         garrisonUnits = new List<UnitController>();
         uiAnchor = MapManager.CalculateMidpoint(cityTiles.Select(cityTile => cityTile.transform.position).ToList());
         UI = UnityEngine.Object.Instantiate(CityUIPrefab, uiAnchor, Quaternion.identity).GetComponent<CityUIController>();
         UI.Init();
-        if(Owner) {
-            UI.SetColor(Owner.color);
+        if (playerColor != null)
+        {
+            UI.SetColor((Color)playerColor);
         }
-        if(name != null) {
+        if (name != null)
+        {
             this.Name = name;
             UI.SetName(name);
         }
+        InitAdjacentTiles();
     }
 
-    public void StartTurn() {
-        if(UnitInProductionTurnsLeft != 0) {
+    public void StartTurn()
+    {
+        if (UnitInProductionTurnsLeft != 0)
+        {
             UnitInProductionTurnsLeft = UnitInProductionTurnsLeft - 1;
-            if(UnitInProductionTurnsLeft == 0) {
+            if (UnitInProductionTurnsLeft == 0)
+            {
                 UnitController newUnit = Owner.InstantiateUnit(UnitInProduction, null, cityTiles.FirstOrDefault().transform.position);
                 AddToGarrison(newUnit);
                 UnitInProductionTurnsLeft = UnitInProduction.GetProductionTurns();
-                
+
             }
             UI.SetTurnsLeft(UnitInProductionTurnsLeft);
         }
     }
 
-    public void SetUnitInProduction(UnitController unit, GameObject unitInProductionPrefab) {
+    public void SetUnitInProduction(UnitController unit, GameObject unitInProductionPrefab)
+    {
         this.UnitInProduction = unit;
         this.unitInProductionPrefab = unitInProductionPrefab;
         this.UnitInProductionTurnsLeft = unit.GetProductionTurns();
         UI.SetUnitInProduction(Owner.gameManager.getUnitSprite(unit.unitType));
         UI.SetTurnsLeft(UnitInProductionTurnsLeft);
+    }
+
+    private void UpdateProductionLock()
+    {
+        if (besieged && !supplied)
+        {
+            this.UnitInProduction = null;
+            this.unitInProductionPrefab = null;
+            this.UnitInProductionTurnsLeft = 0;
+            UI.SetUnitInProduction(null);
+            UI.SetTurnsLeft(-1);
+        }
     }
 
     public void AddToGarrison(UnitController unit)
@@ -110,17 +138,62 @@ public class City
 
     public void Death(UnitController killer)
     {
-        Owner.playerCitiesManager.cities.Remove(this);
+        if(Owner)
+        {
+            Owner.playerCitiesManager.cities.Remove(this);
+        }
         killer.owner.playerCitiesManager.cities.Add(this);
         Owner = killer.owner;
         UI.SetColor(Owner.color);
         killer.owner.AddGold(Level * 100);
         killer.GainXP(this.Level);
         UpdateHealth();
+        UpdateBesiegedStatus();
     }
 
     public void CreateSupplyLine()
     {
         Owner.playerSupplyManager.OpenSupplyLineDrawer(this);
+    }
+
+    private void InitAdjacentTiles()
+    {
+        List<TileEntity> tiles = cityTiles.Select(x => x.tile).ToList();
+        adjacentTiles = mapManager.GetTilesSurroundingArea(tiles, 1, false);
+
+        List<TileEntity> tilesBlockingSupply = mapManager.GetTilesSurroundingArea(tiles, supplyBlockingRange, false);
+        foreach (var tile in tilesBlockingSupply)
+        {
+            tile.CitiesBlockingSupply.Add(this);
+        }
+    }
+
+    public void UpdateSuppliedStatus()
+    {
+        supplied = cityTiles.Any(cityTile => cityTile.tile.SupplyLineProvider == Owner);
+
+        UI.SetSuppliedStatus(supplied);
+        UpdateProductionLock();
+    }
+
+    public void UpdateBesiegedStatus()
+    {
+        UpdateSuppliedStatus();
+
+        attackingPlayers = new List<PlayerManager>();
+        List<Fort> adjacentForts = adjacentTiles.Select(tile => tile.FortPresent).OfType<Fort>().ToList();
+        foreach (var fort in adjacentForts)
+        {
+            if(fort?.owner != Owner)
+            {
+                attackingPlayers.Add(fort?.owner);
+            }
+        }
+
+        besieged = attackingPlayers.Count != 0;
+
+        UI.SetBesiegedStatus(besieged);
+
+        UpdateProductionLock();
     }
 }
