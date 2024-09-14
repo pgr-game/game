@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
+        unitStatsMenuController = UI.gameObject.GetComponent<UnitStatsMenuController>();
         InitStaticVariables();
         soundManager = Instantiate(soundManager, new Vector3(0,0,0), Quaternion.identity);
         gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
