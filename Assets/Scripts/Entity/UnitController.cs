@@ -11,6 +11,7 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class UnitController : MonoBehaviour
 {
+    public PlayerUnitsManager playerUnitsManager;
     public PlayerManager owner;
     public MapManager mapManager;
     public UnitMove unitMove;
@@ -26,7 +27,7 @@ public class UnitController : MonoBehaviour
     public int level = 1;
     public int defense;
     public GameManager gameManager;
-    public UnitStatsUIController unitStatsUIController;
+    public UnitStatsMenuController unitStatsMenuController;
 
     public List<AudioClip> moveSounds = new List<AudioClip>();
 
@@ -37,11 +38,12 @@ public class UnitController : MonoBehaviour
     public bool canPlaceFort;
     public int turnsSinceFortPlaced = 10;
 
-    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsUIController unitStatsUIController, float? rangeLeft, Vector3? longPathClickPosition)
+    public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsMenuController unitStatsMenuController, float? rangeLeft, Vector3? longPathClickPosition)
     {
         this.owner = playerManager;
+        this.playerUnitsManager = playerManager.playerUnitsManager;
         this.mapManager = mapManager;
-        this.unitStatsUIController = unitStatsUIController;
+        this.unitStatsMenuController = unitStatsMenuController;
         unitUI.Init(this, owner.color, unitType, attack);
         unitMove.Init(mapManager, this, rangeLeft, longPathClickPosition);
 
@@ -69,16 +71,16 @@ public class UnitController : MonoBehaviour
     {
         unitMove.Activate();
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
-        unitStatsUIController.activeUnit = this;
-        unitStatsUIController.UpdateUnitStatisticsWindow(this);
-        unitStatsUIController.ShowUnitBox();
+        unitStatsMenuController.activeUnit = this;
+        unitStatsMenuController.UpdateUnitStatisticsWindow(this);
+        unitStatsMenuController.ShowUnitBox();
     }
 
     public void Deactivate()
     {
         unitMove.Deactivate();
-        unitStatsUIController.activeUnit = null;
-        unitStatsUIController.HideUnitBox();
+        unitStatsMenuController.activeUnit = null;
+        unitStatsMenuController.HideUnitBox();
         this.owner.Deselect();
 
     }
@@ -129,7 +131,7 @@ public class UnitController : MonoBehaviour
             this.attacked = true;
             enemy.ReceiveDamage(damage, this);
         }
-        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        this.unitStatsMenuController.UpdateUnitStatisticsWindow(this);
     }
 
     public void Attack(City enemy)
@@ -152,7 +154,7 @@ public class UnitController : MonoBehaviour
         {
             //show message that already attacked? Or better yet remove the city from passable area
         }
-        this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        this.unitStatsMenuController.UpdateUnitStatisticsWindow(this);
     }
 
     private bool CanAttackCity(City city)
@@ -181,8 +183,7 @@ public class UnitController : MonoBehaviour
 
     public void Death(UnitController killer)
     {
-        owner.allyUnits.Remove(this);
-        gameManager.units.Remove(this);
+        playerUnitsManager.RemoveUnit(this);
         killer.owner.AddGold(CalculateGoldValue());
         TileEntity oldTile = this.mapManager.MapEntity.Tile(this.unitMove.hexPosition);
         oldTile.UnitPresent = null;
@@ -223,7 +224,7 @@ public class UnitController : MonoBehaviour
         attack += 5;
         unitUI.HideUpgradeUnitMenu();
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
-        unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        unitStatsMenuController.UpdateUnitStatisticsWindow(this);
         return null;
     }
     public Action UpgradeHealth()
@@ -232,7 +233,7 @@ public class UnitController : MonoBehaviour
         currentHealth += 5;
         unitUI.HideUpgradeUnitMenu();
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
-        unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        unitStatsMenuController.UpdateUnitStatisticsWindow(this);
         return null;
     }
     public Action UpgradeDefence()
@@ -240,7 +241,7 @@ public class UnitController : MonoBehaviour
         defense += 2;
         unitUI.HideUpgradeUnitMenu();
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
-        unitStatsUIController.UpdateUnitStatisticsWindow(this);
+        unitStatsMenuController.UpdateUnitStatisticsWindow(this);
         return null;
     }
 
@@ -331,7 +332,7 @@ public class UnitController : MonoBehaviour
             currentHealth += (int)(0.2f * maxHealth);
             if (currentHealth > maxHealth) currentHealth = maxHealth;
             unitUI.UpdateUnitUI(currentHealth, maxHealth);
-            this.unitStatsUIController.UpdateUnitStatisticsWindow(this);
+            this.unitStatsMenuController.UpdateUnitStatisticsWindow(this);
         }
     }
 
@@ -350,8 +351,8 @@ public class UnitController : MonoBehaviour
 
     void OnMouseOver()
     {
-        unitStatsUIController.UpdateUnitStatisticsWindow(this);
-        unitStatsUIController.ShowUnitBox();
+        unitStatsMenuController.UpdateUnitStatisticsWindow(this);
+        unitStatsMenuController.ShowUnitBox();
         unitMove.ShowLongPath();
     }
 
@@ -362,13 +363,13 @@ public class UnitController : MonoBehaviour
             unitMove.HideLongPath();
         }
 
-        if (!unitStatsUIController.activeUnit)
+        if (!unitStatsMenuController.activeUnit)
         {
-            unitStatsUIController.HideUnitBox();
+            unitStatsMenuController.HideUnitBox();
         }
         else
         {
-            unitStatsUIController.UpdateUnitStatisticsWindow(unitStatsUIController.activeUnit);
+            unitStatsMenuController.UpdateUnitStatisticsWindow(unitStatsMenuController.activeUnit);
         }
     }
 }

@@ -14,7 +14,6 @@ public class PlayerManager : MonoBehaviour
 
     //assigned by game manager
     public MapManager mapManager;
-    public StartingResources startingResources;
     public GameManager gameManager;
     public bool isComputer;
     public Color32 color;
@@ -29,7 +28,7 @@ public class PlayerManager : MonoBehaviour
     RaycastHit hit;  
 
     //player's assets
-    public List<UnitController> allyUnits = new List<UnitController>();
+    public PlayerUnitsManager playerUnitsManager;
     public PlayerCitiesManager playerCitiesManager;
     public PlayerFortsManager playerFortsManager;
     public PlayerSupplyManager playerSupplyManager;
@@ -51,14 +50,13 @@ public class PlayerManager : MonoBehaviour
         this.index = index;
         this.gameManager = gameManager;
         this.mapManager = mapManager;
-        this.startingResources = startingResources;
         this.color = color;
         this.colorName = ColorUtility.ToHtmlStringRGBA(color);
         InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
-        InitForts();
+        InitForts(startingResources);
         InitSupplyLines(startingResources.supplyLoadData);
-        InitUnits();
+        InitUnits(startingResources);
         this.gold = startingResources.gold;
         GameObject[] texts = GameObject.FindGameObjectsWithTag("currencyText");
         this.goldText = texts[0];
@@ -174,68 +172,9 @@ public class PlayerManager : MonoBehaviour
         gameManager.cityMenuManager.Activate();
     }
 
-    void InitUnits() {
-        if(startingResources == null) {
-            Debug.Log("No starting resources for player!");
-            return;
-        } 
-
-        if(startingResources.unitLoadData.Count > 0) {
-            var unitControllerAndLoadData = startingResources.units.Zip(
-                startingResources.unitLoadData, (u, d) => new { UnitController = u, UnitLoadData = d }
-            );
-
-            foreach(var ud in unitControllerAndLoadData)
-            {
-                InstantiateUnit(ud.UnitController, ud.UnitLoadData, transform.position);
-            }
-        }
-        else 
-        {
-            // instantiate new without loading health, movement left etc.
-            foreach(UnitController unit in startingResources.units) 
-            {
-                InstantiateUnit(unit, null, transform.position);
-            }
-        }
-
-        //add units to city garrison
-        foreach(UnitController unit in allyUnits) 
-        {
-            var path = mapManager.MapEntity.PathTiles(unit.transform.position, unit.transform.position, 1);
-            var tile = path.Last();
-            if (tile.CityTilePresent)
-            {
-                tile.CityTilePresent.city.AddToGarrison(unit);
-            }
-        }
-        
-    }
-
-    public UnitController InstantiateUnit(UnitController unitController, UnitLoadData unitLoadData, Vector3 position) {
-        float? rangeLeft = null;
-        Vector3? longPathClickPosition = null;
-        if (unitLoadData != null) {
-            position = unitLoadData.position;
-            unitController.maxHealth = unitLoadData.maxHealth;
-            unitController.currentHealth = unitLoadData.currentHealth;
-            unitController.attack = unitLoadData.attack;
-            unitController.attackRange = unitLoadData.attackRange;
-            unitController.baseProductionCost = unitLoadData.baseProductionCost;
-            unitController.turnsToProduce = unitLoadData.turnsToProduce;
-            unitController.turnProduced = unitLoadData.turnProduced;
-            unitController.level = unitLoadData.level;
-            unitController.turnsToProduce = unitLoadData.turnsToProduce;
-            unitController.experience = unitLoadData.experience;
-            rangeLeft = unitLoadData.rangeLeft;
-            unitController.attacked = unitLoadData.attacked;
-            longPathClickPosition = unitLoadData.longPathClickPosition;
-        }
-
-        UnitController newUnit = Instantiate(unitController, position, Quaternion.identity).GetComponent<UnitController>();
-        allyUnits.Add(newUnit);
-        newUnit.Init(this, mapManager, gameManager, gameManager.unitStatsUIController, rangeLeft, longPathClickPosition);
-        return newUnit;
+    void InitUnits(StartingResources startingResources) {
+        playerUnitsManager = new PlayerUnitsManager();
+        playerUnitsManager.Init(this, startingResources);
     }
     void InitTree(TreeLoadData treeLoadData)
     {
@@ -261,7 +200,7 @@ public class PlayerManager : MonoBehaviour
         playerSupplyManager.Init(this, supplyLoadData);
     }
 
-    void InitForts() {
+    void InitForts(StartingResources startingResources) {
         playerFortsManager = new PlayerFortsManager();
         playerFortsManager.Init(this);
 
@@ -296,14 +235,6 @@ public class PlayerManager : MonoBehaviour
         goldText.GetComponent<TMPro.TextMeshProUGUI>().text = "gold: " + gold;
     }
 
-    public void DeactivateUnitsRange()
-    {
-        foreach (UnitController unit in allyUnits)
-        {
-            unit.Deactivate();
-        }
-    }
-
     public void SetGoldIncome() {
         // option no 1:
         if(gameManager.turnNumber % 2 == 0) {
@@ -313,10 +244,10 @@ public class PlayerManager : MonoBehaviour
         // goldIncome = 5 + gameManager.turn/2;
 
         // here we can do some more advanced calculations, for example based on type of unit
-        int goldForUnits = this.allyUnits.Count / 2;
+        int goldForUnits = playerUnitsManager.GetUnitCount() / 2;
         goldIncome += goldForUnits;
         // here we can do some more advanced calculations, for example based on level of city
-        int goldForCities = this.playerCitiesManager.GetNumberOfCities()*2;
+        int goldForCities = playerCitiesManager.GetNumberOfCities()*2;
         goldIncome += goldForCities;
     }
 
@@ -328,17 +259,8 @@ public class PlayerManager : MonoBehaviour
     }
 
     public void StartTurn() {
-        this.playerSupplyManager.CheckSupplyLines();
-        allyUnits.ForEach((unit) => {
-            unit.attacked = false;
-            unit.unitMove.ResetRange();
-            if(unit.CanHealOrGetDefenceBonus()) unit.Heal();
-            unit.CommitToBuildingFort();
-            if(gameManager.turnNumber != 1) {
-                unit.turnsSinceFortPlaced++;
-                if(unit.turnsSinceFortPlaced == 10) unit.canPlaceFort = true;
-            }
-        });
+        playerSupplyManager.CheckSupplyLines();
+        playerUnitsManager.StartUnitsTurn();
 
         if (gameManager.turnNumber != 1) {
             AddGold(playerCitiesManager.GetGoldIncome());
@@ -356,16 +278,6 @@ public class PlayerManager : MonoBehaviour
         return selected.GetComponent<UnitController>();
     }
 
-    // probably will be deleted when we implement multiple units on a tile
-    public void ResetUnitPresentOnTile(TileEntity tile, UnitController currentUnit) {
-        allyUnits.ForEach((unit) => {
-            if(currentUnit != unit && unit.GetCurrentTile() == tile) {
-                tile.UnitPresent = unit;
-                return;
-            }
-        });
-    }
-
     public void SelectUnitFromList(UnitController selectedUnit) {
         if(selected) selected.GetComponent<UnitController>().Deactivate();
         selected = selectedUnit.gameObject;
@@ -374,7 +286,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool isAlive() {
         bool isAlive = false;
-        if(allyUnits.Count > 0) {
+        if(playerUnitsManager.GetUnitCount() > 0) {
             isAlive = true;
         }
         if(playerCitiesManager.GetNumberOfCities() > 0) {

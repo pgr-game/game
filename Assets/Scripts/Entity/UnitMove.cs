@@ -194,7 +194,7 @@ public class UnitMove : MonoBehaviour
 
         TileEntity oldTile = mapManager.MapEntity.Tile(hexPosition);
         oldTile.UnitPresent = null;
-        unitController.owner.ResetUnitPresentOnTile(oldTile, this.unitController);
+        unitController.playerUnitsManager.ResetUnitPresentOnTile(oldTile, this.unitController);
         path.Last().UnitPresent = this.unitController;
         hexPosition = path.Last().Position;
         DestroyFortsOnTheWay(path);
