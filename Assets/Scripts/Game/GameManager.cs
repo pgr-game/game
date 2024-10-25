@@ -53,15 +53,30 @@ public class GameManager : MonoBehaviour
     public GameObject UI;
     public TileTag cityTag;
 
-    void Start()
+    // Multiplayer
+    public bool isInitialized = false;
+    public bool isInitializing = false;
+    private SceneLoadData sceneLoadData;
+
+    public void Start()
     {
+        if (!isInitialized)
+        {
+            Init();
+        }
+    }
+
+    public void Init()
+    {
+        isInitializing = true;
+
         playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
         unitStatsMenuController = UI.gameObject.GetComponent<UnitStatsMenuController>();
         InitStaticVariables();
         soundManager = Instantiate(soundManager, new Vector3(0,0,0), Quaternion.identity);
         gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
         string saveRoot = SaveRoot.saveRoot;
-        SceneLoadData sceneLoadData = new SceneLoadData();
+        sceneLoadData = new SceneLoadData();
 
         saveManager.Init(this);
         loadManager.Init(this);
@@ -80,9 +95,13 @@ public class GameManager : MonoBehaviour
         mapManager.Init(this);
         cityMenuManager.Init(this);
 
-        InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames);
+        players = new PlayerManager[sceneLoadData.numberOfPlayers];
+
+        InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames, sceneLoadData.isComputer, sceneLoadData.isMultiplayer);
         players[activePlayerIndex].StartFirstTurn();
-        
+
+        isInitializing = false;
+        isInitialized = true;
     }
 
     private void InitStaticVariables()
@@ -104,7 +123,7 @@ public class GameManager : MonoBehaviour
             InStartingResources[i] = getStartingResourcesByDifficulty(gameSettings.difficulty);
         }
 
-        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0);
+        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0, new bool[InNumberOfPlayers], false);
     }
 
     public StartingResources getStartingResourcesByDifficulty(string difficulty) {
@@ -163,23 +182,26 @@ public class GameManager : MonoBehaviour
         DisplayTurnNumber(turnNumber);
     }
 
-    private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames)
+    public void Register(PlayerManager player, int i)
+    {
+        players[i] = player;
+        players[i].Init(this, mapManager, sceneLoadData.startingResources[i], sceneLoadData.playerColors[i], sceneLoadData.startingCityNames[i], i);
+    }
+
+    private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames, bool[] isComputer, bool isMultiplayer)
     {
         this.numberOfPlayers = numberOfPlayers;
         players = new PlayerManager[numberOfPlayers];
         for(int i = 0; i < numberOfPlayers; i++) {
+            if (!isComputer[i] && isMultiplayer)
+            {
+                //registers self
+                continue;
+            }
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
             players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], i);
-            if (i == activePlayerIndex) {
-                players[i].gameObject.SetActive(true);
-            }
-            else {
-                players[i].gameObject.SetActive(false);
-            }
             
         }
-        activePlayer = players[activePlayerIndex];
-        SetPlayerUIColor(players[activePlayerIndex].color);
     }
 
     public void NextPlayer()
@@ -298,7 +320,7 @@ public class GameManager : MonoBehaviour
         playerPositions = newPlayersPositions;        
     }
 
-    private void SetPlayerUIColor(Color color) {
+    public void SetPlayerUIColor(Color color) {
         nextTurnButtonImage.color = color;
     }
 

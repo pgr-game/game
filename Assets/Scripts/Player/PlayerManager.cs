@@ -45,6 +45,20 @@ public class PlayerManager : MonoBehaviour
     public int goldIncome = 5;     // amount given to player every round independently of cities, units etc.
     public const int costOfFort = 100;
 
+    void Start()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+        if (!gameManager.isInitialized)
+        {
+            gameManager.Init();
+        }
+
+        if (index != null) //TODO
+        {
+            gameManager.Register(this, index);
+        }
+    }
+
     public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, int index)
     {
         this.index = index;
@@ -60,6 +74,17 @@ public class PlayerManager : MonoBehaviour
         this.gold = startingResources.gold;
         GameObject[] texts = GameObject.FindGameObjectsWithTag("currencyText");
         this.goldText = texts[0];
+
+        if (index == gameManager.activePlayerIndex)
+        {
+            gameObject.SetActive(true);
+            gameManager.activePlayer = this;
+            gameManager.SetPlayerUIColor(this.color);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
