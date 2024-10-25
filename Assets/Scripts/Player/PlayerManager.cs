@@ -59,13 +59,14 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, int index)
+    public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, bool isComputer, int index)
     {
         this.index = index;
         this.gameManager = gameManager;
         this.mapManager = mapManager;
         this.color = color;
         this.colorName = ColorUtility.ToHtmlStringRGBA(color);
+        this.isComputer = isComputer;
         InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
         InitForts(startingResources);
@@ -140,6 +141,14 @@ public class PlayerManager : MonoBehaviour
         }
         
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), transform.TransformDirection(Vector3.forward), Color.green);
+    }
+
+    public void DoTurn()
+    {
+        // TODO computer player actions
+        // Now computer player just skips his turn
+        Debug.Log("Computer player " + index + " turn");
+        gameManager.NextPlayer();
     }
 
     public void Deselect()
@@ -281,6 +290,7 @@ public class PlayerManager : MonoBehaviour
         //first turn after game start or load. Healing, forts and reset range disabled
         SetGoldText(gold.ToString());
         SetGoldIncome();
+        if(isComputer) DoTurn();
     }
 
     public void StartTurn() {
@@ -294,6 +304,7 @@ public class PlayerManager : MonoBehaviour
         SetGoldIncome();
         gold += goldIncome;
         playerCitiesManager.StartCitiesTurn();
+        if (isComputer) DoTurn();
     }
 
     public UnitController getSelectedUnit() {

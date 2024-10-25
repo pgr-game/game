@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System;
 
 
 public class GameCreatorController : MonoBehaviour
@@ -15,6 +16,7 @@ public class GameCreatorController : MonoBehaviour
     public TMP_Text numberOfPlayersText;
     public TMP_Dropdown difficultyDropdown;
     public TMP_Dropdown[] colorDropdowns = new TMP_Dropdown[4];
+    public Toggle[] IsComputerToggles = new Toggle[4];
     public TMP_Text colorDuplicateText;
     void Start()
     {
@@ -128,6 +130,13 @@ public class GameCreatorController : MonoBehaviour
         // Cities names
         gameSettings.citiesNames = getCitiesNamesByMap(gameSettings.mapName);
 
+        // IsComputer
+        gameSettings.isComputer = new bool[numberOfPlayers];
+        for (int i = 0; i < numberOfPlayers; i++)
+        {
+            gameSettings.isComputer[i] = GetIsComputer(i);
+        }
+
         // validation and starting game if valid
         ValidateGameSettings();
     }
@@ -176,5 +185,8 @@ public class GameCreatorController : MonoBehaviour
         return duplicates.ToArray();
     }
 
-
+    private bool GetIsComputer(int index)
+    {
+        return IsComputerToggles[index].isOn;
+    }
 }

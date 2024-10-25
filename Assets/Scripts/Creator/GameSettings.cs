@@ -10,6 +10,7 @@ public class GameSettings : MonoBehaviour
     public Vector3[] playerPositions;
     public string difficulty;
     public string[] citiesNames;
+    public bool[] isComputer;
 
     public void SetMapName(string name)
     {

@@ -117,13 +117,14 @@ public class GameManager : MonoBehaviour
         Vector3[] InPlayerPositions = gameSettings.playerPositions;
         Color32[] InPlayerColors = gameSettings.playerColors;
         string[] InStartingCityNames = gameSettings.citiesNames;
+        bool[] isComputer = gameSettings.isComputer;
         StartingResources[] InStartingResources = new StartingResources[InNumberOfPlayers];
 
         for(int i = 0; i < InNumberOfPlayers; i++) {
             InStartingResources[i] = getStartingResourcesByDifficulty(gameSettings.difficulty);
         }
 
-        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0, new bool[InNumberOfPlayers], false);
+        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0, isComputer, false);
     }
 
     public StartingResources getStartingResourcesByDifficulty(string difficulty) {
@@ -185,7 +186,7 @@ public class GameManager : MonoBehaviour
     public void Register(PlayerManager player, int i)
     {
         players[i] = player;
-        players[i].Init(this, mapManager, sceneLoadData.startingResources[i], sceneLoadData.playerColors[i], sceneLoadData.startingCityNames[i], i);
+        players[i].Init(this, mapManager, sceneLoadData.startingResources[i], sceneLoadData.playerColors[i], sceneLoadData.startingCityNames[i], sceneLoadData.isComputer[i], i);
     }
 
     private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames, bool[] isComputer, bool isMultiplayer)
@@ -199,7 +200,7 @@ public class GameManager : MonoBehaviour
                 continue;
             }
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
-            players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], i);
+            players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], isComputer[i], i);
             
         }
     }
@@ -215,7 +216,9 @@ public class GameManager : MonoBehaviour
         players[activePlayerIndex].gameObject.SetActive(false);
         GameObject unitList = UI.transform.Find("UnitList").gameObject;
         unitList.SetActive(false);
+
         activePlayerIndex = (activePlayerIndex + 1) % numberOfPlayers;
+
         activePlayer = players[activePlayerIndex];
         players[activePlayerIndex].gameObject.SetActive(true);
         if(activePlayerIndex == 0) {
