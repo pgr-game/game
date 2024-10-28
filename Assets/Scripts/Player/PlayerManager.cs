@@ -45,13 +45,28 @@ public class PlayerManager : MonoBehaviour
     public int goldIncome = 5;     // amount given to player every round independently of cities, units etc.
     public const int costOfFort = 100;
 
-    public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, int index)
+    void Start()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+        if (!gameManager.isInitialized)
+        {
+            gameManager.Init();
+        }
+
+        if (index != null) //TODO
+        {
+            gameManager.Register(this, index);
+        }
+    }
+
+    public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, bool isComputer, int index)
     {
         this.index = index;
         this.gameManager = gameManager;
         this.mapManager = mapManager;
         this.color = color;
         this.colorName = ColorUtility.ToHtmlStringRGBA(color);
+        this.isComputer = isComputer;
         InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
         InitForts(startingResources);
@@ -60,6 +75,17 @@ public class PlayerManager : MonoBehaviour
         this.gold = startingResources.gold;
         GameObject[] texts = GameObject.FindGameObjectsWithTag("currencyText");
         this.goldText = texts[0];
+
+        if (index == gameManager.activePlayerIndex)
+        {
+            gameObject.SetActive(true);
+            gameManager.activePlayer = this;
+            gameManager.SetPlayerUIColor(this.color);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -115,6 +141,14 @@ public class PlayerManager : MonoBehaviour
         }
         
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), transform.TransformDirection(Vector3.forward), Color.green);
+    }
+
+    public void DoTurn()
+    {
+        // TODO computer player actions
+        // Now computer player just skips his turn
+        Debug.Log("Computer player " + index + " turn");
+        gameManager.NextPlayer();
     }
 
     public void Deselect()
@@ -256,6 +290,7 @@ public class PlayerManager : MonoBehaviour
         //first turn after game start or load. Healing, forts and reset range disabled
         SetGoldText(gold.ToString());
         SetGoldIncome();
+        if(isComputer) DoTurn();
     }
 
     public void StartTurn() {
@@ -269,6 +304,7 @@ public class PlayerManager : MonoBehaviour
         SetGoldIncome();
         gold += goldIncome;
         playerCitiesManager.StartCitiesTurn();
+        if (isComputer) DoTurn();
     }
 
     public UnitController getSelectedUnit() {
