@@ -45,20 +45,6 @@ public class PlayerManager : MonoBehaviour
     public int goldIncome = 5;     // amount given to player every round independently of cities, units etc.
     public const int costOfFort = 100;
 
-    void Start()
-    {
-        gameManager = FindObjectOfType<GameManager>();
-        if (!gameManager.isInitialized)
-        {
-            gameManager.Init();
-        }
-
-        if (gameManager.isMultiplayer)
-        {
-            gameManager.Register(this, index);
-        }
-    }
-
     public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, bool isComputer, int index)
     {
         this.index = index;

@@ -55,22 +55,15 @@ public class GameManager : MonoBehaviour
 
     // Multiplayer
     public bool isMultiplayer;
-    public bool isInitialized = false;
-    public bool isInitializing = false;
     private SceneLoadData sceneLoadData;
 
     public void Start()
     {
-        if (!isInitialized)
-        {
-            Init();
-        }
+        Init();
     }
 
     public void Init()
     {
-        isInitializing = true;
-
         playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
         unitStatsMenuController = UI.gameObject.GetComponent<UnitStatsMenuController>();
         InitStaticVariables();
@@ -100,9 +93,6 @@ public class GameManager : MonoBehaviour
 
         InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames, sceneLoadData.isComputer, sceneLoadData.isMultiplayer);
         players[activePlayerIndex].StartFirstTurn();
-
-        isInitializing = false;
-        isInitialized = true;
     }
 
     private void InitStaticVariables()
@@ -185,25 +175,11 @@ public class GameManager : MonoBehaviour
         DisplayTurnNumber(turnNumber);
     }
 
-    public void Register(PlayerManager player, int i)
-    {
-        if (players[i] == null)
-        {
-            players[i] = player;
-            players[i].Init(this, mapManager, sceneLoadData.startingResources[i], sceneLoadData.playerColors[i], sceneLoadData.startingCityNames[i], sceneLoadData.isComputer[i], i);
-        }
-    }
-
     private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames, bool[] isComputer, bool isMultiplayer)
     {
         this.numberOfPlayers = numberOfPlayers;
         players = new PlayerManager[numberOfPlayers];
         for(int i = 0; i < numberOfPlayers; i++) {
-            if (!isComputer[i] && isMultiplayer)
-            {
-                //registers self
-                continue;
-            }
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
             players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], isComputer[i], i);
             
