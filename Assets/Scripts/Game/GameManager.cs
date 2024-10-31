@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour
         Vector3[] InPlayerPositions = gameSettings?.playerPositions ?? new [] { new Vector3(-6.93f, 0.00f, 0.00f), new Vector3(12.12f, 0.00f, 0.00f)};
         Color32[] InPlayerColors = gameSettings?.playerColors ?? new[] { new Color32(255, 0, 0, 255), new Color32(0, 0, 255, 255) };
         string[] InStartingCityNames = gameSettings?.citiesNames ?? new [] { "Babylon", "Alexandria", "Carthage", "Persepolis" };
-        bool[] isComputer = gameSettings?.isComputer ?? new bool[] { false, false };
+        bool[] isComputer = gameSettings?.isComputer ?? new [] { false, false };
         StartingResources[] InStartingResources = new StartingResources[InNumberOfPlayers];
 
         for(int i = 0; i < InNumberOfPlayers; i++) {
@@ -185,8 +185,11 @@ public class GameManager : MonoBehaviour
 
     public void Register(PlayerManager player, int i)
     {
-        players[i] = player;
-        players[i].Init(this, mapManager, sceneLoadData.startingResources[i], sceneLoadData.playerColors[i], sceneLoadData.startingCityNames[i], sceneLoadData.isComputer[i], i);
+        if (players[i] == null)
+        {
+            players[i] = player;
+            players[i].Init(this, mapManager, sceneLoadData.startingResources[i], sceneLoadData.playerColors[i], sceneLoadData.startingCityNames[i], sceneLoadData.isComputer[i], i);
+        }
     }
 
     private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames, bool[] isComputer, bool isMultiplayer)

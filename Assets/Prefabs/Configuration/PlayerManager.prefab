@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1249127612854783611}
   - component: {fileID: 3982005917007664542}
+  - component: {fileID: -5542777466725160738}
   m_Layer: 0
   m_Name: PlayerManager
   m_TagString: Untagged
@@ -50,8 +51,8 @@ MonoBehaviour:
   color:
     serializedVersion: 2
     rgba: 0
+  colorName: 
   index: 0
-  allyUnits: []
   pathPrefab: {fileID: 114413117004689456, guid: b08b90c04512be143a7b595fa43b6559, type: 3}
   passableAreaPrefab: {fileID: 114964435729023602, guid: fe2319e9d6e840f409af77b3e7a85259, type: 3}
   fortPrefab: {fileID: 7362454568944323520, guid: 26ffc5ad993277348bf537bf162f852c, type: 3}
@@ -59,3 +60,23 @@ MonoBehaviour:
   gold: 0
   goldText: {fileID: 0}
   goldIncome: 5
+--- !u!114 &-5542777466725160738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6202811586810600753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1

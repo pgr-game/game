@@ -148,7 +148,8 @@ public class GameCreatorController : MonoBehaviour
         if(duplicates.Length == 0) {
             if (IsMultiplayer)
             {
-                FindObjectOfType<MultiplayerMainMenuController>().StartHost();
+                //TODO
+                //FindObjectOfType<MultiplayerMainMenuController>().StartHost();
             }
             else
             {
