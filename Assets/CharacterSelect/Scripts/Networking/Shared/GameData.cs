@@ -130,7 +130,8 @@ public class GameInfo
         switch (map)
         {
             case Map.Default:
-                return "Gameplay";
+                var gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
+                return gameSettings.mapName ?? "RiverDelta";
             default:
                 Debug.LogWarning($"{map} - is not supported.");
                 return "";

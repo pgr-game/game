@@ -10,16 +10,17 @@ public class MainMenu : MonoBehaviour
         SaveRoot.saveRoot = null;
         SaveRoot.mapName = null;
     }
+
     public void QuitGame()
     {
-        Application.Quit(); 
+        Application.Quit();
     }
 
-
-
-    public void StartGame() {
+    public void StartGame(bool isMultiplayer)
+    {
         var gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
-        if(gameSettings.mapName == null) {
+        if (gameSettings.mapName == null)
+        {
             gameSettings.mapName = "RiverDelta";
         }
 
@@ -29,6 +30,19 @@ public class MainMenu : MonoBehaviour
             gameSettings.mapName = SaveRoot.mapName;
         }
 
-        SceneManager.LoadScene(gameSettings.mapName);
+        if (isMultiplayer)
+        {
+            //TODO loading screen for host
+            HostSingleton.Instance.StartHostAsync();
+        }
+        else
+        {
+            SceneManager.LoadScene(gameSettings.mapName);
+        }
+    }
+
+    public void JoinGame()
+    {
+        SceneManager.LoadScene("MainMenu1", LoadSceneMode.Single);
     }
 }

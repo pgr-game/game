@@ -149,14 +149,7 @@ public class GameCreatorController : MonoBehaviour
         Color32[] colors = gameSettings.playerColors;
         int[] duplicates = CheckForDuplicateColors(colors);
         if(duplicates.Length == 0) {
-            if (IsMultiplayer)
-            {
-                FindObjectOfType<NetworkManager>().StartHost();
-            }
-            else
-            {
-                this.gameObject.GetComponent<MainMenu>().StartGame();
-            }
+            this.gameObject.GetComponent<MainMenu>().StartGame(IsMultiplayer);
         }
         else {
             string message = "Colors for players: ";
