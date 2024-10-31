@@ -10,6 +10,7 @@ using System;
 
 public class GameCreatorController : MonoBehaviour
 {
+    public bool IsMultiplayer;
     public GameSettings gameSettings;
     public TMP_Dropdown mapDropdown;
     public Slider numberOfPlayersSlider;
@@ -145,7 +146,14 @@ public class GameCreatorController : MonoBehaviour
         Color32[] colors = gameSettings.playerColors;
         int[] duplicates = CheckForDuplicateColors(colors);
         if(duplicates.Length == 0) {
-            this.gameObject.GetComponent<MainMenu>().StartGame();
+            if (IsMultiplayer)
+            {
+                FindObjectOfType<MultiplayerMainMenuController>().StartHost();
+            }
+            else
+            {
+                this.gameObject.GetComponent<MainMenu>().StartGame();
+            }
         }
         else {
             string message = "Colors for players: ";

@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
         unitStatsMenuController = UI.gameObject.GetComponent<UnitStatsMenuController>();
         InitStaticVariables();
         soundManager = Instantiate(soundManager, new Vector3(0,0,0), Quaternion.identity);
-        gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
+        gameSettings = GameObject.Find("GameSettings")?.GetComponent<GameSettings>();
         string saveRoot = SaveRoot.saveRoot;
         sceneLoadData = new SceneLoadData();
 
@@ -113,15 +113,15 @@ public class GameManager : MonoBehaviour
     }
 
     public SceneLoadData LoadDataFromSettingsCreator() {
-        int InNumberOfPlayers = gameSettings.numberOfPlayers;
-        Vector3[] InPlayerPositions = gameSettings.playerPositions;
-        Color32[] InPlayerColors = gameSettings.playerColors;
-        string[] InStartingCityNames = gameSettings.citiesNames;
-        bool[] isComputer = gameSettings.isComputer;
+        int InNumberOfPlayers = gameSettings?.numberOfPlayers ?? 2;
+        Vector3[] InPlayerPositions = gameSettings?.playerPositions ?? new [] { new Vector3(-6.93f, 0.00f, 0.00f), new Vector3(12.12f, 0.00f, 0.00f)};
+        Color32[] InPlayerColors = gameSettings?.playerColors ?? new[] { new Color32(255, 0, 0, 255), new Color32(0, 0, 255, 255) };
+        string[] InStartingCityNames = gameSettings?.citiesNames ?? new [] { "Babylon", "Alexandria", "Carthage", "Persepolis" };
+        bool[] isComputer = gameSettings?.isComputer ?? new bool[] { false, false };
         StartingResources[] InStartingResources = new StartingResources[InNumberOfPlayers];
 
         for(int i = 0; i < InNumberOfPlayers; i++) {
-            InStartingResources[i] = getStartingResourcesByDifficulty(gameSettings.difficulty);
+            InStartingResources[i] = getStartingResourcesByDifficulty(gameSettings?.difficulty ?? "Medium");
         }
 
         return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0, isComputer, false);
