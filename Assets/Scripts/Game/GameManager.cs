@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
     public TileTag cityTag;
 
     // Multiplayer
+    public bool isMultiplayer;
     public bool isInitialized = false;
     public bool isInitializing = false;
     private SceneLoadData sceneLoadData;
@@ -118,13 +119,14 @@ public class GameManager : MonoBehaviour
         Color32[] InPlayerColors = gameSettings?.playerColors ?? new[] { new Color32(255, 0, 0, 255), new Color32(0, 0, 255, 255) };
         string[] InStartingCityNames = gameSettings?.citiesNames ?? new [] { "Babylon", "Alexandria", "Carthage", "Persepolis" };
         bool[] isComputer = gameSettings?.isComputer ?? new [] { false, false };
+        isMultiplayer = gameSettings?.isMultiplayer ?? true;
         StartingResources[] InStartingResources = new StartingResources[InNumberOfPlayers];
 
         for(int i = 0; i < InNumberOfPlayers; i++) {
             InStartingResources[i] = getStartingResourcesByDifficulty(gameSettings?.difficulty ?? "Medium");
         }
 
-        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0, isComputer, false);
+        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0, isComputer, isMultiplayer);
     }
 
     public StartingResources getStartingResourcesByDifficulty(string difficulty) {

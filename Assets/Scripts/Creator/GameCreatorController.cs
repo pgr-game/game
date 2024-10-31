@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System;
+using Unity.Netcode;
 
 
 public class GameCreatorController : MonoBehaviour
@@ -138,6 +139,8 @@ public class GameCreatorController : MonoBehaviour
             gameSettings.isComputer[i] = GetIsComputer(i);
         }
 
+        gameSettings.isMultiplayer = IsMultiplayer;
+
         // validation and starting game if valid
         ValidateGameSettings();
     }
@@ -148,8 +151,7 @@ public class GameCreatorController : MonoBehaviour
         if(duplicates.Length == 0) {
             if (IsMultiplayer)
             {
-                //TODO
-                //FindObjectOfType<MultiplayerMainMenuController>().StartHost();
+                FindObjectOfType<NetworkManager>().StartHost();
             }
             else
             {

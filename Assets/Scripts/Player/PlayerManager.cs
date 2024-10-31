@@ -53,7 +53,7 @@ public class PlayerManager : MonoBehaviour
             gameManager.Init();
         }
 
-        if (index != null) //TODO
+        if (gameManager.isMultiplayer)
         {
             gameManager.Register(this, index);
         }
