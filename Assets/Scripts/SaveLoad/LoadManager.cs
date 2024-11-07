@@ -89,7 +89,8 @@ public class LoadManager : MonoBehaviour
             Color32 convertedColor32 = (Color32)convertedColor;
             sceneLoadData.playerColors[i] = convertedColor32;
         }
-        sceneLoadData.startingResources = startingResources;
+        //TODO
+        //sceneLoadData.startingResources = startingResources;
         return sceneLoadData;
     }
 

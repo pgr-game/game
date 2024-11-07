@@ -10349,6 +10349,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 319505135}
+  - component: {fileID: 319505136}
   - component: {fileID: 319505134}
   - component: {fileID: 319505133}
   - component: {fileID: 319505131}
@@ -10447,10 +10448,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  unitStatsUIController: {fileID: 1999044890}
+  unitStatsMenuController: {fileID: 0}
   nextTurnButtonImage: {fileID: 1560324830}
   UI: {fileID: 1326028657}
   cityTag: {fileID: 0}
+  isMultiplayer: 0
 --- !u!4 &319505135
 Transform:
   m_ObjectHideFlags: 0
@@ -10466,6 +10468,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &319505136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319505129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2352531146
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &324626487
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59808,17 +59830,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7365716079596273168, guid: 3bbbc41ce13deed4b9e87e2ef7d37daf, type: 3}
   m_PrefabInstance: {fileID: 1997662103}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1999044890 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1521599357571747152, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
-  m_PrefabInstance: {fileID: 777570907}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1326028657}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1109aec5f3b37da47981b4e5d1db3b57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2001644722
 GameObject:
   m_ObjectHideFlags: 0

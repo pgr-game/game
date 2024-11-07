@@ -22255,17 +22255,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7365716079596273168, guid: e2cff4a8d029fb642b32841bf743f37c, type: 3}
   m_PrefabInstance: {fileID: 697631149}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &698232124 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1521599357571747152, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
-  m_PrefabInstance: {fileID: 1985123544}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1985123545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1109aec5f3b37da47981b4e5d1db3b57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &704221176
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59166,6 +59155,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1991390625}
+  - component: {fileID: 1991390630}
   - component: {fileID: 1991390624}
   - component: {fileID: 1991390626}
   - component: {fileID: 1991390629}
@@ -59222,10 +59212,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  unitStatsUIController: {fileID: 698232124}
+  unitStatsMenuController: {fileID: 0}
   nextTurnButtonImage: {fileID: 1985123546}
   UI: {fileID: 1985123545}
   cityTag: {fileID: 0}
+  isMultiplayer: 0
 --- !u!4 &1991390625
 Transform:
   m_ObjectHideFlags: 0
@@ -59283,6 +59274,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee444ad54272a7645a1af23ee3dc5cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1991390630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991390623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3846161897
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &1993902718
 PrefabInstance:
   m_ObjectHideFlags: 0

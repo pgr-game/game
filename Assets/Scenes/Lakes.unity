@@ -33007,6 +33007,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1043727870}
+  - component: {fileID: 1043727871}
   - component: {fileID: 1043727869}
   - component: {fileID: 1043727868}
   - component: {fileID: 1043727866}
@@ -33105,10 +33106,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  unitStatsUIController: {fileID: 1593226862}
+  unitStatsMenuController: {fileID: 0}
   nextTurnButtonImage: {fileID: 1593226867}
   UI: {fileID: 1593226861}
   cityTag: {fileID: 0}
+  isMultiplayer: 0
 --- !u!4 &1043727870
 Transform:
   m_ObjectHideFlags: 0
@@ -33124,6 +33126,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1043727871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043727864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2971332462
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &1050113146
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -48902,17 +48924,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5918970003185900430, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
   m_PrefabInstance: {fileID: 1593226860}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1593226862 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1521599357571747152, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
-  m_PrefabInstance: {fileID: 1593226860}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1593226861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1109aec5f3b37da47981b4e5d1db3b57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1593226863 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8698468300345917908, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}

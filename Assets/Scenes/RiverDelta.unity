@@ -46441,6 +46441,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1991390625}
+  - component: {fileID: 1991390630}
   - component: {fileID: 1991390624}
   - component: {fileID: 1991390626}
   - component: {fileID: 1991390629}
@@ -46502,8 +46503,6 @@ MonoBehaviour:
   UI: {fileID: 2037950189}
   cityTag: {fileID: 0}
   isMultiplayer: 0
-  isInitialized: 0
-  isInitializing: 0
 --- !u!4 &1991390625
 Transform:
   m_ObjectHideFlags: 0
@@ -46561,6 +46560,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee444ad54272a7645a1af23ee3dc5cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1991390630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991390623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2388124898
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &1991900417
 PrefabInstance:
   m_ObjectHideFlags: 0

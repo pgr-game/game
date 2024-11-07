@@ -4,8 +4,9 @@ using UnityEngine;
 using System.Linq;
 using RedBjorn.ProtoTiles;
 using RedBjorn.ProtoTiles.Example;
+using Unity.Netcode;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : NetworkBehaviour
 {
     //Evolution Tree Progress
     public Dictionary<int, List<string>> powerEvolution = new Dictionary<int, List<string>>();
@@ -45,12 +46,25 @@ public class PlayerManager : MonoBehaviour
     public int goldIncome = 5;     // amount given to player every round independently of cities, units etc.
     public const int costOfFort = 100;
 
+    // Multiplayer
+    private PlayerData playerNetworkData;
+
     public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, bool isComputer, int index)
     {
         this.index = index;
         this.gameManager = gameManager;
         this.mapManager = mapManager;
         this.color = color;
+        if (gameManager.isMultiplayer)
+        {
+            var playerData = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerData>();
+            
+            if (playerData && this.index == playerData.index)
+            {
+                this.playerNetworkData = playerData;
+                this.color = playerNetworkData.color;
+            }
+        }
         this.colorName = ColorUtility.ToHtmlStringRGBA(color);
         this.isComputer = isComputer;
         InitTree(startingResources.treeLoadData);
@@ -72,6 +86,8 @@ public class PlayerManager : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+
+
     }
 
     // Update is called once per frame
@@ -134,6 +150,10 @@ public class PlayerManager : MonoBehaviour
         // TODO computer player actions
         // Now computer player just skips his turn
         Debug.Log("Computer player " + index + " turn");
+        SkipTurn();
+    }
+    public void SkipTurn()
+    {
         gameManager.NextPlayer();
     }
 
@@ -276,7 +296,22 @@ public class PlayerManager : MonoBehaviour
         //first turn after game start or load. Healing, forts and reset range disabled
         SetGoldText(gold.ToString());
         SetGoldIncome();
-        if(isComputer) DoTurn();
+        HandleComputerOrMultiplayerActions();
+    }
+
+    private void HandleComputerOrMultiplayerActions()
+    {
+        if (gameManager.isMultiplayer)
+        {
+            if (isComputer && NetworkManager.Singleton.IsHost)
+            {
+                DoTurn();
+            }
+            if (playerNetworkData.index != this.index)
+            {
+                Debug.Log("Another player plays his turn");
+            }
+        } else if (isComputer) DoTurn();
     }
 
     public void StartTurn() {
@@ -289,8 +324,7 @@ public class PlayerManager : MonoBehaviour
         SetGoldText(gold.ToString());
         SetGoldIncome();
         gold += goldIncome;
-        playerCitiesManager.StartCitiesTurn();
-        if (isComputer) DoTurn();
+        HandleComputerOrMultiplayerActions();
     }
 
     public UnitController getSelectedUnit() {
