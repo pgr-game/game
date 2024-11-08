@@ -307,7 +307,7 @@ public class PlayerManager : NetworkBehaviour
             {
                 DoTurn();
             }
-            if (playerNetworkData.index != this.index)
+            if (playerNetworkData == null || playerNetworkData?.index != this.index)
             {
                 Debug.Log("Another player plays his turn");
             }

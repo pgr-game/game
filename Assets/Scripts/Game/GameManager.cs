@@ -73,10 +73,11 @@ public class GameManager : NetworkBehaviour
 
         sceneLoadData = networkSceneLoadData?.Value;
 
-		if (sceneLoadData == null)
+        if (sceneLoadData == null)
         {
 	        sceneLoadData = new SceneLoadData();
-		}
+        }
+        else isMultiplayer = sceneLoadData.isMultiplayer;
 
 		saveManager.Init(this);
         loadManager.Init(this);

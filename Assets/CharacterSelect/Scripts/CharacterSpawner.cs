@@ -51,10 +51,10 @@ public class CharacterSpawner : NetworkBehaviour
                         color = Color.white;
                         break;
                 }
+                characterInstance.SpawnAsPlayerObject(client.Value.clientId);
                 var playerData = characterInstance.gameObject.GetComponent<PlayerData>();
                 playerData.Init((int)client.Value.clientId, color, character.DisplayName);
-                characterInstance.SpawnAsPlayerObject(client.Value.clientId);
-            }
+			}
         }
     }
 }
