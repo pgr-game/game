@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using System;
+using System.Linq;
 
-public class SceneLoadData : INetworkSerializable
+public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 {
 	public SceneLoadData(int numberOfPlayers, Vector3[] playerPositions,
 	Color32[] playerColors, string[] startingCityNames, int turnNumber,
@@ -62,5 +64,38 @@ public class SceneLoadData : INetworkSerializable
 				serializer.SerializeValue(ref cityName);
 			}
 		}
+	}
+
+	public bool Equals(SceneLoadData other)
+	{
+		if (other == null) return false;
+		return numberOfPlayers == other.numberOfPlayers &&
+			playerPositions.SequenceEqual(other.playerPositions) &&
+			playerColors.SequenceEqual(other.playerColors) &&
+			startingCityNames.SequenceEqual(other.startingCityNames) &&
+			turnNumber == other.turnNumber &&
+			activePlayerIndex == other.activePlayerIndex &&
+			isComputer.SequenceEqual(other.isComputer) &&
+			isMultiplayer == other.isMultiplayer;
+	}
+
+	public override bool Equals(object obj)
+	{
+		if (obj == null) return false;
+		if (obj.GetType() != GetType()) return false;
+		return Equals(obj as SceneLoadData);
+	}
+
+	public override int GetHashCode()
+	{
+		int hash = numberOfPlayers.GetHashCode();
+		hash = (hash * 397) ^ playerPositions.GetHashCode();
+		hash = (hash * 397) ^ playerColors.GetHashCode();
+		hash = (hash * 397) ^ startingCityNames.GetHashCode();
+		hash = (hash * 397) ^ turnNumber.GetHashCode();
+		hash = (hash * 397) ^ activePlayerIndex.GetHashCode();
+		hash = (hash * 397) ^ isComputer.GetHashCode();
+		hash = (hash * 397) ^ isMultiplayer.GetHashCode();
+		return hash;
 	}
 }
