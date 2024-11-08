@@ -61,8 +61,9 @@ public class GameManager : NetworkBehaviour
     private SceneLoadData sceneLoadData;
     private NetworkVariable<SceneLoadData> networkSceneLoadData = new NetworkVariable<SceneLoadData>();
 
+
     [GenerateSerializationForType(typeof(SceneLoadData))]
-	public override void OnNetworkSpawn()
+	private void Start()
     {
         playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
         unitStatsMenuController = UI.gameObject.GetComponent<UnitStatsMenuController>();
