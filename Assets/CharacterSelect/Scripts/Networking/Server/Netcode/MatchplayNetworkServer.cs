@@ -108,7 +108,9 @@ public class MatchplayNetworkServer : IDisposable
     {
         gameHasStarted = true;
 
-        NetworkManager.Singleton.SceneManager.LoadScene("RiverDelta", LoadSceneMode.Single);
+        var gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
+        var sceneName = gameSettings.mapName ?? "RiverDelta";
+		NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
     }
 
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
