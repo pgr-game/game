@@ -18,7 +18,6 @@ public class PlayerManager : NetworkBehaviour
     public GameManager gameManager;
     public bool isComputer;
     public Color32 color;
-    public string colorName;
     public int index;
 
     //selecting units and settlements
@@ -64,8 +63,11 @@ public class PlayerManager : NetworkBehaviour
                 this.playerNetworkData = playerData;
                 this.color = playerNetworkData.color;
             }
+            else if (playerData)
+            {
+	            this.color = playerData.otherPlayersColors[index];
+            }
         }
-        this.colorName = ColorUtility.ToHtmlStringRGBA(color);
         this.isComputer = isComputer;
         InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);

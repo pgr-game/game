@@ -12,8 +12,10 @@ public class PlayerData : NetworkBehaviour
 	private NetworkVariable<Color32> networkColor = new NetworkVariable<Color32>();
 	[SerializeField]
 	private NetworkVariable<FixedString64Bytes> networkName = new NetworkVariable<FixedString64Bytes>();
+	[SerializeField]
+	private NetworkList<Color32> networkOtherPlayersColors = new NetworkList<Color32>();
 
-	
+
 	public int index
 	{
 		get => networkIndex.Value; 
@@ -29,11 +31,19 @@ public class PlayerData : NetworkBehaviour
 		get => networkName.Value.ToString(); 
 		private set => networkName.Value = value;
 	}
+	public NetworkList<Color32> otherPlayersColors
+	{
+		get => networkOtherPlayersColors;
+	}
 
-	public void Init(int index, Color32 color, string name)
+	public void Init(int index, Color32 color, string name, Color32[] otherPlayersColors)
 	{
 		this.index = index;
 		this.color = color;
 		this.name = name;
+		foreach (var otherPlayersColor in otherPlayersColors)
+		{
+			networkOtherPlayersColors.Add(otherPlayersColor);
+		}
 	}
 }
