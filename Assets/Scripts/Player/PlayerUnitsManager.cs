@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -54,6 +55,7 @@ public class PlayerUnitsManager
         }
     }
 
+    //[Rpc(SendTo.Server)]
     public UnitController InstantiateUnit(UnitController unitController, UnitLoadData unitLoadData, Vector3 position)
     {
         float? rangeLeft = null;
@@ -79,7 +81,14 @@ public class PlayerUnitsManager
         UnitController newUnit = GameObject.Instantiate(unitController, position, Quaternion.identity).GetComponent<UnitController>();
         units.Add(newUnit);
         newUnit.Init(playerManager, playerManager.mapManager, playerManager.gameManager, playerManager.gameManager.unitStatsMenuController, rangeLeft, longPathClickPosition);
-        return newUnit;
+
+        if (gameManager.isMultiplayer)
+        {
+	        //var instanceNetworkObject = newUnit.GetComponent<NetworkObject>();
+	        //instanceNetworkObject.Spawn();
+        }
+
+		return newUnit;
     }
 
     public void RemoveUnit(UnitController unit)
