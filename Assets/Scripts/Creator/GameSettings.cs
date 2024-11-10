@@ -11,6 +11,7 @@ public class GameSettings : MonoBehaviour
     public string difficulty;
     public string[] citiesNames;
     public bool[] isComputer;
+    public bool isMultiplayer;
 
     public void SetMapName(string name)
     {

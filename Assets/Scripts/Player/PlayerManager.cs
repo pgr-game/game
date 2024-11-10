@@ -4,8 +4,9 @@ using UnityEngine;
 using System.Linq;
 using RedBjorn.ProtoTiles;
 using RedBjorn.ProtoTiles.Example;
+using Unity.Netcode;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : NetworkBehaviour
 {
     //Evolution Tree Progress
     public Dictionary<int, List<string>> powerEvolution = new Dictionary<int, List<string>>();
@@ -17,7 +18,6 @@ public class PlayerManager : MonoBehaviour
     public GameManager gameManager;
     public bool isComputer;
     public Color32 color;
-    public string colorName;
     public int index;
 
     //selecting units and settlements
@@ -45,19 +45,8 @@ public class PlayerManager : MonoBehaviour
     public int goldIncome = 5;     // amount given to player every round independently of cities, units etc.
     public const int costOfFort = 100;
 
-    void Start()
-    {
-        gameManager = FindObjectOfType<GameManager>();
-        if (!gameManager.isInitialized)
-        {
-            gameManager.Init();
-        }
-
-        if (index != null) //TODO
-        {
-            gameManager.Register(this, index);
-        }
-    }
+    // Multiplayer
+    private PlayerData playerNetworkData;
 
     public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, bool isComputer, int index)
     {
@@ -65,7 +54,20 @@ public class PlayerManager : MonoBehaviour
         this.gameManager = gameManager;
         this.mapManager = mapManager;
         this.color = color;
-        this.colorName = ColorUtility.ToHtmlStringRGBA(color);
+        if (gameManager.isMultiplayer)
+        {
+            var playerData = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerData>();
+            
+            if (playerData && this.index == playerData.index)
+            {
+                this.playerNetworkData = playerData;
+                this.color = playerNetworkData.color;
+            }
+            else if (playerData && index < playerData.otherPlayersColors.Count - 1)
+            {
+	            this.color = playerData.otherPlayersColors[index];
+            }
+        }
         this.isComputer = isComputer;
         InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
@@ -86,6 +88,8 @@ public class PlayerManager : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+
+
     }
 
     // Update is called once per frame
@@ -148,6 +152,10 @@ public class PlayerManager : MonoBehaviour
         // TODO computer player actions
         // Now computer player just skips his turn
         Debug.Log("Computer player " + index + " turn");
+        SkipTurn();
+    }
+    public void SkipTurn()
+    {
         gameManager.NextPlayer();
     }
 
@@ -290,7 +298,22 @@ public class PlayerManager : MonoBehaviour
         //first turn after game start or load. Healing, forts and reset range disabled
         SetGoldText(gold.ToString());
         SetGoldIncome();
-        if(isComputer) DoTurn();
+        HandleComputerOrMultiplayerActions();
+    }
+
+    private void HandleComputerOrMultiplayerActions()
+    {
+        if (gameManager.isMultiplayer)
+        {
+            if (isComputer && NetworkManager.Singleton.IsHost)
+            {
+                DoTurn();
+            }
+            if (playerNetworkData == null || playerNetworkData?.index != this.index)
+            {
+                Debug.Log("Another player plays his turn");
+            }
+        } else if (isComputer) DoTurn();
     }
 
     public void StartTurn() {
@@ -303,8 +326,7 @@ public class PlayerManager : MonoBehaviour
         SetGoldText(gold.ToString());
         SetGoldIncome();
         gold += goldIncome;
-        playerCitiesManager.StartCitiesTurn();
-        if (isComputer) DoTurn();
+        HandleComputerOrMultiplayerActions();
     }
 
     public UnitController getSelectedUnit() {
@@ -321,14 +343,10 @@ public class PlayerManager : MonoBehaviour
     }
 
     public bool isAlive() {
-        bool isAlive = false;
-        if(playerUnitsManager.GetUnitCount() > 0) {
-            isAlive = true;
-        }
-        if(playerCitiesManager.GetNumberOfCities() > 0) {
-            isAlive = true;
-        }
-        return isAlive;
+	    bool isAlive = playerUnitsManager.GetUnitCount() > 0;
+	    if(playerCitiesManager.GetNumberOfCities() > 0) {
+		    isAlive = true;
+	    }
+	    return isAlive;
     }
-
 }

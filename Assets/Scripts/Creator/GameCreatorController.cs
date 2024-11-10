@@ -6,10 +6,12 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System;
+using Unity.Netcode;
 
 
 public class GameCreatorController : MonoBehaviour
 {
+    public bool IsMultiplayer;
     public GameSettings gameSettings;
     public TMP_Dropdown mapDropdown;
     public Slider numberOfPlayersSlider;
@@ -137,6 +139,8 @@ public class GameCreatorController : MonoBehaviour
             gameSettings.isComputer[i] = GetIsComputer(i);
         }
 
+        gameSettings.isMultiplayer = IsMultiplayer;
+
         // validation and starting game if valid
         ValidateGameSettings();
     }
@@ -145,7 +149,7 @@ public class GameCreatorController : MonoBehaviour
         Color32[] colors = gameSettings.playerColors;
         int[] duplicates = CheckForDuplicateColors(colors);
         if(duplicates.Length == 0) {
-            this.gameObject.GetComponent<MainMenu>().StartGame();
+            this.gameObject.GetComponent<MainMenu>().StartGame(IsMultiplayer);
         }
         else {
             string message = "Colors for players: ";

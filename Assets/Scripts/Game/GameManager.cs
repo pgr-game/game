@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using RedBjorn.ProtoTiles;
+using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 
 
@@ -19,7 +21,8 @@ public enum UnitTypes {
     Skirmisher
 }
 
-public class GameManager : MonoBehaviour
+[GenerateSerializationForType(typeof(SceneLoadData))]
+public class GameManager : NetworkBehaviour
 {
     public MapManager mapManager;
     public SaveManager saveManager;
@@ -54,40 +57,53 @@ public class GameManager : MonoBehaviour
     public TileTag cityTag;
 
     // Multiplayer
-    public bool isInitialized = false;
-    public bool isInitializing = false;
+    public bool isMultiplayer;
     private SceneLoadData sceneLoadData;
+    private NetworkVariable<SceneLoadData> networkSceneLoadData = new NetworkVariable<SceneLoadData>();
 
-    public void Start()
+
+    [GenerateSerializationForType(typeof(SceneLoadData))]
+	private void Start()
     {
-        if (!isInitialized)
-        {
-            Init();
-        }
-    }
-
-    public void Init()
-    {
-        isInitializing = true;
-
         playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
         unitStatsMenuController = UI.gameObject.GetComponent<UnitStatsMenuController>();
         InitStaticVariables();
         soundManager = Instantiate(soundManager, new Vector3(0,0,0), Quaternion.identity);
-        gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
+        gameSettings = GameObject.Find("GameSettings")?.GetComponent<GameSettings>();
         string saveRoot = SaveRoot.saveRoot;
-        sceneLoadData = new SceneLoadData();
 
-        saveManager.Init(this);
-        loadManager.Init(this);
-        
-        //there should also be error handling for when saveRoot is wrong
-        if (saveRoot == null) {
-            sceneLoadData = LoadDataFromSettingsCreator();
-        } else {
-            loadManager.SetSaveRoot(saveRoot);
-            sceneLoadData = loadManager.Load();
+        sceneLoadData = networkSceneLoadData?.Value;
+
+        if (sceneLoadData == null)
+        {
+	        sceneLoadData = new SceneLoadData();
         }
+        else isMultiplayer = sceneLoadData.isMultiplayer;
+
+		saveManager.Init(this);
+        loadManager.Init(this);
+
+		//there should also be error handling for when saveRoot is wrong
+		if (sceneLoadData.playerColors == null)
+		{
+			if (saveRoot == null)
+			{
+				sceneLoadData = LoadDataFromSettingsCreator();
+				networkSceneLoadData.Value = sceneLoadData;
+			}
+			else
+			{
+				loadManager.SetSaveRoot(saveRoot);
+				sceneLoadData = loadManager.Load();
+			}
+		}
+
+
+		var startingResources = new StartingResources[sceneLoadData.numberOfPlayers];
+		for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
+		{
+			startingResources[i] = getStartingResourcesByDifficulty(sceneLoadData.difficulty);
+		}
 
         LoadGameData(sceneLoadData);
 
@@ -97,11 +113,8 @@ public class GameManager : MonoBehaviour
 
         players = new PlayerManager[sceneLoadData.numberOfPlayers];
 
-        InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames, sceneLoadData.isComputer, sceneLoadData.isMultiplayer);
+        InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames, sceneLoadData.isComputer, sceneLoadData.isMultiplayer);
         players[activePlayerIndex].StartFirstTurn();
-
-        isInitializing = false;
-        isInitialized = true;
     }
 
     private void InitStaticVariables()
@@ -113,18 +126,15 @@ public class GameManager : MonoBehaviour
     }
 
     public SceneLoadData LoadDataFromSettingsCreator() {
-        int InNumberOfPlayers = gameSettings.numberOfPlayers;
-        Vector3[] InPlayerPositions = gameSettings.playerPositions;
-        Color32[] InPlayerColors = gameSettings.playerColors;
-        string[] InStartingCityNames = gameSettings.citiesNames;
-        bool[] isComputer = gameSettings.isComputer;
-        StartingResources[] InStartingResources = new StartingResources[InNumberOfPlayers];
+        int InNumberOfPlayers = gameSettings?.numberOfPlayers ?? 2;
+        Vector3[] InPlayerPositions = gameSettings?.playerPositions ?? new [] { new Vector3(-6.93f, 0.00f, 0.00f), new Vector3(12.12f, 0.00f, 0.00f)};
+        Color32[] InPlayerColors = gameSettings?.playerColors ?? new[] { new Color32(255, 0, 0, 255), new Color32(0, 0, 255, 255) };
+        string[] InStartingCityNames = gameSettings?.citiesNames ?? new [] { "Babylon", "Alexandria", "Carthage", "Persepolis" };
+        bool[] isComputer = gameSettings?.isComputer ?? new [] { false, false };
+        isMultiplayer = gameSettings?.isMultiplayer ?? true;
+        string difficulty = gameSettings?.difficulty ?? "Medium";
 
-        for(int i = 0; i < InNumberOfPlayers; i++) {
-            InStartingResources[i] = getStartingResourcesByDifficulty(gameSettings.difficulty);
-        }
-
-        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InStartingResources, InPlayerColors, InStartingCityNames, 1, 0, isComputer, false);
+        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InPlayerColors, InStartingCityNames, 1, 0, isComputer, isMultiplayer, difficulty);
     }
 
     public StartingResources getStartingResourcesByDifficulty(string difficulty) {
@@ -172,7 +182,7 @@ public class GameManager : MonoBehaviour
     }
     
     public void LoadGameData(SceneLoadData sceneLoadData) {
-        if(!IsInitialDataCorrect(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, sceneLoadData.startingResources, sceneLoadData.playerColors)) {
+        if(!IsInitialDataCorrect(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, new StartingResources[sceneLoadData.numberOfPlayers], sceneLoadData.playerColors)) {
             Debug.Log("Wrong initial data. Stopping game now!");
             return;
         }
@@ -183,22 +193,11 @@ public class GameManager : MonoBehaviour
         DisplayTurnNumber(turnNumber);
     }
 
-    public void Register(PlayerManager player, int i)
-    {
-        players[i] = player;
-        players[i].Init(this, mapManager, sceneLoadData.startingResources[i], sceneLoadData.playerColors[i], sceneLoadData.startingCityNames[i], sceneLoadData.isComputer[i], i);
-    }
-
     private void InstantiatePlayers(int numberOfPlayers, Vector3[] playerPositions, StartingResources[] startingResources, Color32[] playerColors, string[] startingCityNames, bool[] isComputer, bool isMultiplayer)
     {
         this.numberOfPlayers = numberOfPlayers;
         players = new PlayerManager[numberOfPlayers];
         for(int i = 0; i < numberOfPlayers; i++) {
-            if (!isComputer[i] && isMultiplayer)
-            {
-                //registers self
-                continue;
-            }
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
             players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], isComputer[i], i);
             
