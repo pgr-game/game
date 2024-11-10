@@ -26,7 +26,7 @@ public class PlayerTreeManager : MonoBehaviour
 
     private bool panelActive = false;
     private static int powerEvolutionCount = 4;
-    private static int startegyEvolutionCount = 3;
+    private static int startegyEvolutionCount = 4;
 
     public void Init(GameManager gameManager)
     {
@@ -66,16 +66,19 @@ public class PlayerTreeManager : MonoBehaviour
         strategyNodeNames.Add("PLACING FORTS");
         strategyNodeNames.Add("DEFENCE BONUS");
         strategyNodeNames.Add("HEALING");
+        strategyNodeNames.Add("SUPPLY LINES");
         // creating list with ids which node is linked to 
         strategyNodeLinks.Add(0); //root node; not used
         strategyNodeLinks.Add(0); //from  Node 1
         strategyNodeLinks.Add(1); //from  Node 2
         strategyNodeLinks.Add(1); //from  Node 3
+        strategyNodeLinks.Add(3); //from  Node 4
         //list of turns needed to reasrch each node
         startegyTurnsToUnlock.Add(3);
         startegyTurnsToUnlock.Add(4);
         startegyTurnsToUnlock.Add(4);
         startegyTurnsToUnlock.Add(5);
+        startegyTurnsToUnlock.Add(3);
     }
 
     public void populateEvolutionTrees(PlayerManager playerManager)

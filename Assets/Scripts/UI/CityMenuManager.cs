@@ -48,8 +48,9 @@ public class CityMenuManager : MonoBehaviour
             this.cityNameText.text = city.Name;
             FillUnitsList(gameManager.unitPrefabs);
         }
-
-        if(city.besieged && !city.supplied)
+        bool isSupplyLineReaserched = this.gameManager.playerTreeManager.isNodeResearched(4, "Strategy");
+        this.transform.Find("Buttons").Find("CreateSupplyLineButton").gameObject.GetComponent<Button>().interactable = isSupplyLineReaserched;
+        if (city.besieged && !city.supplied)
         {
             foreach (var item in unitEntriesInList)
             {
