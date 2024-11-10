@@ -11,6 +11,10 @@ GameObject:
   - component: {fileID: 1249127612854783611}
   - component: {fileID: -5542777466725160738}
   - component: {fileID: 3982005917007664542}
+  - component: {fileID: 2786874101670556190}
+  - component: {fileID: 1511773653220151579}
+  - component: {fileID: 1136160051143162615}
+  - component: {fileID: 3801431291732027362}
   m_Layer: 0
   m_Name: PlayerManager
   m_TagString: Untagged
@@ -45,7 +49,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3187381886
+  GlobalObjectIdHash: 4026202524
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -53,6 +60,8 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &3982005917007664542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,14 +74,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1480271d7d5e0fc48aa81f26e0fda6fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   mapManager: {fileID: 0}
   gameManager: {fileID: 0}
   isComputer: 0
   color:
     serializedVersion: 2
     rgba: 0
-  colorName: 
   index: 0
+  playerUnitsManager: {fileID: 2786874101670556190}
+  playerCitiesManager: {fileID: 1511773653220151579}
+  playerFortsManager: {fileID: 1136160051143162615}
+  playerSupplyManager: {fileID: 3801431291732027362}
   pathPrefab: {fileID: 114413117004689456, guid: b08b90c04512be143a7b595fa43b6559, type: 3}
   passableAreaPrefab: {fileID: 114964435729023602, guid: fe2319e9d6e840f409af77b3e7a85259, type: 3}
   fortPrefab: {fileID: 7362454568944323520, guid: 26ffc5ad993277348bf537bf162f852c, type: 3}
@@ -80,3 +93,59 @@ MonoBehaviour:
   gold: 0
   goldText: {fileID: 0}
   goldIncome: 5
+--- !u!114 &2786874101670556190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6202811586810600753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dcd8cc46819d1a4582bd94a28e7a317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &1511773653220151579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6202811586810600753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66c25db3345b8764f8554cb86cd8733d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &1136160051143162615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6202811586810600753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 266b4a16192cc324a92e163c72bbabe0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &3801431291732027362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6202811586810600753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f17c660d0ec7334ea6f89a17eedf618, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  playerManager: {fileID: 0}
+  gameManager: {fileID: 0}
+  drawingSupplyLine: 0
+  justActivated: 1

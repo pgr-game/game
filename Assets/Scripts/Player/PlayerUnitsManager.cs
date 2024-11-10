@@ -7,7 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class PlayerUnitsManager
+public class PlayerUnitsManager : NetworkBehaviour
 {
     private PlayerManager playerManager;
     private GameManager gameManager;

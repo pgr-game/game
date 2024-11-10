@@ -239,7 +239,6 @@ public class PlayerManager : NetworkBehaviour
     }
 
     void InitUnits(StartingResources startingResources) {
-        playerUnitsManager = new PlayerUnitsManager();
         playerUnitsManager.Init(this, startingResources);
     }
     void InitTree(TreeLoadData treeLoadData)
@@ -256,18 +255,15 @@ public class PlayerManager : NetworkBehaviour
     }
 
     void InitCities(string startingCityName, List<CityLoadData> cityLoadData) {
-        playerCitiesManager = new PlayerCitiesManager();
         playerCitiesManager.Init(this, startingCityName, cityLoadData);
     }
 
     void InitSupplyLines(SupplyLoadData supplyLoadData)
     {
-        playerSupplyManager = new PlayerSupplyManager();
         playerSupplyManager.Init(this, supplyLoadData);
     }
 
     void InitForts(StartingResources startingResources) {
-        playerFortsManager = new PlayerFortsManager();
         playerFortsManager.Init(this);
 
         if(startingResources.fortLoadData != null) {

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using RedBjorn.ProtoTiles;
 using RedBjorn.ProtoTiles.Example;
+using Unity.Netcode;
 using UnityEngine.UIElements;
 
-public class PlayerCitiesManager
+public class PlayerCitiesManager : NetworkBehaviour
 {
     public List<City> cities { get; private set; }
     private PlayerManager playerManager;
