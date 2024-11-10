@@ -63,7 +63,7 @@ public class PlayerManager : NetworkBehaviour
                 this.playerNetworkData = playerData;
                 this.color = playerNetworkData.color;
             }
-            else if (playerData)
+            else if (playerData && index < playerData.otherPlayersColors.Count - 1)
             {
 	            this.color = playerData.otherPlayersColors[index];
             }
@@ -343,14 +343,10 @@ public class PlayerManager : NetworkBehaviour
     }
 
     public bool isAlive() {
-        bool isAlive = false;
-        if(playerUnitsManager.GetUnitCount() > 0) {
-            isAlive = true;
-        }
-        if(playerCitiesManager.GetNumberOfCities() > 0) {
-            isAlive = true;
-        }
-        return isAlive;
+	    bool isAlive = playerUnitsManager.GetUnitCount() > 0;
+	    if(playerCitiesManager.GetNumberOfCities() > 0) {
+		    isAlive = true;
+	    }
+	    return isAlive;
     }
-
 }
