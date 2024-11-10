@@ -48,6 +48,30 @@ public class PlayerManager : NetworkBehaviour
     // Multiplayer
     private PlayerData playerNetworkData;
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        var gameManager = FindAnyObjectByType<GameManager>();
+        if (!gameManager.isInit)
+        {
+	        gameManager.Init();
+        }
+
+        int index = 0;
+        for (int i = 0; i < gameManager.sceneLoadData.playerPositions.Length; i++)
+        {
+	        if (gameManager.sceneLoadData.playerPositions[i] == transform.position)
+	        {
+		        index = i;
+		        break;
+	        }
+        }
+		Init(gameManager, gameManager.mapManager, gameManager.startingResources[index], 
+			gameManager.sceneLoadData.playerColors[index], gameManager.sceneLoadData.startingCityNames[index], 
+			gameManager.sceneLoadData.isComputer[index], index);
+    }
+
     public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, bool isComputer, int index)
     {
         this.index = index;
@@ -63,7 +87,7 @@ public class PlayerManager : NetworkBehaviour
                 this.playerNetworkData = playerData;
                 this.color = playerNetworkData.color;
             }
-            else if (playerData && index < playerData.otherPlayersColors.Count - 1)
+            else if (playerData && index < playerData.otherPlayersColors.Count)
             {
 	            this.color = playerData.otherPlayersColors[index];
             }

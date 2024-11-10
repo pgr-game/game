@@ -4,12 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.Netcode;
 //using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 
-public class UnitController : MonoBehaviour
+public class UnitController : NetworkBehaviour
 {
     public PlayerUnitsManager playerUnitsManager;
     public PlayerManager owner;
@@ -66,8 +67,19 @@ public class UnitController : MonoBehaviour
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
     }
 
+    public override void OnGainedOwnership()
+    {
+	    base.OnGainedOwnership();
 
-    public void Activate()
+	    if (!IsServer)
+	    {
+		    var gameManager = FindAnyObjectByType<GameManager>();
+            var index = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerData>().index;
+			Init(gameManager.players[index], gameManager.mapManager, gameManager, gameManager.unitStatsMenuController, 0, new Vector3()); // TODO last two should not be empty
+	    }
+    }
+
+	public void Activate()
     {
         unitMove.Activate();
         unitUI.UpdateUnitUI(currentHealth, maxHealth);

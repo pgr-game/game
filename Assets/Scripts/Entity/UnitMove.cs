@@ -10,9 +10,10 @@ using UnityEngine.UIElements;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.IO;
+using Unity.Netcode;
 using UnityEngine.Tilemaps;
 
-public class UnitMove : MonoBehaviour
+public class UnitMove : NetworkBehaviour
 {
     public float Speed = 5;
     public float Range = 10f;
@@ -85,8 +86,8 @@ public class UnitMove : MonoBehaviour
         AreaHide();
     }
 
-    // TODO: probably need changing when we implement multiple units on a tile
-    void HandleWorldClick()
+	// TODO: probably need changing when we implement multiple units on a tile
+	void HandleWorldClick()
     {
         if (LongPath)
         {
@@ -94,31 +95,38 @@ public class UnitMove : MonoBehaviour
         }
         // manual movement (get click position from mouse position now)
         Vector3 clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
-        var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
-        if(path.Count == 0)
-        {
-            //clicked on impassable tile
-            isAutoMove = false;
-            return;
-        }
-        TileEntity tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
-        if (path.Count - 1 > RangeLeft)
-        {
-            // clicked out of range, set long path
-            longPathTile = path.Last();
-            longPathPoints = path.Select(x => mapManager.MapEntity.WorldPosition(x)).ToList();
-            longPathPoints.Add(mapManager.MapEntity.WorldPosition(tile));
-            longPathClickPosition = clickPos;
-            isAutoMove = true;
-        }
-        else
-        {
-            // no need for long path, tile is within reach
-            isAutoMove = false;
-        }
 
-        DetermineMoveType(tile, clickPos);
+        ClickedToMoveToPositionRpc(clickPos);
     }
+
+    //[Rpc(SendTo.Everyone)]
+    public void ClickedToMoveToPositionRpc(Vector3 clickPos)
+    {
+	    var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
+	    if (path.Count == 0)
+	    {
+		    //clicked on impassable tile
+		    isAutoMove = false;
+		    return;
+	    }
+	    TileEntity tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
+	    if (path.Count - 1 > RangeLeft)
+	    {
+		    // clicked out of range, set long path
+		    longPathTile = path.Last();
+		    longPathPoints = path.Select(x => mapManager.MapEntity.WorldPosition(x)).ToList();
+		    longPathPoints.Add(mapManager.MapEntity.WorldPosition(tile));
+		    longPathClickPosition = clickPos;
+		    isAutoMove = true;
+	    }
+	    else
+	    {
+		    // no need for long path, tile is within reach
+		    isAutoMove = false;
+	    }
+
+	    DetermineMoveType(tile, clickPos);
+	}
 
     private void DetermineMoveType(TileEntity tile, Vector3 clickPos)
     {
