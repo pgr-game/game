@@ -9,7 +9,8 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 {
 	public SceneLoadData(int numberOfPlayers, Vector3[] playerPositions,
 	Color32[] playerColors, string[] startingCityNames, int turnNumber,
-	int activePlayerIndex, bool[] isComputer, bool isMultiplayer)
+	int activePlayerIndex, bool[] isComputer, bool isMultiplayer,
+	string difficulty)
 	{
 		this.numberOfPlayers = numberOfPlayers;
 		this.playerPositions = playerPositions;
@@ -19,6 +20,7 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 		this.activePlayerIndex = activePlayerIndex;
 		this.isComputer = isComputer;
 		this.isMultiplayer = isMultiplayer;
+		this.difficulty = difficulty;
 	}
 
 	public SceneLoadData() { }
@@ -30,6 +32,7 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 	public int activePlayerIndex;
 	public bool[] isComputer;
 	public bool isMultiplayer;
+	public string difficulty;
 
 	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
 	{
@@ -40,6 +43,7 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 		serializer.SerializeValue(ref activePlayerIndex);
 		serializer.SerializeValue(ref isComputer);
 		serializer.SerializeValue(ref isMultiplayer);
+		serializer.SerializeValue(ref difficulty);
 
 		// Serialize string array manually
 		if (serializer.IsReader)
@@ -70,13 +74,14 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 	{
 		if (other == null) return false;
 		return numberOfPlayers == other.numberOfPlayers &&
-			playerPositions.SequenceEqual(other.playerPositions) &&
-			playerColors.SequenceEqual(other.playerColors) &&
-			startingCityNames.SequenceEqual(other.startingCityNames) &&
-			turnNumber == other.turnNumber &&
-			activePlayerIndex == other.activePlayerIndex &&
-			isComputer.SequenceEqual(other.isComputer) &&
-			isMultiplayer == other.isMultiplayer;
+		       playerPositions.SequenceEqual(other.playerPositions) &&
+		       playerColors.SequenceEqual(other.playerColors) &&
+		       startingCityNames.SequenceEqual(other.startingCityNames) &&
+		       turnNumber == other.turnNumber &&
+		       activePlayerIndex == other.activePlayerIndex &&
+		       isComputer.SequenceEqual(other.isComputer) &&
+		       isMultiplayer == other.isMultiplayer &&
+		       difficulty == other.difficulty;
 	}
 
 	public override bool Equals(object obj)
@@ -96,6 +101,7 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 		hash = (hash * 397) ^ activePlayerIndex.GetHashCode();
 		hash = (hash * 397) ^ isComputer.GetHashCode();
 		hash = (hash * 397) ^ isMultiplayer.GetHashCode();
+		hash = (hash * 397) ^ difficulty.GetHashCode();
 		return hash;
 	}
 }

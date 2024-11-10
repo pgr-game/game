@@ -102,7 +102,7 @@ public class GameManager : NetworkBehaviour
 		var startingResources = new StartingResources[sceneLoadData.numberOfPlayers];
 		for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
 		{
-			startingResources[i] = getStartingResourcesByDifficulty(gameSettings?.difficulty ?? "Medium");
+			startingResources[i] = getStartingResourcesByDifficulty(sceneLoadData.difficulty);
 		}
 
         LoadGameData(sceneLoadData);
@@ -132,8 +132,9 @@ public class GameManager : NetworkBehaviour
         string[] InStartingCityNames = gameSettings?.citiesNames ?? new [] { "Babylon", "Alexandria", "Carthage", "Persepolis" };
         bool[] isComputer = gameSettings?.isComputer ?? new [] { false, false };
         isMultiplayer = gameSettings?.isMultiplayer ?? true;
+        string difficulty = gameSettings?.difficulty ?? "Medium";
 
-        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InPlayerColors, InStartingCityNames, 1, 0, isComputer, isMultiplayer);
+        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InPlayerColors, InStartingCityNames, 1, 0, isComputer, isMultiplayer, difficulty);
     }
 
     public StartingResources getStartingResourcesByDifficulty(string difficulty) {
