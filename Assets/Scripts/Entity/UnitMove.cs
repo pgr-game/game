@@ -99,7 +99,7 @@ public class UnitMove : NetworkBehaviour
         ClickedToMoveToPositionRpc(clickPos);
     }
 
-    //[Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Everyone)]
     public void ClickedToMoveToPositionRpc(Vector3 clickPos)
     {
 	    var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
