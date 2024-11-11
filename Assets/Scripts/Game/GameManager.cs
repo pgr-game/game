@@ -273,6 +273,12 @@ public class GameManager : NetworkBehaviour
 
     public void NextPlayer()
     {
+	    NextPlayerRpc();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void NextPlayerRpc()
+    {
         this.activePlayer.playerSupplyManager.ClearSupplyLineCreator();
         this.cityMenuManager.Deactivate();
         // this needs to happen before the next player is activated, because next player may be dead
