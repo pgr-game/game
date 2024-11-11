@@ -87,7 +87,15 @@ public class UnitController : NetworkBehaviour, INetworkSerializable
         }
         canPlaceFort = true;
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
-    }
+
+        // Add to city garrison if in city
+        var path = playerManager.mapManager.MapEntity.PathTiles(transform.position, transform.position, 1);
+        var tile = path.Last();
+        if (tile.CityTilePresent)
+        {
+	        tile.CityTilePresent.city.AddToGarrison(this);
+        }
+	}
 
 	public void Activate()
     {

@@ -92,14 +92,6 @@ public class PlayerUnitsManager : NetworkBehaviour
         newUnit.Init(playerManager, playerManager.mapManager, playerManager.gameManager, playerManager.gameManager.unitStatsMenuController, 
 	        rangeLeft, longPathClickPosition);
 
-		// Add to city garrison if in city
-		var path = playerManager.mapManager.MapEntity.PathTiles(newUnit.transform.position, newUnit.transform.position, 1);
-		var tile = path.Last();
-		if (tile.CityTilePresent)
-		{
-			tile.CityTilePresent.city.AddToGarrison(newUnit);
-		}
-
 		if (gameManager.isMultiplayer)
         {
             newUnit.ownerIndex.Initialize(newUnit);
