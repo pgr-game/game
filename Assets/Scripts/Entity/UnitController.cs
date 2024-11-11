@@ -39,10 +39,32 @@ public class UnitController : NetworkBehaviour, INetworkSerializable
     public bool canPlaceFort;
     public int turnsSinceFortPlaced = 10;
 
+    // Multiplayer
+    public NetworkVariable<int> ownerIndex = new NetworkVariable<int>();
+
+    public override void OnNetworkSpawn()
+    {
+	    base.OnNetworkSpawn();
+
+		// This is only to initiate unit on client
+		if (owner) return;
+
+		owner = FindObjectsByType<PlayerManager>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+			.FirstOrDefault(playerManager => playerManager.index == ownerIndex.Value);
+
+		if (owner)
+		{
+			// TODO arguments should not be 0
+			Init(owner, owner.mapManager, owner.gameManager, owner.gameManager.unitStatsMenuController, null, null);
+		}
+    }
+
     public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsMenuController unitStatsMenuController, float? rangeLeft, Vector3? longPathClickPosition)
     {
         this.owner = playerManager;
-        this.playerUnitsManager = playerManager.playerUnitsManager;
+        if(IsServer)
+			ownerIndex.Value = owner.index;
+		this.playerUnitsManager = playerManager.playerUnitsManager;
         this.mapManager = mapManager;
         this.unitStatsMenuController = unitStatsMenuController;
         unitUI.Init(this, owner.color, unitType, attack);
@@ -65,18 +87,6 @@ public class UnitController : NetworkBehaviour, INetworkSerializable
         }
         canPlaceFort = true;
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
-    }
-
-    public override void OnGainedOwnership()
-    {
-	    base.OnGainedOwnership();
-
-	    if (!IsServer)
-	    {
-		    var gameManager = FindAnyObjectByType<GameManager>();
-            var index = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerData>().index;
-			Init(gameManager.players[index], gameManager.mapManager, gameManager, gameManager.unitStatsMenuController, 0, new Vector3()); // TODO last two should not be empty
-	    }
     }
 
 	public void Activate()

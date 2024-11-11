@@ -257,10 +257,8 @@ public class GameManager : NetworkBehaviour
 	        foreach (var playerManager in players)
 	        {
                 // clientId is likely always equal to index, but better play it safe
-		        var clientId = NetworkManager.ConnectedClientsList
-			        .FirstOrDefault(client => client.PlayerObject.GetComponent<PlayerData>().index == playerManager.index)
-			        .ClientId;
-		        playerManager.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
+                var clientId = GetClientId(playerManager.index);
+				playerManager.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
 	        }
         }
     }
@@ -449,4 +447,11 @@ public class GameManager : NetworkBehaviour
     {
         return unitSprites[(int)unitType];
     }
+
+    public ulong GetClientId(int index)
+    {
+        return NetworkManager.ConnectedClientsList
+	        .FirstOrDefault(client => client.PlayerObject.GetComponent<PlayerData>().index == index)
+	        .ClientId;
+	}
 }

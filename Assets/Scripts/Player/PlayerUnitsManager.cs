@@ -13,9 +13,6 @@ public class PlayerUnitsManager : NetworkBehaviour
     private GameManager gameManager;
     private List<UnitController> units = new List<UnitController>();
 
-    // Init only
-    private StartingResources startingResources;
-
     public void Init(PlayerManager playerManager, StartingResources startingResources)
     {
         this.playerManager = playerManager;
@@ -27,7 +24,21 @@ public class PlayerUnitsManager : NetworkBehaviour
             return;
         }
 
-        this.startingResources = startingResources;
+        if (!IsServer)
+        {
+            // Pick up spawned starting units
+            var units = FindObjectsByType<UnitController>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+	            .Where(unit => unit.owner == null);
+
+            foreach (var unitController in units)
+            {
+	            var ownerIndex = unitController.ownerIndex;
+				var owner = gameManager.players[ownerIndex.Value];
+				unitController.Init(owner, owner.mapManager, owner.gameManager, 
+					owner.gameManager.unitStatsMenuController, null, null);
+			}
+	        return;
+        };
 
         if (startingResources.unitLoadData.Count > 0)
         {
@@ -78,7 +89,8 @@ public class PlayerUnitsManager : NetworkBehaviour
 
         UnitController newUnit = GameObject.Instantiate(unitController, position, Quaternion.identity).GetComponent<UnitController>();
         units.Add(newUnit);
-        newUnit.Init(playerManager, playerManager.mapManager, playerManager.gameManager, playerManager.gameManager.unitStatsMenuController, rangeLeft, longPathClickPosition);
+        newUnit.Init(playerManager, playerManager.mapManager, playerManager.gameManager, playerManager.gameManager.unitStatsMenuController, 
+	        rangeLeft, longPathClickPosition);
 
 		// Add to city garrison if in city
 		var path = playerManager.mapManager.MapEntity.PathTiles(newUnit.transform.position, newUnit.transform.position, 1);
@@ -90,8 +102,11 @@ public class PlayerUnitsManager : NetworkBehaviour
 
 		if (gameManager.isMultiplayer)
         {
-	        var instanceNetworkObject = newUnit.GetComponent<NetworkObject>();
-	        instanceNetworkObject.Spawn();
+            newUnit.ownerIndex.Initialize(newUnit);
+            newUnit.ownerIndex.Value = newUnit.owner.index;
+            var instanceNetworkObject = newUnit.GetComponent<NetworkObject>();
+	        var clientId = gameManager.GetClientId(playerManager.index);
+			instanceNetworkObject.SpawnWithOwnership(clientId);
         }
     }
 
