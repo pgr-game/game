@@ -144,7 +144,7 @@ public class PlayerManager : NetworkBehaviour
             gameObject.SetActive(false);
         }
 
-
+        gameManager.SetNextTurnButtonText();
     }
 
     // Update is called once per frame
@@ -209,7 +209,8 @@ public class PlayerManager : NetworkBehaviour
 		// TODO computer player actions
 		// Now computer player just skips his turn
 		Debug.Log("Computer player " + index + " turn");
-        SkipTurn();
+		isSpectator = false;
+		SkipTurn();
     }
     public void SkipTurn()
     {
@@ -371,12 +372,15 @@ public class PlayerManager : NetworkBehaviour
 	            Debug.Log("Another player plays his turn");
 	            isSpectator = true;
 			}
+            gameManager.SetNextTurnButtonText();
         } else if (isComputer) DoTurn();
     }
 
     public void StartTurn() {
         playerSupplyManager.CheckSupplyLines();
-        playerUnitsManager.StartUnitsTurn();
+        playerCitiesManager.StartCitiesTurn();
+
+		playerUnitsManager.StartUnitsTurn();
 
         if (gameManager.turnNumber != 1) {
             AddGold(playerCitiesManager.GetGoldIncome());
@@ -407,4 +411,20 @@ public class PlayerManager : NetworkBehaviour
 	    }
 	    return isAlive;
     }
+
+    [Rpc(SendTo.Everyone)]
+	public void ResearchTreeRpc(int currResearchItem1, string currResearchItem2)
+	{
+		ResearchTree(currResearchItem1, currResearchItem2);
+	}
+	public void ResearchTree(int currResearchItem1, string currResearchItem2)
+    {
+	    var branch = currResearchItem2.Equals("Power")
+		    ? gameManager.activePlayer.powerEvolution
+		    : gameManager.activePlayer.strategyEvolution;
+
+	    branch[currResearchItem1][2] = "true";
+	    branch[currResearchItem1][3] = "0";
+	    gameManager.activePlayer.researchNode = (-1, "NONE");
+	}
 }

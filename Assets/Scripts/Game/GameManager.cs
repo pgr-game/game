@@ -71,13 +71,6 @@ public class GameManager : NetworkBehaviour
 	    }
 	}
 
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-
-
-	}
-
 	[GenerateSerializationForType(typeof(SceneLoadData))]
 	public void Init()
 	{
@@ -249,7 +242,10 @@ public class GameManager : NetworkBehaviour
         players = new PlayerManager[numberOfPlayers];
         for(int i = 0; i < numberOfPlayers; i++) {
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
-            //players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], isComputer[i], i);
+            if (!isMultiplayer)
+            {
+	            players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], isComputer[i], i);
+			}
             players[i].index = i;
         }
 
@@ -275,35 +271,50 @@ public class GameManager : NetworkBehaviour
 
     public void NextPlayer()
     {
-        if(!activePlayer.isSpectator)
-			NextPlayerRpc();
+	    if (!activePlayer.isSpectator)
+	    {
+		    if (isMultiplayer)
+		    {
+			    NextTurnRpc();
+			}
+		    else
+		    {
+			    NextTurn();
+			}
+	    }
     }
 
     [Rpc(SendTo.Everyone)]
-    public void NextPlayerRpc()
+    public void NextTurnRpc()
     {
-        this.activePlayer.playerSupplyManager.ClearSupplyLineCreator();
-        this.cityMenuManager.Deactivate();
-        // this needs to happen before the next player is activated, because next player may be dead
-        CheckIfGameIsEnded();
-        players[activePlayerIndex].playerUnitsManager.TryAutoMoveAll();
-        players[activePlayerIndex].playerUnitsManager.DeactivateAll();
-        players[activePlayerIndex].gameObject.SetActive(false);
-        GameObject unitList = UI.transform.Find("UnitList").gameObject;
-        unitList.SetActive(false);
-
-        activePlayerIndex = (activePlayerIndex + 1) % numberOfPlayers;
-
-        activePlayer = players[activePlayerIndex];
-        players[activePlayerIndex].gameObject.SetActive(true);
-        if(activePlayerIndex == 0) {
-            turnNumber++;
-            DisplayTurnNumber(turnNumber);
-        }
-        SetPlayerUIColor(players[activePlayerIndex].color);
-        players[activePlayerIndex].StartTurn();
-        playerTreeManager.reserachProgress();
+	    NextTurn();
     }
+
+    public void NextTurn()
+    {
+	    this.activePlayer.playerSupplyManager.ClearSupplyLineCreator();
+	    this.cityMenuManager.Deactivate();
+	    // this needs to happen before the next player is activated, because next player may be dead
+	    CheckIfGameIsEnded();
+	    players[activePlayerIndex].playerUnitsManager.TryAutoMoveAll();
+	    players[activePlayerIndex].playerUnitsManager.DeactivateAll();
+	    players[activePlayerIndex].gameObject.SetActive(false);
+	    GameObject unitList = UI.transform.Find("UnitList").gameObject;
+	    unitList.SetActive(false);
+
+	    activePlayerIndex = (activePlayerIndex + 1) % numberOfPlayers;
+
+	    activePlayer = players[activePlayerIndex];
+	    players[activePlayerIndex].gameObject.SetActive(true);
+	    if (activePlayerIndex == 0)
+	    {
+		    turnNumber++;
+		    DisplayTurnNumber(turnNumber);
+	    }
+	    SetPlayerUIColor(players[activePlayerIndex].color);
+		players[activePlayerIndex].StartTurn();
+	    playerTreeManager.reserachProgress();
+	}
 
     public void CheckIfGameIsEnded() {
         bool gameEnded = false;
@@ -400,15 +411,19 @@ public class GameManager : NetworkBehaviour
 
     public void SetPlayerUIColor(Color color) {
 	    nextTurnMenuController.SetColor(color);
-        if (activePlayer.isSpectator)
-        {
-	        nextTurnMenuController.SetText("WAIT FOR OTHER PLAYER");
-        }
-        else
-        {
-	        nextTurnMenuController.SetText("NEXT TURN");
-        }
     }
+
+    public void SetNextTurnButtonText()
+    {
+	    if (activePlayer.isSpectator)
+	    {
+		    nextTurnMenuController.SetText("WAIT FOR OTHER PLAYER");
+	    }
+	    else
+	    {
+		    nextTurnMenuController.SetText("NEXT TURN");
+	    }
+	}
 
     private void DisplayTurnNumber(int turnNumber)
     {

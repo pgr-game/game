@@ -13,6 +13,10 @@ public class UnitList : MonoBehaviour
 
     public void ButtonPress()
     {
+	    if (gameManager.isMultiplayer && !gameManager.activePlayer.IsOwner)
+	    {
+		    return;
+	    }
         GameObject content = unitList.transform.Find("Scroll View/Viewport/Content").gameObject;
         unitList.SetActive(!unitList.activeSelf);
         if (unitList.activeSelf)

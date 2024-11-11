@@ -54,7 +54,15 @@ public class City
             UnitInProductionTurnsLeft = UnitInProductionTurnsLeft - 1;
             if (UnitInProductionTurnsLeft == 0)
             {
-                Owner.playerUnitsManager.InstantiateUnitRpc(UnitInProduction.name, null, cityTiles.FirstOrDefault().transform.position);
+	            if (Owner.gameManager.isMultiplayer)
+	            {
+		            Owner.playerUnitsManager.InstantiateUnitRpc(UnitInProduction.name, null, cityTiles.FirstOrDefault().transform.position);
+				}
+	            else
+	            {
+		            Owner.playerUnitsManager.InstantiateUnit(UnitInProduction.name, null, cityTiles.FirstOrDefault().transform.position);
+				}
+                
                 UnitInProductionTurnsLeft = UnitInProduction.GetProductionTurns();
 
             }
