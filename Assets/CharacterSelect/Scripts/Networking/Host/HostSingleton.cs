@@ -52,7 +52,10 @@ public class HostSingleton : MonoBehaviour
 
     public async Task<bool> StartHostAsync()
     {
-        Allocation allocation = null;
+	    var gameSettings = GameObject.Find("GameSettings")?.GetComponent<GameSettings>();
+	    maxConnections = gameSettings.numberOfPlayers;
+
+	    Allocation allocation = null;
 
         try
         {
