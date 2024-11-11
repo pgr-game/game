@@ -95,6 +95,8 @@ public class UnitController : NetworkBehaviour, INetworkSerializable
         {
 	        tile.CityTilePresent.city.AddToGarrison(this);
         }
+
+        playerUnitsManager.AddIfNotInList(this);
 	}
 
 	public void Activate()

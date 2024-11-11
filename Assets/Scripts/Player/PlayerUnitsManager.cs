@@ -105,7 +105,6 @@ public class PlayerUnitsManager : NetworkBehaviour
     public void RemoveUnit(UnitController unit)
     {
         units.Remove(unit);
-        gameManager.units.Remove(unit);
     }
 
     public void StartUnitsTurn()
@@ -167,4 +166,12 @@ public class PlayerUnitsManager : NetworkBehaviour
         });
         return unitData;
     }
+
+    public void AddIfNotInList(UnitController unit)
+    {
+	    if (!units.Contains(unit))
+	    {
+		    units.Add(unit);
+	    }
+	}
 }
