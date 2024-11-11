@@ -22,6 +22,7 @@ public class PlayerManager : NetworkBehaviour
 
     //selecting units and settlements
     private bool isInMenu = false;
+    public bool isSpectator { get; private set; } = true;
     private GameObject selected;
     private GameObject newSelected;
     private Ray ray;
@@ -120,6 +121,8 @@ public class PlayerManager : NetworkBehaviour
         else if (!gameManager.isMultiplayer)
 		{
 	        this.isComputer = isComputer;
+	        if (!isComputer)
+		        isSpectator = false;
 		}
 		InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
@@ -147,7 +150,7 @@ public class PlayerManager : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!PauseMenu.isPaused) 
+        if (!PauseMenu.isPaused && !isSpectator) 
         {
             if (playerSupplyManager.drawingSupplyLine && !playerSupplyManager.justActivated)
             {
@@ -201,9 +204,11 @@ public class PlayerManager : NetworkBehaviour
 
     public void DoTurn()
     {
-        // TODO computer player actions
-        // Now computer player just skips his turn
-        Debug.Log("Computer player " + index + " turn");
+	    isSpectator = true;
+
+		// TODO computer player actions
+		// Now computer player just skips his turn
+		Debug.Log("Computer player " + index + " turn");
         SkipTurn();
     }
     public void SkipTurn()
@@ -357,10 +362,15 @@ public class PlayerManager : NetworkBehaviour
             {
                 DoTurn();
             }
-            if (playerNetworkData == null || playerNetworkData?.index != this.index)
+            else if (IsOwner)
             {
-                Debug.Log("Another player plays his turn");
-            }
+				isSpectator = false;
+			}
+            else if (!IsOwner)
+            {
+	            Debug.Log("Another player plays his turn");
+	            isSpectator = true;
+			}
         } else if (isComputer) DoTurn();
     }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using RedBjorn.ProtoTiles;
+using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
@@ -51,7 +52,7 @@ public class GameManager : NetworkBehaviour
 
     // UI elements
     public UnitStatsMenuController unitStatsMenuController;
-    public Image nextTurnButtonImage;
+    public NextTurnMenuController nextTurnMenuController;
     public GameObject UI;
     public TileTag cityTag;
 
@@ -83,6 +84,7 @@ public class GameManager : NetworkBehaviour
 		isInit = true;
         playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
         unitStatsMenuController = UI.gameObject.GetComponent<UnitStatsMenuController>();
+        nextTurnMenuController = UI.gameObject.GetComponent<NextTurnMenuController>();
         InitStaticVariables();
         soundManager = Instantiate(soundManager, new Vector3(0,0,0), Quaternion.identity);
         gameSettings = GameObject.Find("GameSettings")?.GetComponent<GameSettings>();
@@ -273,7 +275,8 @@ public class GameManager : NetworkBehaviour
 
     public void NextPlayer()
     {
-	    NextPlayerRpc();
+        if(!activePlayer.isSpectator)
+			NextPlayerRpc();
     }
 
     [Rpc(SendTo.Everyone)]
@@ -396,7 +399,15 @@ public class GameManager : NetworkBehaviour
     }
 
     public void SetPlayerUIColor(Color color) {
-        nextTurnButtonImage.color = color;
+	    nextTurnMenuController.SetColor(color);
+        if (activePlayer.isSpectator)
+        {
+	        nextTurnMenuController.SetText("WAIT FOR OTHER PLAYER");
+        }
+        else
+        {
+	        nextTurnMenuController.SetText("NEXT TURN");
+        }
     }
 
     private void DisplayTurnNumber(int turnNumber)
