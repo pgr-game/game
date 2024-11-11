@@ -16,7 +16,7 @@ public class PlayerManager : NetworkBehaviour
     //assigned by game manager
     public MapManager mapManager;
     public GameManager gameManager;
-    public bool isComputer;
+    public bool isComputer = false;
     public Color32 color;
     public int index;
 
@@ -111,9 +111,17 @@ public class PlayerManager : NetworkBehaviour
             {
 	            this.color = playerData.otherPlayersColors[index];
             }
+            else
+            {
+                // player without PlayerData in a multiplayer game is automatically controlled by computer
+                this.isComputer = true;
+            }
         }
-        this.isComputer = isComputer;
-        InitTree(startingResources.treeLoadData);
+        else if (!gameManager.isMultiplayer)
+		{
+	        this.isComputer = isComputer;
+		}
+		InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
         InitForts(startingResources);
         InitSupplyLines(startingResources.supplyLoadData);

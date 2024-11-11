@@ -257,8 +257,17 @@ public class GameManager : NetworkBehaviour
 	        {
                 // clientId is likely always equal to index, but better play it safe
                 var clientId = GetClientId(playerManager.index);
-				playerManager.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
-	        }
+                if (clientId != null)
+                {
+	                playerManager.GetComponent<NetworkObject>().SpawnWithOwnership((ulong)clientId);
+				}
+                else
+                {
+					// this is a player that never joined, convert them to computer player
+                    // and spawn as a server owned object
+					playerManager.GetComponent<NetworkObject>().Spawn();
+				}
+			}
         }
     }
 
@@ -447,10 +456,10 @@ public class GameManager : NetworkBehaviour
         return unitSprites[(int)unitType];
     }
 
-    public ulong GetClientId(int index)
+    public ulong? GetClientId(int index)
     {
         return NetworkManager.ConnectedClientsList
-	        .FirstOrDefault(client => client.PlayerObject.GetComponent<PlayerData>().index == index)
+	        .FirstOrDefault(client => client.PlayerObject.GetComponent<PlayerData>().index == index)?
 	        .ClientId;
 	}
 }

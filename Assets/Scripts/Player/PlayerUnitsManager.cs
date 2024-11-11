@@ -98,7 +98,14 @@ public class PlayerUnitsManager : NetworkBehaviour
             newUnit.ownerIndex.Value = newUnit.owner.index;
             var instanceNetworkObject = newUnit.GetComponent<NetworkObject>();
 	        var clientId = gameManager.GetClientId(playerManager.index);
-			instanceNetworkObject.SpawnWithOwnership(clientId);
+	        if (clientId != null)
+	        {
+		        instanceNetworkObject.SpawnWithOwnership((ulong)clientId);
+			}
+	        else
+	        {
+		        instanceNetworkObject.Spawn();
+			}
         }
     }
 
