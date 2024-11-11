@@ -16,12 +16,13 @@ public class PlayerManager : NetworkBehaviour
     //assigned by game manager
     public MapManager mapManager;
     public GameManager gameManager;
-    public bool isComputer;
+    public bool isComputer = false;
     public Color32 color;
     public int index;
 
     //selecting units and settlements
     private bool isInMenu = false;
+    public bool isSpectator { get; private set; } = true;
     private GameObject selected;
     private GameObject newSelected;
     private Ray ray;
@@ -47,18 +48,32 @@ public class PlayerManager : NetworkBehaviour
 
     // Multiplayer
     private PlayerData playerNetworkData;
+    public bool isInit = true;
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
+	    base.OnNetworkSpawn();
 
-        var gameManager = FindAnyObjectByType<GameManager>();
-        if (!gameManager.isInit)
-        {
-	        gameManager.Init();
-        }
+	    var gameManager = FindAnyObjectByType<GameManager>();
+	    if (gameManager == null)
+	    {
+		    isInit = false;
+		    return;
+	    }
 
-        int index = 0;
+	    if (!gameManager.isInit)
+	    {
+		    gameManager.Init();
+	    }
+
+		Init(gameManager);
+    }
+
+    public void Init(GameManager gameManager)
+    {
+	    this.gameManager = gameManager;
+
+		int index = 0;
         for (int i = 0; i < gameManager.sceneLoadData.playerPositions.Length; i++)
         {
 	        if (gameManager.sceneLoadData.playerPositions[i] == transform.position)
@@ -67,7 +82,13 @@ public class PlayerManager : NetworkBehaviour
 		        break;
 	        }
         }
-		Init(gameManager, gameManager.mapManager, gameManager.startingResources[index], 
+
+        if (gameManager.players[index] == null)
+        {
+	        gameManager.players[index] = this;
+        }
+
+	    Init(gameManager, gameManager.mapManager, gameManager.startingResources[index], 
 			gameManager.sceneLoadData.playerColors[index], gameManager.sceneLoadData.startingCityNames[index], 
 			gameManager.sceneLoadData.isComputer[index], index);
     }
@@ -91,9 +112,19 @@ public class PlayerManager : NetworkBehaviour
             {
 	            this.color = playerData.otherPlayersColors[index];
             }
+            else
+            {
+                // player without PlayerData in a multiplayer game is automatically controlled by computer
+                this.isComputer = true;
+            }
         }
-        this.isComputer = isComputer;
-        InitTree(startingResources.treeLoadData);
+        else if (!gameManager.isMultiplayer)
+		{
+	        this.isComputer = isComputer;
+	        if (!isComputer)
+		        isSpectator = false;
+		}
+		InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
         InitForts(startingResources);
         InitSupplyLines(startingResources.supplyLoadData);
@@ -119,7 +150,7 @@ public class PlayerManager : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!PauseMenu.isPaused) 
+        if (!PauseMenu.isPaused && !isSpectator) 
         {
             if (playerSupplyManager.drawingSupplyLine && !playerSupplyManager.justActivated)
             {
@@ -173,9 +204,11 @@ public class PlayerManager : NetworkBehaviour
 
     public void DoTurn()
     {
-        // TODO computer player actions
-        // Now computer player just skips his turn
-        Debug.Log("Computer player " + index + " turn");
+	    isSpectator = true;
+
+		// TODO computer player actions
+		// Now computer player just skips his turn
+		Debug.Log("Computer player " + index + " turn");
         SkipTurn();
     }
     public void SkipTurn()
@@ -329,10 +362,15 @@ public class PlayerManager : NetworkBehaviour
             {
                 DoTurn();
             }
-            if (playerNetworkData == null || playerNetworkData?.index != this.index)
+            else if (IsOwner)
             {
-                Debug.Log("Another player plays his turn");
-            }
+				isSpectator = false;
+			}
+            else if (!IsOwner)
+            {
+	            Debug.Log("Another player plays his turn");
+	            isSpectator = true;
+			}
         } else if (isComputer) DoTurn();
     }
 

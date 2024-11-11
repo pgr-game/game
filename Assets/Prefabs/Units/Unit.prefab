@@ -58,6 +58,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -127,6 +130,7 @@ GameObject:
   - component: {fileID: 143430592383320160}
   - component: {fileID: 6065591897587641577}
   - component: {fileID: 4983505441445479054}
+  - component: {fileID: -2029935083711562683}
   - component: {fileID: 3133105980512007016}
   - component: {fileID: -2897094208848902475}
   - component: {fileID: 3416050078212497185}
@@ -193,6 +197,31 @@ CapsuleCollider:
   m_Height: 5
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-2029935083711562683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4825141584707445255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1474350365
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &3133105980512007016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,6 +234,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92a260e60d14c2348afa6280bbf52c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  playerUnitsManager: {fileID: 0}
   owner: {fileID: 0}
   mapManager: {fileID: 0}
   unitMove: {fileID: -2897094208848902475}
@@ -220,7 +251,7 @@ MonoBehaviour:
   level: 1
   defense: 0
   gameManager: {fileID: 0}
-  unitStatsUIController: {fileID: 0}
+  unitStatsMenuController: {fileID: 0}
   moveSounds:
   - {fileID: 8300000, guid: 2699dcea9c6de004b9ee44c17ab1f243, type: 3}
   - {fileID: 8300000, guid: 7d28cb5ec2dff234fa0bb776e0e77b8a, type: 3}
@@ -241,6 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18319cf98b75494ea4c8f550c0a61ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   Speed: 5
   Range: 3
   RangeLeft: 0
@@ -251,6 +283,7 @@ MonoBehaviour:
   unitController: {fileID: 0}
   Area: {fileID: 0}
   isAutoMove: 0
+  longPathClickPosition: {x: 0, y: 0, z: 0}
   hexPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &3416050078212497185
 MonoBehaviour:
@@ -325,6 +358,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
