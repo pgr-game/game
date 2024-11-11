@@ -209,7 +209,8 @@ public class PlayerManager : NetworkBehaviour
 		// TODO computer player actions
 		// Now computer player just skips his turn
 		Debug.Log("Computer player " + index + " turn");
-        SkipTurn();
+		isSpectator = false;
+		SkipTurn();
     }
     public void SkipTurn()
     {

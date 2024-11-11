@@ -24,7 +24,7 @@ public class PlayerUnitsManager : NetworkBehaviour
             return;
         }
 
-        if (!IsServer)
+        if (gameManager.isMultiplayer && !IsServer)
         {
             // Pick up spawned starting units
             var units = FindObjectsByType<UnitController>(FindObjectsInactive.Include, FindObjectsSortMode.None)
@@ -48,15 +48,29 @@ public class PlayerUnitsManager : NetworkBehaviour
 
 	        foreach (var ud in unitControllerAndLoadData)
 	        {
-		        InstantiateUnitRpc(ud.UnitController.name, ud.UnitLoadData, playerManager.transform.position);
-	        }
+		        if (gameManager.isMultiplayer)
+		        {
+			        InstantiateUnitRpc(ud.UnitController.name, ud.UnitLoadData, playerManager.transform.position);
+				}
+		        else
+		        {
+			        InstantiateUnit(ud.UnitController.name, ud.UnitLoadData, playerManager.transform.position);
+				}
+			}
         }
         else
         {
 	        // instantiate new without loading health, movement left etc.
 	        foreach (UnitController unit in startingResources.units)
 	        {
-		        InstantiateUnitRpc(unit.name, null, playerManager.transform.position);
+		        if (gameManager.isMultiplayer)
+		        {
+					InstantiateUnitRpc(unit.name, null, playerManager.transform.position);
+				}
+		        else
+		        {
+					InstantiateUnit(unit.name, null, playerManager.transform.position);
+				}
 	        }
         }
 	}
@@ -64,50 +78,55 @@ public class PlayerUnitsManager : NetworkBehaviour
     [Rpc(SendTo.Server, RequireOwnership = false)]
     public void InstantiateUnitRpc(string unitName, UnitLoadData unitLoadData, Vector3 position)
     {
+	    InstantiateUnit(unitName, unitLoadData, position);
+    }
+
+    public void InstantiateUnit(string unitName, UnitLoadData unitLoadData, Vector3 position)
+    {
 	    UnitController unitController = gameManager.unitPrefabs
 		    .FirstOrDefault(prefab => prefab.name == unitName)?
 		    .GetComponent<UnitController>();
-        float? rangeLeft = null;
-        Vector3? longPathClickPosition = null;
-        if (unitLoadData != null)
-        {
-            position = unitLoadData.position;
-            unitController.maxHealth = unitLoadData.maxHealth;
-            unitController.currentHealth = unitLoadData.currentHealth;
-            unitController.attack = unitLoadData.attack;
-            unitController.attackRange = unitLoadData.attackRange;
-            unitController.baseProductionCost = unitLoadData.baseProductionCost;
-            unitController.turnsToProduce = unitLoadData.turnsToProduce;
-            unitController.turnProduced = unitLoadData.turnProduced;
-            unitController.level = unitLoadData.level;
-            unitController.turnsToProduce = unitLoadData.turnsToProduce;
-            unitController.experience = unitLoadData.experience;
-            rangeLeft = unitLoadData.rangeLeft;
-            unitController.attacked = unitLoadData.attacked;
-            longPathClickPosition = unitLoadData.longPathClickPosition;
-        }
+	    float? rangeLeft = null;
+	    Vector3? longPathClickPosition = null;
+	    if (unitLoadData != null)
+	    {
+		    position = unitLoadData.position;
+		    unitController.maxHealth = unitLoadData.maxHealth;
+		    unitController.currentHealth = unitLoadData.currentHealth;
+		    unitController.attack = unitLoadData.attack;
+		    unitController.attackRange = unitLoadData.attackRange;
+		    unitController.baseProductionCost = unitLoadData.baseProductionCost;
+		    unitController.turnsToProduce = unitLoadData.turnsToProduce;
+		    unitController.turnProduced = unitLoadData.turnProduced;
+		    unitController.level = unitLoadData.level;
+		    unitController.turnsToProduce = unitLoadData.turnsToProduce;
+		    unitController.experience = unitLoadData.experience;
+		    rangeLeft = unitLoadData.rangeLeft;
+		    unitController.attacked = unitLoadData.attacked;
+		    longPathClickPosition = unitLoadData.longPathClickPosition;
+	    }
 
-        UnitController newUnit = GameObject.Instantiate(unitController, position, Quaternion.identity).GetComponent<UnitController>();
-        units.Add(newUnit);
-        newUnit.Init(playerManager, playerManager.mapManager, playerManager.gameManager, playerManager.gameManager.unitStatsMenuController, 
-	        rangeLeft, longPathClickPosition);
+	    UnitController newUnit = GameObject.Instantiate(unitController, position, Quaternion.identity).GetComponent<UnitController>();
+	    units.Add(newUnit);
+	    newUnit.Init(playerManager, playerManager.mapManager, playerManager.gameManager, playerManager.gameManager.unitStatsMenuController,
+		    rangeLeft, longPathClickPosition);
 
-		if (gameManager.isMultiplayer)
-        {
-            newUnit.ownerIndex.Initialize(newUnit);
-            newUnit.ownerIndex.Value = newUnit.owner.index;
-            var instanceNetworkObject = newUnit.GetComponent<NetworkObject>();
-	        var clientId = gameManager.GetClientId(playerManager.index);
-	        if (clientId != null)
-	        {
-		        instanceNetworkObject.SpawnWithOwnership((ulong)clientId);
-			}
-	        else
-	        {
-		        instanceNetworkObject.Spawn();
-			}
-        }
-    }
+	    if (gameManager.isMultiplayer)
+	    {
+		    newUnit.ownerIndex.Initialize(newUnit);
+		    newUnit.ownerIndex.Value = newUnit.owner.index;
+		    var instanceNetworkObject = newUnit.GetComponent<NetworkObject>();
+		    var clientId = gameManager.GetClientId(playerManager.index);
+		    if (clientId != null)
+		    {
+			    instanceNetworkObject.SpawnWithOwnership((ulong)clientId);
+		    }
+		    else
+		    {
+			    instanceNetworkObject.Spawn();
+		    }
+	    }
+	}
 
     public void RemoveUnit(UnitController unit)
     {

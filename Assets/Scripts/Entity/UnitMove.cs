@@ -96,11 +96,23 @@ public class UnitMove : NetworkBehaviour
         // manual movement (get click position from mouse position now)
         Vector3 clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
 
-        ClickedToMoveToPositionRpc(clickPos);
-    }
+        if (unitController.owner.gameManager.isMultiplayer)
+        {
+	        ClickedToMoveToPositionRpc(clickPos);
+		}
+        else
+        {
+	        ClickedToMoveToPosition(clickPos);
+		}
+	}
 
     [Rpc(SendTo.Everyone)]
     public void ClickedToMoveToPositionRpc(Vector3 clickPos)
+    {
+	    ClickedToMoveToPosition(clickPos);
+    }
+
+    public void ClickedToMoveToPosition(Vector3 clickPos)
     {
 	    var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
 	    if (path.Count == 0)
