@@ -12,6 +12,10 @@ public class PlayerUnitsManager : NetworkBehaviour
     private PlayerManager playerManager;
     private GameManager gameManager;
     private List<UnitController> units = new List<UnitController>();
+
+    // Init only
+    private StartingResources startingResources;
+
     public void Init(PlayerManager playerManager, StartingResources startingResources)
     {
         this.playerManager = playerManager;
@@ -23,41 +27,35 @@ public class PlayerUnitsManager : NetworkBehaviour
             return;
         }
 
+        this.startingResources = startingResources;
+
         if (startingResources.unitLoadData.Count > 0)
         {
-            var unitControllerAndLoadData = startingResources.units.Zip(
-                startingResources.unitLoadData, (u, d) => new { UnitController = u, UnitLoadData = d }
-            );
+	        var unitControllerAndLoadData = startingResources.units.Zip(
+		        startingResources.unitLoadData, (u, d) => new { UnitController = u, UnitLoadData = d }
+	        );
 
-            foreach (var ud in unitControllerAndLoadData)
-            {
-                InstantiateUnit(ud.UnitController, ud.UnitLoadData, playerManager.transform.position);
-            }
+	        foreach (var ud in unitControllerAndLoadData)
+	        {
+		        InstantiateUnitRpc(ud.UnitController.name, ud.UnitLoadData, playerManager.transform.position);
+	        }
         }
         else
         {
-            // instantiate new without loading health, movement left etc.
-            foreach (UnitController unit in startingResources.units)
-            {
-                InstantiateUnit(unit, null, playerManager.transform.position);
-            }
+	        // instantiate new without loading health, movement left etc.
+	        foreach (UnitController unit in startingResources.units)
+	        {
+		        InstantiateUnitRpc(unit.name, null, playerManager.transform.position);
+	        }
         }
+	}
 
-        //add units to city garrison
-        foreach (UnitController unit in units)
-        {
-            var path = playerManager.mapManager.MapEntity.PathTiles(unit.transform.position, unit.transform.position, 1);
-            var tile = path.Last();
-            if (tile.CityTilePresent)
-            {
-                tile.CityTilePresent.city.AddToGarrison(unit);
-            }
-        }
-    }
-
-    //[Rpc(SendTo.Server)]
-    public UnitController InstantiateUnit(UnitController unitController, UnitLoadData unitLoadData, Vector3 position)
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    public void InstantiateUnitRpc(string unitName, UnitLoadData unitLoadData, Vector3 position)
     {
+	    UnitController unitController = gameManager.unitPrefabs
+		    .FirstOrDefault(prefab => prefab.name == unitName)?
+		    .GetComponent<UnitController>();
         float? rangeLeft = null;
         Vector3? longPathClickPosition = null;
         if (unitLoadData != null)
@@ -82,13 +80,19 @@ public class PlayerUnitsManager : NetworkBehaviour
         units.Add(newUnit);
         newUnit.Init(playerManager, playerManager.mapManager, playerManager.gameManager, playerManager.gameManager.unitStatsMenuController, rangeLeft, longPathClickPosition);
 
-        if (gameManager.isMultiplayer)
-        {
-	        //var instanceNetworkObject = newUnit.GetComponent<NetworkObject>();
-	        //instanceNetworkObject.Spawn();
-        }
+		// Add to city garrison if in city
+		var path = playerManager.mapManager.MapEntity.PathTiles(newUnit.transform.position, newUnit.transform.position, 1);
+		var tile = path.Last();
+		if (tile.CityTilePresent)
+		{
+			tile.CityTilePresent.city.AddToGarrison(newUnit);
+		}
 
-		return newUnit;
+		if (gameManager.isMultiplayer)
+        {
+	        var instanceNetworkObject = newUnit.GetComponent<NetworkObject>();
+	        instanceNetworkObject.Spawn();
+        }
     }
 
     public void RemoveUnit(UnitController unit)

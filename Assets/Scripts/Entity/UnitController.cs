@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 
-public class UnitController : NetworkBehaviour
+public class UnitController : NetworkBehaviour, INetworkSerializable
 {
     public PlayerUnitsManager playerUnitsManager;
     public PlayerManager owner;
@@ -384,4 +384,20 @@ public class UnitController : NetworkBehaviour
             unitStatsMenuController.UpdateUnitStatisticsWindow(unitStatsMenuController.activeUnit);
         }
     }
+	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+	{
+		serializer.SerializeValue(ref maxHealth);
+		serializer.SerializeValue(ref currentHealth);
+		serializer.SerializeValue(ref attack);
+		serializer.SerializeValue(ref attackRange);
+		serializer.SerializeValue(ref baseProductionCost);
+		serializer.SerializeValue(ref turnsToProduce);
+		serializer.SerializeValue(ref turnProduced);
+		serializer.SerializeValue(ref level);
+		serializer.SerializeValue(ref defense);
+		serializer.SerializeValue(ref experience);
+		serializer.SerializeValue(ref attacked);
+		serializer.SerializeValue(ref canPlaceFort);
+		serializer.SerializeValue(ref turnsSinceFortPlaced);
+	}
 }

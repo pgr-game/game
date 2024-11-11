@@ -67,9 +67,16 @@ public class GameManager : NetworkBehaviour
     {
 	    if (!isInit)
 	    {
-			Init();
+		    Init();
 	    }
-    }
+	}
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+
+	}
 
 	[GenerateSerializationForType(typeof(SceneLoadData))]
 	public void Init()
@@ -128,7 +135,36 @@ public class GameManager : NetworkBehaviour
 	        InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames, sceneLoadData.isComputer, sceneLoadData.isMultiplayer);
 	        players[activePlayerIndex].StartFirstTurn();
 		}
-    }
+
+        if (!IsServer)
+        {
+	        InitPlayersThatSpawnedBeforeThis();
+
+        }
+	}
+
+	private void InitPlayersThatSpawnedBeforeThis()
+	{
+		// Players that have spawned before GameManager need initialization
+
+		for (int i = 0; i < players.Length; i++)
+		{
+			var playerManager = players[i];
+			if (!playerManager)
+			{
+				playerManager =
+					FindObjectsByType<PlayerManager>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+						.FirstOrDefault(player => player.index == i);
+				players[i] = playerManager;
+				activePlayer = players[0];
+			}
+
+			if (playerManager && !playerManager.isInit)
+			{
+				playerManager.Init(this);
+			}
+		}
+	}
 
     private void InitStaticVariables()
     {
@@ -212,7 +248,8 @@ public class GameManager : NetworkBehaviour
         players = new PlayerManager[numberOfPlayers];
         for(int i = 0; i < numberOfPlayers; i++) {
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
-            players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], isComputer[i], i);
+            //players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], isComputer[i], i);
+            players[i].index = i;
         }
 
         if (isMultiplayer)

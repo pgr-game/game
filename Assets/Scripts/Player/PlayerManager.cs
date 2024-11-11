@@ -47,18 +47,32 @@ public class PlayerManager : NetworkBehaviour
 
     // Multiplayer
     private PlayerData playerNetworkData;
+    public bool isInit = true;
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
+	    base.OnNetworkSpawn();
 
-        var gameManager = FindAnyObjectByType<GameManager>();
-        if (!gameManager.isInit)
-        {
-	        gameManager.Init();
-        }
+	    var gameManager = FindAnyObjectByType<GameManager>();
+	    if (gameManager == null)
+	    {
+		    isInit = false;
+		    return;
+	    }
 
-        int index = 0;
+	    if (!gameManager.isInit)
+	    {
+		    gameManager.Init();
+	    }
+
+		Init(gameManager);
+    }
+
+    public void Init(GameManager gameManager)
+    {
+	    this.gameManager = gameManager;
+
+		int index = 0;
         for (int i = 0; i < gameManager.sceneLoadData.playerPositions.Length; i++)
         {
 	        if (gameManager.sceneLoadData.playerPositions[i] == transform.position)
@@ -67,7 +81,13 @@ public class PlayerManager : NetworkBehaviour
 		        break;
 	        }
         }
-		Init(gameManager, gameManager.mapManager, gameManager.startingResources[index], 
+
+        if (gameManager.players[index] == null)
+        {
+	        gameManager.players[index] = this;
+        }
+
+	    Init(gameManager, gameManager.mapManager, gameManager.startingResources[index], 
 			gameManager.sceneLoadData.playerColors[index], gameManager.sceneLoadData.startingCityNames[index], 
 			gameManager.sceneLoadData.isComputer[index], index);
     }
