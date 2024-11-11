@@ -377,7 +377,9 @@ public class PlayerManager : NetworkBehaviour
 
     public void StartTurn() {
         playerSupplyManager.CheckSupplyLines();
-        playerUnitsManager.StartUnitsTurn();
+        playerCitiesManager.StartCitiesTurn();
+
+		playerUnitsManager.StartUnitsTurn();
 
         if (gameManager.turnNumber != 1) {
             AddGold(playerCitiesManager.GetGoldIncome());
