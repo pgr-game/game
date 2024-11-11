@@ -614,6 +614,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogContainer: {fileID: 0}
   UnitEntryPrefab: {fileID: 7768305636674779308, guid: 2421758fbe0bedf4ba11c99b241c1f99, type: 3}
+  createSupplyLineButton: {fileID: 4857425968618511062}
 --- !u!1 &1538086986603975304
 GameObject:
   m_ObjectHideFlags: 0

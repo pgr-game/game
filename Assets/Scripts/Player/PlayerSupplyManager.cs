@@ -9,6 +9,7 @@ using UnityEngine;
 public class PlayerSupplyManager
 {
     public PlayerManager playerManager;
+    public GameObject hexHighlitPrefab;
     public GameManager gameManager;
     private List<SupplyLineController> supplyLines;
 
@@ -23,10 +24,11 @@ public class PlayerSupplyManager
     private Color supplyInactiveColor;
     private const int maxSupplyRange = 1000;
 
-    public void Init(PlayerManager playerManager, SupplyLoadData loadData)
+    public void Init(PlayerManager playerManager, SupplyLoadData loadData, GameObject hexHighlitPrefab)
     {
         this.playerManager = playerManager;
         this.gameManager = playerManager.gameManager;
+        this.hexHighlitPrefab = hexHighlitPrefab;
         supplyLines = new List<SupplyLineController>();
         passableArea = GameObject.Instantiate(playerManager.passableAreaPrefab, Vector3.zero, Quaternion.identity);
         passableArea.Hide();
@@ -170,7 +172,7 @@ public class PlayerSupplyManager
         newSupplyLineDrawer.ActiveState();
         newSupplyLineDrawer.Hide();
         SupplyLineController newSupplyLine = new SupplyLineController();
-        newSupplyLine.Init(this, originCity, path, newSupplyLineDrawer);
+        newSupplyLine.Init(this, originCity, path, newSupplyLineDrawer,hexHighlitPrefab);
         supplyLines.Add(newSupplyLine);
         ClearSupplyLineCreator();
     }

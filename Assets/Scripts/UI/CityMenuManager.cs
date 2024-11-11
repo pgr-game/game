@@ -11,6 +11,7 @@ public class CityMenuManager : MonoBehaviour
     public RectTransform dialogContainer;
     public GameObject UnitEntryPrefab;
     public City city;
+    public GameObject createSupplyLineButton;
 
     private Text cityNameText;
     private GameObject unitsContainer;
@@ -49,7 +50,7 @@ public class CityMenuManager : MonoBehaviour
             FillUnitsList(gameManager.unitPrefabs);
         }
         bool isSupplyLineReaserched = this.gameManager.playerTreeManager.isNodeResearched(4, "Strategy");
-        this.transform.Find("Buttons").Find("CreateSupplyLineButton").gameObject.GetComponent<Button>().interactable = isSupplyLineReaserched;
+        createSupplyLineButton.GetComponent<Button>().interactable = isSupplyLineReaserched;
         if (city.besieged && !city.supplied)
         {
             foreach (var item in unitEntriesInList)

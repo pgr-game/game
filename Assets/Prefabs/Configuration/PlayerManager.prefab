@@ -45,7 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3187381886
+  GlobalObjectIdHash: 4026202524
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -53,6 +56,8 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &3982005917007664542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,18 +70,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1480271d7d5e0fc48aa81f26e0fda6fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   mapManager: {fileID: 0}
   gameManager: {fileID: 0}
   isComputer: 0
   color:
     serializedVersion: 2
     rgba: 0
-  colorName: 
   index: 0
   pathPrefab: {fileID: 114413117004689456, guid: b08b90c04512be143a7b595fa43b6559, type: 3}
   passableAreaPrefab: {fileID: 114964435729023602, guid: fe2319e9d6e840f409af77b3e7a85259, type: 3}
   fortPrefab: {fileID: 7362454568944323520, guid: 26ffc5ad993277348bf537bf162f852c, type: 3}
   supplyLinePrefab: {fileID: 0}
+  hexHighlitPrefab: {fileID: 7362454568944323520, guid: dbbaf1f5e5a06dc43acf821e4defda6f, type: 3}
   gold: 0
   goldText: {fileID: 0}
   goldIncome: 5
