@@ -90,6 +90,7 @@ MonoBehaviour:
   passableAreaPrefab: {fileID: 114964435729023602, guid: fe2319e9d6e840f409af77b3e7a85259, type: 3}
   fortPrefab: {fileID: 7362454568944323520, guid: 26ffc5ad993277348bf537bf162f852c, type: 3}
   supplyLinePrefab: {fileID: 0}
+  hexHighlitPrefab: {fileID: 7362454568944323520, guid: dbbaf1f5e5a06dc43acf821e4defda6f, type: 3}
   gold: 0
   goldText: {fileID: 0}
   goldIncome: 5

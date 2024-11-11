@@ -38,7 +38,8 @@ public class PlayerManager : NetworkBehaviour
     public PathDrawer pathPrefab;
     public AreaOutline passableAreaPrefab;
     public GameObject fortPrefab;
-    public GameObject supplyLinePrefab; 
+    public GameObject supplyLinePrefab;
+    public GameObject hexHighlitPrefab;
 
     // currency
     public int gold;
@@ -294,7 +295,7 @@ public class PlayerManager : NetworkBehaviour
 
     void InitSupplyLines(SupplyLoadData supplyLoadData)
     {
-        playerSupplyManager.Init(this, supplyLoadData);
+        playerSupplyManager.Init(this, supplyLoadData,hexHighlitPrefab);
     }
 
     void InitForts(StartingResources startingResources) {
