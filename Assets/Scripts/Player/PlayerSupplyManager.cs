@@ -4,9 +4,10 @@ using RedBjorn.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerSupplyManager
+public class PlayerSupplyManager : NetworkBehaviour
 {
     public PlayerManager playerManager;
     public GameObject hexHighlitPrefab;

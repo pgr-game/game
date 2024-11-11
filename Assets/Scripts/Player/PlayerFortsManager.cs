@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using RedBjorn.ProtoTiles;
 using RedBjorn.ProtoTiles.Example;
+using Unity.Netcode;
 
-public class PlayerFortsManager
+public class PlayerFortsManager : NetworkBehaviour
 {
     public List<Fort> forts {get; private set;}
     private PlayerManager playerManager;

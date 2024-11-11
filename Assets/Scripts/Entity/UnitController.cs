@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 
-public class UnitController : NetworkBehaviour
+public class UnitController : NetworkBehaviour, INetworkSerializable
 {
     public PlayerUnitsManager playerUnitsManager;
     public PlayerManager owner;
@@ -39,10 +39,32 @@ public class UnitController : NetworkBehaviour
     public bool canPlaceFort;
     public int turnsSinceFortPlaced = 10;
 
+    // Multiplayer
+    public NetworkVariable<int> ownerIndex = new NetworkVariable<int>();
+
+    public override void OnNetworkSpawn()
+    {
+	    base.OnNetworkSpawn();
+
+		// This is only to initiate unit on client
+		if (owner) return;
+
+		owner = FindObjectsByType<PlayerManager>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+			.FirstOrDefault(playerManager => playerManager.index == ownerIndex.Value);
+
+		if (owner)
+		{
+			// TODO arguments should not be 0
+			Init(owner, owner.mapManager, owner.gameManager, owner.gameManager.unitStatsMenuController, null, null);
+		}
+    }
+
     public void Init(PlayerManager playerManager, MapManager mapManager, GameManager gameManager, UnitStatsMenuController unitStatsMenuController, float? rangeLeft, Vector3? longPathClickPosition)
     {
         this.owner = playerManager;
-        this.playerUnitsManager = playerManager.playerUnitsManager;
+        if(IsServer)
+			ownerIndex.Value = owner.index;
+		this.playerUnitsManager = playerManager.playerUnitsManager;
         this.mapManager = mapManager;
         this.unitStatsMenuController = unitStatsMenuController;
         unitUI.Init(this, owner.color, unitType, attack);
@@ -65,19 +87,17 @@ public class UnitController : NetworkBehaviour
         }
         canPlaceFort = true;
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
-    }
 
-    public override void OnGainedOwnership()
-    {
-	    base.OnGainedOwnership();
+        // Add to city garrison if in city
+        var path = playerManager.mapManager.MapEntity.PathTiles(transform.position, transform.position, 1);
+        var tile = path.Last();
+        if (tile.CityTilePresent)
+        {
+	        tile.CityTilePresent.city.AddToGarrison(this);
+        }
 
-	    if (!IsServer)
-	    {
-		    var gameManager = FindAnyObjectByType<GameManager>();
-            var index = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerData>().index;
-			Init(gameManager.players[index], gameManager.mapManager, gameManager, gameManager.unitStatsMenuController, 0, new Vector3()); // TODO last two should not be empty
-	    }
-    }
+        playerUnitsManager.AddIfNotInList(this);
+	}
 
 	public void Activate()
     {
@@ -384,4 +404,20 @@ public class UnitController : NetworkBehaviour
             unitStatsMenuController.UpdateUnitStatisticsWindow(unitStatsMenuController.activeUnit);
         }
     }
+	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+	{
+		serializer.SerializeValue(ref maxHealth);
+		serializer.SerializeValue(ref currentHealth);
+		serializer.SerializeValue(ref attack);
+		serializer.SerializeValue(ref attackRange);
+		serializer.SerializeValue(ref baseProductionCost);
+		serializer.SerializeValue(ref turnsToProduce);
+		serializer.SerializeValue(ref turnProduced);
+		serializer.SerializeValue(ref level);
+		serializer.SerializeValue(ref defense);
+		serializer.SerializeValue(ref experience);
+		serializer.SerializeValue(ref attacked);
+		serializer.SerializeValue(ref canPlaceFort);
+		serializer.SerializeValue(ref turnsSinceFortPlaced);
+	}
 }

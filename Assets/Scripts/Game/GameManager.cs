@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using RedBjorn.ProtoTiles;
+using TMPro;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
@@ -44,7 +45,6 @@ public class GameManager : NetworkBehaviour
     public int numberOfPlayers;
     public PlayerManager[] players;
     public Vector3[] playerPositions;
-    public List<UnitController> units = new List<UnitController>();
     // Unit types
     private const int amountOfUnitTypes = 7;
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
@@ -52,7 +52,7 @@ public class GameManager : NetworkBehaviour
 
     // UI elements
     public UnitStatsMenuController unitStatsMenuController;
-    public Image nextTurnButtonImage;
+    public NextTurnMenuController nextTurnMenuController;
     public GameObject UI;
     public TileTag cityTag;
 
@@ -67,9 +67,16 @@ public class GameManager : NetworkBehaviour
     {
 	    if (!isInit)
 	    {
-			Init();
+		    Init();
 	    }
-    }
+	}
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+
+	}
 
 	[GenerateSerializationForType(typeof(SceneLoadData))]
 	public void Init()
@@ -77,6 +84,7 @@ public class GameManager : NetworkBehaviour
 		isInit = true;
         playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
         unitStatsMenuController = UI.gameObject.GetComponent<UnitStatsMenuController>();
+        nextTurnMenuController = UI.gameObject.GetComponent<NextTurnMenuController>();
         InitStaticVariables();
         soundManager = Instantiate(soundManager, new Vector3(0,0,0), Quaternion.identity);
         gameSettings = GameObject.Find("GameSettings")?.GetComponent<GameSettings>();
@@ -128,7 +136,36 @@ public class GameManager : NetworkBehaviour
 	        InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames, sceneLoadData.isComputer, sceneLoadData.isMultiplayer);
 	        players[activePlayerIndex].StartFirstTurn();
 		}
-    }
+
+        if (!IsServer)
+        {
+	        InitPlayersThatSpawnedBeforeThis();
+
+        }
+	}
+
+	private void InitPlayersThatSpawnedBeforeThis()
+	{
+		// Players that have spawned before GameManager need initialization
+
+		for (int i = 0; i < players.Length; i++)
+		{
+			var playerManager = players[i];
+			if (!playerManager)
+			{
+				playerManager =
+					FindObjectsByType<PlayerManager>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+						.FirstOrDefault(player => player.index == i);
+				players[i] = playerManager;
+				activePlayer = players[0];
+			}
+
+			if (playerManager && !playerManager.isInit)
+			{
+				playerManager.Init(this);
+			}
+		}
+	}
 
     private void InitStaticVariables()
     {
@@ -212,7 +249,8 @@ public class GameManager : NetworkBehaviour
         players = new PlayerManager[numberOfPlayers];
         for(int i = 0; i < numberOfPlayers; i++) {
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
-            players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], isComputer[i], i);
+            //players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], isComputer[i], i);
+            players[i].index = i;
         }
 
         if (isMultiplayer)
@@ -220,15 +258,29 @@ public class GameManager : NetworkBehaviour
 	        foreach (var playerManager in players)
 	        {
                 // clientId is likely always equal to index, but better play it safe
-		        var clientId = NetworkManager.ConnectedClientsList
-			        .FirstOrDefault(client => client.PlayerObject.GetComponent<PlayerData>().index == playerManager.index)
-			        .ClientId;
-		        playerManager.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
-	        }
+                var clientId = GetClientId(playerManager.index);
+                if (clientId != null)
+                {
+	                playerManager.GetComponent<NetworkObject>().SpawnWithOwnership((ulong)clientId);
+				}
+                else
+                {
+					// this is a player that never joined, convert them to computer player
+                    // and spawn as a server owned object
+					playerManager.GetComponent<NetworkObject>().Spawn();
+				}
+			}
         }
     }
 
     public void NextPlayer()
+    {
+        if(!activePlayer.isSpectator)
+			NextPlayerRpc();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void NextPlayerRpc()
     {
         this.activePlayer.playerSupplyManager.ClearSupplyLineCreator();
         this.cityMenuManager.Deactivate();
@@ -347,7 +399,15 @@ public class GameManager : NetworkBehaviour
     }
 
     public void SetPlayerUIColor(Color color) {
-        nextTurnButtonImage.color = color;
+	    nextTurnMenuController.SetColor(color);
+        if (activePlayer.isSpectator)
+        {
+	        nextTurnMenuController.SetText("WAIT FOR OTHER PLAYER");
+        }
+        else
+        {
+	        nextTurnMenuController.SetText("NEXT TURN");
+        }
     }
 
     private void DisplayTurnNumber(int turnNumber)
@@ -412,4 +472,11 @@ public class GameManager : NetworkBehaviour
     {
         return unitSprites[(int)unitType];
     }
+
+    public ulong? GetClientId(int index)
+    {
+        return NetworkManager.ConnectedClientsList
+	        .FirstOrDefault(client => client.PlayerObject.GetComponent<PlayerData>().index == index)?
+	        .ClientId;
+	}
 }
