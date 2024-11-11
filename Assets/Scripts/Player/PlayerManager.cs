@@ -160,8 +160,8 @@ public class PlayerManager : NetworkBehaviour
                 if (MyInput.GetOnWorldUp(mapManager.MapEntity.Settings.Plane()))
                 {
                     Vector3 clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
-                    playerSupplyManager.CreateSupplyLine(null, clickPos);
-                }
+                    playerSupplyManager.CreateSupplyLineToPosition(clickPos);
+				}
             }
             if (playerSupplyManager.drawingSupplyLine && playerSupplyManager.justActivated)
             {
