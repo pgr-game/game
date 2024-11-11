@@ -158,7 +158,16 @@ public class PlayerTreeManager : MonoBehaviour
         (int, string) currResearch = gameManager.activePlayer.researchNode;
 
         panelActive = !panelActive;
-        this.gameObject.SetActive(panelActive);
+
+        if (gameManager.isMultiplayer)
+        {
+	        if (!gameManager.activePlayer.IsOwner)
+	        {
+		        panelActive = false;
+	        }
+        }
+
+		this.gameObject.SetActive(panelActive);
         if (panelActive)
         {
             updateStrategyBranch(strategyEvolvCurrPLayer, currResearch);
