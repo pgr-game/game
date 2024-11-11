@@ -223,7 +223,7 @@ public class UnitMove : NetworkBehaviour
         {
             longPathPoints.RemoveRange(0, numberOfSteps);
         }
-        if (longPathPoints != null && isAutoMove)
+        if (longPathPoints != null && isAutoMove && LongPath != null)
         {
             LongPath.SetNumberOfTurns(CalculateLongPathNumberOfTurns(longPathPoints.Count - numberOfSteps));
         }

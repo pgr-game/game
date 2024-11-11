@@ -312,7 +312,7 @@ public class GameManager : NetworkBehaviour
 		    DisplayTurnNumber(turnNumber);
 	    }
 	    SetPlayerUIColor(players[activePlayerIndex].color);
-	    players[activePlayerIndex].StartTurn();
+		players[activePlayerIndex].StartTurn();
 	    playerTreeManager.reserachProgress();
 	}
 
@@ -411,15 +411,19 @@ public class GameManager : NetworkBehaviour
 
     public void SetPlayerUIColor(Color color) {
 	    nextTurnMenuController.SetColor(color);
-        if (activePlayer.isSpectator)
-        {
-	        nextTurnMenuController.SetText("WAIT FOR OTHER PLAYER");
-        }
-        else
-        {
-	        nextTurnMenuController.SetText("NEXT TURN");
-        }
     }
+
+    public void SetNextTurnButtonText()
+    {
+	    if (activePlayer.isSpectator)
+	    {
+		    nextTurnMenuController.SetText("WAIT FOR OTHER PLAYER");
+	    }
+	    else
+	    {
+		    nextTurnMenuController.SetText("NEXT TURN");
+	    }
+	}
 
     private void DisplayTurnNumber(int turnNumber)
     {

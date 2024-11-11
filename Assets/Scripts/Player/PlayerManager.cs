@@ -144,7 +144,7 @@ public class PlayerManager : NetworkBehaviour
             gameObject.SetActive(false);
         }
 
-
+        gameManager.SetNextTurnButtonText();
     }
 
     // Update is called once per frame
@@ -372,6 +372,7 @@ public class PlayerManager : NetworkBehaviour
 	            Debug.Log("Another player plays his turn");
 	            isSpectator = true;
 			}
+            gameManager.SetNextTurnButtonText();
         } else if (isComputer) DoTurn();
     }
 
