@@ -408,4 +408,20 @@ public class PlayerManager : NetworkBehaviour
 	    }
 	    return isAlive;
     }
+
+    [Rpc(SendTo.Everyone)]
+	public void ResearchTreeRpc(int currResearchItem1, string currResearchItem2)
+	{
+		ResearchTree(currResearchItem1, currResearchItem2);
+	}
+	public void ResearchTree(int currResearchItem1, string currResearchItem2)
+    {
+	    var branch = currResearchItem2.Equals("Power")
+		    ? gameManager.activePlayer.powerEvolution
+		    : gameManager.activePlayer.strategyEvolution;
+
+	    branch[currResearchItem1][2] = "true";
+	    branch[currResearchItem1][3] = "0";
+	    gameManager.activePlayer.researchNode = (-1, "NONE");
+	}
 }

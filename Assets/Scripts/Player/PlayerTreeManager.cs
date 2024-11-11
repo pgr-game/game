@@ -219,11 +219,17 @@ public class PlayerTreeManager : MonoBehaviour
         turnsLeft--;
         if (turnsLeft <= 0)
         {
-            evolutionBranch[currResearch.Item1][2] = "true";
-            evolutionBranch[currResearch.Item1][3] = "0";
-            gameManager.activePlayer.researchNode = (-1, "NONE");
+			if (gameManager.isMultiplayer)
+            {
+                gameManager.activePlayer.ResearchTreeRpc(currResearch.Item1, currResearch.Item2);
+            }
+            else
+            {
+	            gameManager.activePlayer.ResearchTree(currResearch.Item1, currResearch.Item2);
+			}
+
             updateProgressCircle(1f);
-        }
+		}
         else
         {
             evolutionBranch[currResearch.Item1][3] = turnsLeft.ToString();
