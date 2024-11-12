@@ -18,29 +18,29 @@ public class PlayerFortsManager : NetworkBehaviour
         this.mapManager = playerManager.mapManager;
     }
 
-    public int AddFort(Vector3Int hexPosition, int id) {
-        Debug.Log("Adding fort");
-
-        if(id == 0) {
-            id = forts.Count;
-        }
-        Vector3 mapPos = playerManager.mapManager.MapEntity.WorldPosition(hexPosition);
-        var position = new Vector3(mapPos.x, mapPos.y, -1);
-        GameObject fort = GameObject.Instantiate(playerManager.fortPrefab, position, Quaternion.identity);
-        int result = fort.GetComponent<Fort>().Init(id, playerManager, hexPosition);
-        
-        if(result == 1) {
-            forts.Add(fort.GetComponent<Fort>());
-            return 1;
-        }   
-        else {
-          Debug.LogError("Could not add fort");
-          return 0;
-          //Destroy(fort);  
-        } 
+    [Rpc(SendTo.Everyone)]
+    public void AddFortRpc(Vector3Int hexPosition, int id)
+    {
+	    AddFort(hexPosition, id);
     }
 
-    public void RemoveFort(Fort fort, City adjacentCity)
+    public void AddFort(Vector3Int hexPosition, int id)
+    {
+	    Debug.Log("Adding fort");
+
+	    if (id == 0)
+	    {
+		    id = forts.Count;
+	    }
+	    Vector3 mapPos = playerManager.mapManager.MapEntity.WorldPosition(hexPosition);
+	    var position = new Vector3(mapPos.x, mapPos.y, -1);
+	    GameObject fort = GameObject.Instantiate(playerManager.fortPrefab, position, Quaternion.identity);
+	    fort.GetComponent<Fort>().Init(id, playerManager, hexPosition);
+
+	    forts.Add(fort.GetComponent<Fort>());
+    }
+
+public void RemoveFort(Fort fort, City adjacentCity)
     {
         forts.Remove(fort);
         GameObject.Destroy(fort.gameObject);
