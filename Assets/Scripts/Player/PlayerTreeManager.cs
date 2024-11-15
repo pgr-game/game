@@ -6,11 +6,8 @@ using UnityEngine.UI;
 public class PlayerTreeManager : MonoBehaviour
 {
     private static readonly int powerEvolutionCount = 4;
-
     private static readonly int startegyEvolutionCount = 4;
-
-    //Dictionary<int, List<string>> powerEvolution = new Dictionary<int, List<string>>();
-    //Dictionary<int, List<string>> strategyEvolution = new Dictionary<int, List<string>>();
+    
     public GameObject rootOfTreeCanvas;
     public GameManager gameManager;
     public GameObject ProgressCricle;
@@ -298,4 +295,43 @@ public class PlayerTreeManager : MonoBehaviour
 
         return true;
     }
+
+    public List<string> GetNodesAvailableForResearch(Dictionary<int, List<string>> evolutionBranch)
+    {
+        var availableNodes = new List<string>();
+
+        for (var i = 0; i < evolutionBranch.Count; i++)
+        {
+            if (bool.Parse(evolutionBranch[int.Parse(evolutionBranch[i][0])][2]) || i == 0)
+            {
+                if (!bool.Parse(evolutionBranch[i][2]))
+                {
+                    availableNodes.Add(evolutionBranch[i][1]);
+                }
+            }
+        }
+
+        return availableNodes;
+    }
+    
+    public int getNodeIdByName(string name, string branchType)
+    {
+        if (branchType.Equals("Power"))
+        {
+            for (var i = 0; i < powerNodeNames.Count; i++)
+            {
+                if (powerNodeNames[i].Equals(name)) return i;
+            }
+        }
+        else if (branchType.Equals("Strategy"))
+        {
+            for (var i = 0; i < strategyNodeNames.Count; i++)
+            {
+                if (strategyNodeNames[i].Equals(name)) return i;
+            }
+        }
+
+        return -1;
+    }
+
 }

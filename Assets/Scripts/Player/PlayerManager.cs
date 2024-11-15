@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using RedBjorn.ProtoTiles.Example;
 using TMPro;
 using Unity.Netcode;
@@ -42,12 +44,17 @@ public class PlayerManager : NetworkBehaviour
     // currency
     public int gold;
     public GameObject goldText;
-    public int goldIncome = 5; // amount given to player every round independently of cities, units etc.
+    public int goldIncome = 5;
     public const int costOfFort = 100;
 
     // Multiplayer
     private PlayerData playerNetworkData;
     public bool isInit = true;
+    
+    // AI params
+    
+    // 0 - power, 1 - strategy
+    public float strategicPowerRatio = 0;
 
     public override void OnNetworkSpawn()
     {
@@ -146,6 +153,9 @@ public class PlayerManager : NetworkBehaviour
         }
 
         gameManager.SetNextTurnButtonText();
+        
+        // AI params
+        strategicPowerRatio = UnityEngine.Random.Range(0.4f, 0.6f);
     }
 
     // Update is called once per frame
@@ -250,10 +260,43 @@ public class PlayerManager : NetworkBehaviour
         Debug.Log("Computer player " + index + " turn");
         
         // TODO: Decide what to do on computer turn
+        /*
+         * 1. Cities production
+         * 2. Trees research - predefined strategy with some randomness (e.g. if something was researched, then 2 options are available, chosen randomly)
+         * 3. Units movement and other actions (fort, healing, etc.) - decission tree
+         * 4. Placing supply lines
+         */
+        
+        // 2. Trees research
+        if(researchNode.Item1 == -1)
+        {
+            Debug.Log("DECIDING ON RESEARCH (AI)");
+            DecideOnResearch();
+        }
+        
+        
         
         isSpectator = false;
         SkipTurn();
     }
+
+    private void DecideOnResearch()
+    {
+        var availablePowerNodes = gameManager.playerTreeManager.GetNodesAvailableForResearch(powerEvolution);
+        var availableStrategyNodes = gameManager.playerTreeManager.GetNodesAvailableForResearch(strategyEvolution);
+
+        var allNodes = availablePowerNodes.Select(powerNode => ("Power", powerNode)).ToList();
+        allNodes.AddRange(availableStrategyNodes.Select(strategyNode => ("Strategy", strategyNode)));
+
+        if (allNodes.Count == 0) return;
+        
+        var randomNode = allNodes[UnityEngine.Random.Range(0, allNodes.Count)];
+        Debug.Log("**AI**: Starting new research on: " + randomNode.Item1 + " " + randomNode.Item2);
+        var nodeId = gameManager.playerTreeManager.getNodeIdByName(randomNode.Item2, randomNode.Item1);
+        
+        researchNode = (nodeId, randomNode.Item1);
+    }
+
 
     public void SkipTurn()
     {
@@ -465,6 +508,7 @@ public class PlayerManager : NetworkBehaviour
 
     public void StartTurn()
     {
+        Debug.Log(researchNode.Item1);
         playerSupplyManager.CheckSupplyLines();
         playerCitiesManager.StartCitiesTurn();
 
