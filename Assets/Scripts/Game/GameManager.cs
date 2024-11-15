@@ -300,11 +300,8 @@ public class GameManager : NetworkBehaviour
     {
 	    this.activePlayer.playerSupplyManager.ClearSupplyLineCreator();
 	    this.cityMenuManager.Deactivate();
-	    // this needs to happen before the next player is activated, because next player may be dead
 	    CheckIfGameIsEnded();
-	    players[activePlayerIndex].playerUnitsManager.TryAutoMoveAll();
-	    players[activePlayerIndex].playerUnitsManager.DeactivateAll();
-	    players[activePlayerIndex].gameObject.SetActive(false);
+	    players[activePlayerIndex].performAfterTurnActions();
 	    GameObject unitList = UI.transform.Find("UnitList").gameObject;
 	    unitList.SetActive(false);
 
@@ -323,7 +320,7 @@ public class GameManager : NetworkBehaviour
         fortButtonManager.CheckIfFortResearched(activePlayer);
 	}
 
-    public void CheckIfGameIsEnded() {
+    private void CheckIfGameIsEnded() {
         bool gameEnded = false;
         int indexOfWinner = -1;
         bool[] playersAlive = new bool[numberOfPlayers];

@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
-using RedBjorn.ProtoTiles;
 using RedBjorn.ProtoTiles.Example;
+using TMPro;
 using Unity.Netcode;
+using UnityEngine;
 
 public class PlayerManager : NetworkBehaviour
 {
@@ -16,12 +14,12 @@ public class PlayerManager : NetworkBehaviour
     //assigned by game manager
     public MapManager mapManager;
     public GameManager gameManager;
-    public bool isComputer = false;
+    public bool isComputer;
     public Color32 color;
     public int index;
 
     //selecting units and settlements
-    private bool isInMenu = false;
+    private bool isInMenu;
     public bool isSpectator { get; private set; } = true;
     private GameObject selected;
     private GameObject newSelected;
@@ -44,7 +42,7 @@ public class PlayerManager : NetworkBehaviour
     // currency
     public int gold;
     public GameObject goldText;
-    public int goldIncome = 5;     // amount given to player every round independently of cities, units etc.
+    public int goldIncome = 5; // amount given to player every round independently of cities, units etc.
     public const int costOfFort = 100;
 
     // Multiplayer
@@ -94,7 +92,8 @@ public class PlayerManager : NetworkBehaviour
             gameManager.sceneLoadData.isComputer[index], index);
     }
 
-    public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, bool isComputer, int index)
+    public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color,
+        string startingCityName, bool isComputer, int index)
     {
         this.index = index;
         this.gameManager = gameManager;
@@ -106,7 +105,7 @@ public class PlayerManager : NetworkBehaviour
 
             if (playerData && this.index == playerData.index)
             {
-                this.playerNetworkData = playerData;
+                playerNetworkData = playerData;
                 this.color = playerNetworkData.color;
             }
             else if (playerData && index < playerData.otherPlayersColors.Count)
@@ -125,14 +124,15 @@ public class PlayerManager : NetworkBehaviour
             if (!isComputer)
                 isSpectator = false;
         }
+
         InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
         InitForts(startingResources);
         InitSupplyLines(startingResources.supplyLoadData);
         InitUnits(startingResources);
-        this.gold = startingResources.gold;
+        gold = startingResources.gold;
         GameObject[] texts = GameObject.FindGameObjectsWithTag("currencyText");
-        this.goldText = texts[0];
+        goldText = texts[0];
 
         if (index == gameManager.activePlayerIndex)
         {
@@ -163,6 +163,7 @@ public class PlayerManager : NetworkBehaviour
                     playerSupplyManager.CreateSupplyLineToPosition(clickPos);
                 }
             }
+
             if (playerSupplyManager.drawingSupplyLine && playerSupplyManager.justActivated)
             {
                 if (Input.GetMouseButtonUp(0))
@@ -170,7 +171,6 @@ public class PlayerManager : NetworkBehaviour
                     playerSupplyManager.justActivated = false;
                 }
             }
-
             newSelected = SelectObject();
             if (newSelected && !playerSupplyManager.drawingSupplyLine)
             {
@@ -247,13 +247,14 @@ public class PlayerManager : NetworkBehaviour
     public void DoTurn()
     {
         isSpectator = true;
-
-        // TODO computer player actions
-        // Now computer player just skips his turn
         Debug.Log("Computer player " + index + " turn");
+        
+        // TODO: Decide what to do on computer turn
+        
         isSpectator = false;
         SkipTurn();
     }
+
     public void SkipTurn()
     {
         gameManager.NextPlayer();
@@ -261,7 +262,7 @@ public class PlayerManager : NetworkBehaviour
 
     public void Deselect()
     {
-        this.selected = null;
+        selected = null;
     }
 
     GameObject SelectObject()
@@ -273,8 +274,10 @@ public class PlayerManager : NetworkBehaviour
             {
                 return hit.transform.gameObject;
             }
+
             return null;
         }
+
         return null;
     }
 
@@ -284,6 +287,7 @@ public class PlayerManager : NetworkBehaviour
         {
             return;
         }
+
         if (currentUnit && newSelected == selected)
         {
             //unselect
@@ -297,6 +301,7 @@ public class PlayerManager : NetworkBehaviour
             {
                 selected.GetComponent<UnitController>().Deactivate();
             }
+
             //select if nothing else is selected
             selected = newSelected;
             currentUnit.Activate();
@@ -309,10 +314,12 @@ public class PlayerManager : NetworkBehaviour
         {
             return;
         }
+
         if (city.Owner != this)
         {
             return;
         }
+
         if (gameManager.cityMenuManager.city == city && gameManager.cityMenuManager.gameObject.activeSelf)
         {
             gameManager.cityMenuManager.setValues(null);
@@ -320,6 +327,7 @@ public class PlayerManager : NetworkBehaviour
             isInMenu = false;
             return;
         }
+
         isInMenu = false;
         gameManager.cityMenuManager.setValues(city);
         gameManager.cityMenuManager.Activate();
@@ -329,6 +337,7 @@ public class PlayerManager : NetworkBehaviour
     {
         playerUnitsManager.Init(this, startingResources);
     }
+
     void InitTree(TreeLoadData treeLoadData)
     {
         //call player tree manager here to init once it's implemented\
@@ -339,7 +348,7 @@ public class PlayerManager : NetworkBehaviour
             researchNode = treeLoadData.researchNode;
         }
 
-        this.gameManager.playerTreeManager.populateEvolutionTrees(this);
+        gameManager.playerTreeManager.populateEvolutionTrees(this);
     }
 
     void InitCities(string startingCityName, List<CityLoadData> cityLoadData)
@@ -374,7 +383,7 @@ public class PlayerManager : NetworkBehaviour
 
     public void CreateFort()
     {
-        Vector3Int hexPosition = newSelected.GetComponent<UnitController>().unitMove.hexPosition;
+        Vector3Int hexPosition = selected.GetComponent<UnitController>().unitMove.hexPosition;
         if (gameManager.isMultiplayer)
         {
             playerFortsManager.AddFortRpc(hexPosition, 0);
@@ -402,7 +411,7 @@ public class PlayerManager : NetworkBehaviour
 
     public void SetGoldText(string gold)
     {
-        goldText.GetComponent<TMPro.TextMeshProUGUI>().text = "gold: " + gold;
+        goldText.GetComponent<TextMeshProUGUI>().text = "gold: " + gold;
     }
 
     public void SetGoldIncome()
@@ -448,6 +457,7 @@ public class PlayerManager : NetworkBehaviour
                 Debug.Log("Another player plays his turn");
                 isSpectator = true;
             }
+
             gameManager.SetNextTurnButtonText();
         }
         else if (isComputer) DoTurn();
@@ -464,6 +474,7 @@ public class PlayerManager : NetworkBehaviour
         {
             AddGold(playerCitiesManager.GetGoldIncome());
         }
+
         SetGoldText(gold.ToString());
         SetGoldIncome();
         gold += goldIncome;
@@ -476,6 +487,7 @@ public class PlayerManager : NetworkBehaviour
         {
             return null;
         }
+
         return selected.GetComponent<UnitController>();
     }
 
@@ -493,6 +505,7 @@ public class PlayerManager : NetworkBehaviour
         {
             isAlive = true;
         }
+
         return isAlive;
     }
 
@@ -501,6 +514,7 @@ public class PlayerManager : NetworkBehaviour
     {
         ResearchTree(currResearchItem1, currResearchItem2);
     }
+
     public void ResearchTree(int currResearchItem1, string currResearchItem2)
     {
         var branch = currResearchItem2.Equals("Power")
@@ -510,6 +524,14 @@ public class PlayerManager : NetworkBehaviour
         branch[currResearchItem1][2] = "true";
         branch[currResearchItem1][3] = "0";
         gameManager.activePlayer.researchNode = (-1, "NONE");
+    }
+
+    public void performAfterTurnActions()
+    {
+        playerUnitsManager.TryAutoMoveAll();
+        playerUnitsManager.DeactivateAll();
+        gameObject.SetActive(false);
+
     }
 
     public void ShowAvailableFortPositions()
