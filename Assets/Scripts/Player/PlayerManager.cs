@@ -160,8 +160,8 @@ public class PlayerManager : NetworkBehaviour
                 if (MyInput.GetOnWorldUp(mapManager.MapEntity.Settings.Plane()))
                 {
                     Vector3 clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
-                    playerSupplyManager.CreateSupplyLine(null, clickPos);
-                }
+                    playerSupplyManager.CreateSupplyLineToPosition(clickPos);
+				}
             }
             if (playerSupplyManager.drawingSupplyLine && playerSupplyManager.justActivated)
             {
@@ -303,19 +303,31 @@ public class PlayerManager : NetworkBehaviour
 
         if(startingResources.fortLoadData != null) {
             foreach(FortLoadData fort in startingResources.fortLoadData) {
-                playerFortsManager.AddFort(fort.hexPosition, fort.id);
+	            if (gameManager.isMultiplayer)
+	            {
+		            playerFortsManager.AddFortRpc(fort.hexPosition, fort.id);
+				}
+	            else
+	            {
+		            playerFortsManager.AddFort(fort.hexPosition, fort.id);
+				}
             }
         }
     }
 
     public void CreateFort() {
         Vector3Int hexPosition = selected.GetComponent<UnitController>().unitMove.hexPosition;
-        int result = playerFortsManager.AddFort(hexPosition, 0);
-        if(result == 1) {
-            selected.GetComponent<UnitController>().canPlaceFort = false;
-            selected.GetComponent<UnitController>().turnsSinceFortPlaced = 0;
-            gold -= costOfFort;
+        if (gameManager.isMultiplayer)
+        {
+	        playerFortsManager.AddFortRpc(hexPosition, 0);
         }
+        else
+        {
+	        playerFortsManager.AddFort(hexPosition, 0);
+        }
+		selected.GetComponent<UnitController>().canPlaceFort = false;
+	    selected.GetComponent<UnitController>().turnsSinceFortPlaced = 0;
+	    gold -= costOfFort;
     }
 
     public void AddGold(int amount) {

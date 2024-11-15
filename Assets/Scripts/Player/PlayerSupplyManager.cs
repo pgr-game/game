@@ -151,12 +151,27 @@ public class PlayerSupplyManager : NetworkBehaviour
         return true;
     }
 
-    public void CreateSupplyLine(Vector3? startPosition, Vector3 endPosition)
+	public void CreateSupplyLineToPosition(Vector3 endPosition)
+	{
+		var startPositionNonNullable = (Vector3)drawingStartPosition;
+		if (gameManager.isMultiplayer)
+		{
+			CreateSupplyLineRpc(startPositionNonNullable, endPosition);
+		}
+		else
+		{
+			CreateSupplyLine(startPositionNonNullable, endPosition);
+		}
+	}
+
+	[Rpc(SendTo.Everyone)]
+    public void CreateSupplyLineRpc(Vector3 startPosition, Vector3 endPosition)
     {
-        if (startPosition == null)
-        {
-            startPosition = drawingStartPosition;
-        }
+	    CreateSupplyLine(startPosition, endPosition);
+    }
+
+    public void CreateSupplyLine(Vector3 startPosition, Vector3 endPosition)
+    {
         List<TileEntity> path = playerManager.mapManager.MapEntity.PathTiles((Vector3)startPosition, endPosition, float.MaxValue);
         if (path.Count == 0)
         {
@@ -184,8 +199,8 @@ public class PlayerSupplyManager : NetworkBehaviour
         justActivated = true;
         originCity = null;
         drawingStartPosition = null;
-        passableArea.Hide();
-        supplyLineDrawer.Hide();
+        passableArea?.Hide();
+        supplyLineDrawer?.Hide();
     }
 
     private void DestroyOldCitySupplyLine()
