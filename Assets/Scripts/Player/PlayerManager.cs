@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using RedBjorn.ProtoTiles.Example;
@@ -54,7 +53,7 @@ public class PlayerManager : NetworkBehaviour
     // AI params
     
     // 0 - power, 1 - strategy
-    public float strategicPowerRatio = 0;
+    private float strategicPowerRatio = 0;
 
     public override void OnNetworkSpawn()
     {
@@ -254,7 +253,7 @@ public class PlayerManager : NetworkBehaviour
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), transform.TransformDirection(Vector3.forward), Color.green);
     }
 
-    public void DoTurn()
+    private void DoTurn()
     {
         isSpectator = true;
         Debug.Log("Computer player " + index + " turn");
@@ -277,7 +276,7 @@ public class PlayerManager : NetworkBehaviour
         
         
         isSpectator = false;
-        SkipTurn();
+        //SkipTurn();
     }
 
     private void DecideOnResearch()
@@ -285,17 +284,48 @@ public class PlayerManager : NetworkBehaviour
         var availablePowerNodes = gameManager.playerTreeManager.GetNodesAvailableForResearch(powerEvolution);
         var availableStrategyNodes = gameManager.playerTreeManager.GetNodesAvailableForResearch(strategyEvolution);
 
-        var allNodes = availablePowerNodes.Select(powerNode => ("Power", powerNode)).ToList();
-        allNodes.AddRange(availableStrategyNodes.Select(strategyNode => ("Strategy", strategyNode)));
+        var allNodes = new List<(string branchType, string nodeName, float weight)>();
+        
+        allNodes.AddRange(availablePowerNodes.Select(powerNode => ("Power", powerNode, 1f - strategicPowerRatio)));
+        allNodes.AddRange(availableStrategyNodes.Select(strategyNode => ("Strategy", strategyNode, strategicPowerRatio)));
 
-        if (allNodes.Count == 0) return;
+        // no research available
+        if (allNodes.Count == 0)
+            return;
         
-        var randomNode = allNodes[UnityEngine.Random.Range(0, allNodes.Count)];
-        Debug.Log("**AI**: Starting new research on: " + randomNode.Item1 + " " + randomNode.Item2);
-        var nodeId = gameManager.playerTreeManager.getNodeIdByName(randomNode.Item2, randomNode.Item1);
+        // only one research available
+        if(allNodes.Count == 1)
+        {
+            researchNode = (gameManager.playerTreeManager.getNodeIdByName(allNodes[0].nodeName, allNodes[0].branchType), allNodes[0].branchType);
+            return;
+        }
+
+        // sum of weights
+        var totalWeight = allNodes.Sum(node => node.weight);
         
-        researchNode = (nodeId, randomNode.Item1);
+        var randomValue = UnityEngine.Random.Range(0f, totalWeight);
+        var cumulativeWeight = 0f;
+
+        (string branchType, string nodeName) selectedNode = default;
+
+        foreach (var node in allNodes)
+        {
+            cumulativeWeight += node.weight;
+            if (randomValue <= cumulativeWeight)
+            {
+                selectedNode = (node.branchType, node.nodeName);
+                break;
+            }
+        }
+
+        // start research
+        Debug.Log("**AI**: Starting new research on: " + selectedNode.branchType + " " + selectedNode.nodeName);
+        var nodeId = gameManager.playerTreeManager.getNodeIdByName(selectedNode.nodeName, selectedNode.branchType);
+
+        researchNode = (nodeId, selectedNode.branchType);
     }
+
+
 
 
     public void SkipTurn()
@@ -542,7 +572,7 @@ public class PlayerManager : NetworkBehaviour
         selectedUnit.Activate();
     }
 
-    public bool isAlive()
+    public bool IsAlive()
     {
         bool isAlive = playerUnitsManager.GetUnitCount() > 0;
         if (playerCitiesManager.GetNumberOfCities() > 0)
@@ -570,7 +600,7 @@ public class PlayerManager : NetworkBehaviour
         gameManager.activePlayer.researchNode = (-1, "NONE");
     }
 
-    public void performAfterTurnActions()
+    public void PerformAfterTurnActions()
     {
         playerUnitsManager.TryAutoMoveAll();
         playerUnitsManager.DeactivateAll();
