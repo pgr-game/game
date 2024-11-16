@@ -374,11 +374,7 @@ public class UnitController : NetworkBehaviour, INetworkSerializable
         if (!IsInFort(tile)) return;
         if (tile.FortPresent.owner != this.owner) return;
         if (tile.FortPresent.isBuilt) return;
-        tile.FortPresent.turnsUntilBuilt--;
-        if (tile.FortPresent.turnsUntilBuilt == 0)
-        {
-            tile.FortPresent.BuildComplete();
-        }
+        tile.FortPresent.ProgressBuild(tile);
     }
 
     void OnMouseOver()

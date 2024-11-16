@@ -12,6 +12,7 @@ public class CityMenuManager : MonoBehaviour
     public GameObject UnitEntryPrefab;
     public City city;
     public GameObject createSupplyLineButton;
+    public GameObject createFortButton;
 
     private Text cityNameText;
     private GameObject unitsContainer;
@@ -51,6 +52,9 @@ public class CityMenuManager : MonoBehaviour
         }
         bool isSupplyLineReaserched = this.gameManager.playerTreeManager.isNodeResearched(4, "Strategy");
         createSupplyLineButton.GetComponent<Button>().interactable = isSupplyLineReaserched;
+
+        bool isFortReaserched = this.gameManager.playerTreeManager.isNodeResearched(1, "Strategy");
+        createFortButton.GetComponent<Button>().interactable = isFortReaserched;
         if (city.besieged && !city.supplied)
         {
             foreach (var item in unitEntriesInList)
@@ -67,6 +71,12 @@ public class CityMenuManager : MonoBehaviour
     {
         Deactivate();
         city.CreateSupplyLine();
+    }
+
+    public void ClickCreateFort()
+    {
+        Deactivate();
+        this.gameManager.activePlayer.ShowAvailableFortPositions();
     }
 
     public void ClickSelectProductionUnit(GameObject clickedEntry, UnitController unitController, GameObject prefab)

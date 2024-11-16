@@ -11,6 +11,9 @@ public class PlayerFortsManager : NetworkBehaviour
     private PlayerManager playerManager;
     private MapManager mapManager;
 
+    public bool creatingFort = false;
+    public bool justActivated = false;
+
 
     public void Init(PlayerManager playerManager) {
         this.forts = new List<Fort>();

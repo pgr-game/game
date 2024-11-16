@@ -200,4 +200,28 @@ public class PlayerUnitsManager : NetworkBehaviour
 		    units.Add(unit);
 	    }
 	}
+
+    public void HighlitUnits()
+    {
+        foreach (UnitController unit in units)
+        {
+            if (!unit.CanPlaceFortOnTile())
+            {
+                continue;
+            }
+            if (!unit.canPlaceFort)
+            {
+                continue;
+            }
+            unit.unitMove.UnitShow();
+        }
+    }
+
+    public void UnhighlitUnits()
+    {
+        foreach (UnitController unit in units)
+        {
+            unit.unitMove.Deactivate();
+        }
+    }
 }

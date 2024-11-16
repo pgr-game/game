@@ -311,6 +311,13 @@ public class UnitMove : NetworkBehaviour
         Area.Show(mapManager.MapEntity.WalkableBorder(transform.position, RangeLeft), mapManager.MapEntity);
     }
 
+    public void UnitShow()
+    {
+        AreaHide();
+        var tile = mapManager.MapEntity.WalkableBorder(transform.position,0);
+        Area.Show(tile, mapManager.MapEntity);
+    }
+
     public void AreaHide()
     {
         Area.Hide();

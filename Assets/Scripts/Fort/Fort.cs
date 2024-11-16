@@ -1,7 +1,11 @@
 using RedBjorn.ProtoTiles;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Fort : MonoBehaviour
 {
@@ -17,6 +21,10 @@ public class Fort : MonoBehaviour
     public int amountOfImages;
     public Sprite[] images;
     public SpriteRenderer sprite;
+
+    public GameObject barFiller;
+    public GameObject barText;
+    public GameObject wholeBar;
 
 
     // returns 1 if successful, 0 if not
@@ -90,5 +98,18 @@ public class Fort : MonoBehaviour
         fortTile.FortPresent = null;
 
         owner.playerFortsManager.RemoveFort(this, adjacentCity);
+    }
+
+    public void ProgressBuild(TileEntity tile)
+    {
+        this.turnsUntilBuilt--;
+        float fillAmm = (10.0f - turnsUntilBuilt) / 10.0f;
+        barFiller.GetComponent<Image>().fillAmount = fillAmm;
+        barText.GetComponent<Text>().text = ("TURNS LEFT: " + this.turnsUntilBuilt); 
+        if (this.turnsUntilBuilt == 0)
+        {
+            this.BuildComplete();
+            Destroy(wholeBar);
+        }
     }
 }

@@ -26,7 +26,7 @@ public class PlayerManager : NetworkBehaviour
     private GameObject selected;
     private GameObject newSelected;
     private Ray ray;
-    RaycastHit hit;  
+    RaycastHit hit;
 
     //player's assets
     public PlayerUnitsManager playerUnitsManager;
@@ -53,45 +53,45 @@ public class PlayerManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-	    base.OnNetworkSpawn();
+        base.OnNetworkSpawn();
 
-	    var gameManager = FindAnyObjectByType<GameManager>();
-	    if (gameManager == null)
-	    {
-		    isInit = false;
-		    return;
-	    }
+        var gameManager = FindAnyObjectByType<GameManager>();
+        if (gameManager == null)
+        {
+            isInit = false;
+            return;
+        }
 
-	    if (!gameManager.isInit)
-	    {
-		    gameManager.Init();
-	    }
+        if (!gameManager.isInit)
+        {
+            gameManager.Init();
+        }
 
-		Init(gameManager);
+        Init(gameManager);
     }
 
     public void Init(GameManager gameManager)
     {
-	    this.gameManager = gameManager;
+        this.gameManager = gameManager;
 
-		int index = 0;
+        int index = 0;
         for (int i = 0; i < gameManager.sceneLoadData.playerPositions.Length; i++)
         {
-	        if (gameManager.sceneLoadData.playerPositions[i] == transform.position)
-	        {
-		        index = i;
-		        break;
-	        }
+            if (gameManager.sceneLoadData.playerPositions[i] == transform.position)
+            {
+                index = i;
+                break;
+            }
         }
 
         if (gameManager.players[index] == null)
         {
-	        gameManager.players[index] = this;
+            gameManager.players[index] = this;
         }
 
-	    Init(gameManager, gameManager.mapManager, gameManager.startingResources[index], 
-			gameManager.sceneLoadData.playerColors[index], gameManager.sceneLoadData.startingCityNames[index], 
-			gameManager.sceneLoadData.isComputer[index], index);
+        Init(gameManager, gameManager.mapManager, gameManager.startingResources[index],
+            gameManager.sceneLoadData.playerColors[index], gameManager.sceneLoadData.startingCityNames[index],
+            gameManager.sceneLoadData.isComputer[index], index);
     }
 
     public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, bool isComputer, int index)
@@ -103,7 +103,7 @@ public class PlayerManager : NetworkBehaviour
         if (gameManager.isMultiplayer)
         {
             var playerData = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerData>();
-            
+
             if (playerData && this.index == playerData.index)
             {
                 this.playerNetworkData = playerData;
@@ -111,7 +111,7 @@ public class PlayerManager : NetworkBehaviour
             }
             else if (playerData && index < playerData.otherPlayersColors.Count)
             {
-	            this.color = playerData.otherPlayersColors[index];
+                this.color = playerData.otherPlayersColors[index];
             }
             else
             {
@@ -120,12 +120,12 @@ public class PlayerManager : NetworkBehaviour
             }
         }
         else if (!gameManager.isMultiplayer)
-		{
-	        this.isComputer = isComputer;
-	        if (!isComputer)
-		        isSpectator = false;
-		}
-		InitTree(startingResources.treeLoadData);
+        {
+            this.isComputer = isComputer;
+            if (!isComputer)
+                isSpectator = false;
+        }
+        InitTree(startingResources.treeLoadData);
         InitCities(startingCityName, startingResources.cityLoadData);
         InitForts(startingResources);
         InitSupplyLines(startingResources.supplyLoadData);
@@ -151,7 +151,7 @@ public class PlayerManager : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!PauseMenu.isPaused && !isSpectator) 
+        if (!PauseMenu.isPaused && !isSpectator)
         {
             if (playerSupplyManager.drawingSupplyLine && !playerSupplyManager.justActivated)
             {
@@ -161,7 +161,7 @@ public class PlayerManager : NetworkBehaviour
                 {
                     Vector3 clickPos = MyInput.GroundPosition(mapManager.MapEntity.Settings.Plane());
                     playerSupplyManager.CreateSupplyLineToPosition(clickPos);
-				}
+                }
             }
             if (playerSupplyManager.drawingSupplyLine && playerSupplyManager.justActivated)
             {
@@ -170,48 +170,73 @@ public class PlayerManager : NetworkBehaviour
                     playerSupplyManager.justActivated = false;
                 }
             }
+
             newSelected = SelectObject();
-            if(newSelected && !playerSupplyManager.drawingSupplyLine) {
-                if(newSelected.GetComponent<UnitController>() && !isInMenu) {
+            if (newSelected && !playerSupplyManager.drawingSupplyLine)
+            {
+                if (newSelected.GetComponent<UnitController>() && !isInMenu && this.playerFortsManager.creatingFort)
+                { 
+                    if (!newSelected.GetComponent<UnitController>().CanPlaceFortOnTile())
+                    {
+                        Debug.Log("Fort can't be placed here");     // maybe add dialog box in the future
+                        return;
+                    }
+                    if (!newSelected.GetComponent<UnitController>().canPlaceFort)
+                    {
+                        Debug.Log("Unit can't place fort yet");     // maybe add dialog box in the future
+                        return;
+                    }
+                    CreateFort();
+                }
+                else if (newSelected.GetComponent<UnitController>() && !isInMenu)
+                {
                     UnitController currentUnit = newSelected.GetComponent<UnitController>();
                     HandleUnitClick(currentUnit);
 
                 }
-                else if(newSelected.GetComponent<CityTile>()&&selected == null) {
+                else if (newSelected.GetComponent<CityTile>() && selected == null)
+                {
                     CityTile cityTile = newSelected.GetComponent<CityTile>();
                     HandleCityClick(cityTile.city);
                 }
+
             }
-            if (Input.GetKeyDown(KeyCode.B) && selected != null && this.gameManager.playerTreeManager.isNodeResearched(1,"Strategy")) {
-                if(!selected.GetComponent<UnitController>().CanPlaceFortOnTile()) {
-                    Debug.Log("Fort can't be placed here");     // maybe add dialog box in the future
-                    return;
+
+            if (this.playerFortsManager.creatingFort && !playerFortsManager.justActivated)
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    playerFortsManager.creatingFort = false;
+                    this.playerUnitsManager.UnhighlitUnits();
                 }
-                if(!selected.GetComponent<UnitController>().canPlaceFort) {
-                    Debug.Log("Unit can't place fort yet");     // maybe add dialog box in the future
-                    return;
-                }
-                CreateFort();
             }
-        } 
+            if (this.playerFortsManager.creatingFort && playerFortsManager.justActivated)
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    playerFortsManager.justActivated = false;
+                }
+            }
+
+        }
         else
         {
             // Paused
             playerSupplyManager.ClearSupplyLineCreator();
         }
-        
+
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), transform.TransformDirection(Vector3.forward), Color.green);
     }
 
     public void DoTurn()
     {
-	    isSpectator = true;
+        isSpectator = true;
 
-		// TODO computer player actions
-		// Now computer player just skips his turn
-		Debug.Log("Computer player " + index + " turn");
-		isSpectator = false;
-		SkipTurn();
+        // TODO computer player actions
+        // Now computer player just skips his turn
+        Debug.Log("Computer player " + index + " turn");
+        isSpectator = false;
+        SkipTurn();
     }
     public void SkipTurn()
     {
@@ -225,28 +250,35 @@ public class PlayerManager : NetworkBehaviour
 
     GameObject SelectObject()
     {
-        if (Input.GetMouseButtonDown(0)) {  
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);  
-            if (Physics.Raycast(ray, out hit)) {  
+        if (Input.GetMouseButtonDown(0))
+        {
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
                 return hit.transform.gameObject;
             }
             return null;
-        }  
+        }
         return null;
     }
 
-    private void HandleUnitClick(UnitController currentUnit) {
-        if(currentUnit.owner != this) {
+    private void HandleUnitClick(UnitController currentUnit)
+    {
+        if (currentUnit.owner != this)
+        {
             return;
         }
-        if(currentUnit && newSelected == selected) {
+        if (currentUnit && newSelected == selected)
+        {
             //unselect
             selected = null;
             newSelected = null;
             currentUnit.Deactivate();
         }
-        else if(currentUnit) {
-            if(selected) {
+        else if (currentUnit)
+        {
+            if (selected)
+            {
                 selected.GetComponent<UnitController>().Deactivate();
             }
             //select if nothing else is selected
@@ -255,14 +287,18 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    private void HandleCityClick(City city) {
-        if(city.Owner == null) {
+    private void HandleCityClick(City city)
+    {
+        if (city.Owner == null)
+        {
             return;
         }
-        if(city.Owner != this) {
+        if (city.Owner != this)
+        {
             return;
         }
-        if(gameManager.cityMenuManager.city == city && gameManager.cityMenuManager.gameObject.activeSelf) {
+        if (gameManager.cityMenuManager.city == city && gameManager.cityMenuManager.gameObject.activeSelf)
+        {
             gameManager.cityMenuManager.setValues(null);
             gameManager.cityMenuManager.Deactivate();
             isInMenu = false;
@@ -273,7 +309,8 @@ public class PlayerManager : NetworkBehaviour
         gameManager.cityMenuManager.Activate();
     }
 
-    void InitUnits(StartingResources startingResources) {
+    void InitUnits(StartingResources startingResources)
+    {
         playerUnitsManager.Init(this, startingResources);
     }
     void InitTree(TreeLoadData treeLoadData)
@@ -289,64 +326,74 @@ public class PlayerManager : NetworkBehaviour
         this.gameManager.playerTreeManager.populateEvolutionTrees(this);
     }
 
-    void InitCities(string startingCityName, List<CityLoadData> cityLoadData) {
+    void InitCities(string startingCityName, List<CityLoadData> cityLoadData)
+    {
         playerCitiesManager.Init(this, startingCityName, cityLoadData);
     }
 
     void InitSupplyLines(SupplyLoadData supplyLoadData)
     {
-        playerSupplyManager.Init(this, supplyLoadData,hexHighlitPrefab);
+        playerSupplyManager.Init(this, supplyLoadData, hexHighlitPrefab);
     }
 
-    void InitForts(StartingResources startingResources) {
+    void InitForts(StartingResources startingResources)
+    {
         playerFortsManager.Init(this);
 
-        if(startingResources.fortLoadData != null) {
-            foreach(FortLoadData fort in startingResources.fortLoadData) {
-	            if (gameManager.isMultiplayer)
-	            {
-		            playerFortsManager.AddFortRpc(fort.hexPosition, fort.id);
-				}
-	            else
-	            {
-		            playerFortsManager.AddFort(fort.hexPosition, fort.id);
-				}
+        if (startingResources.fortLoadData != null)
+        {
+            foreach (FortLoadData fort in startingResources.fortLoadData)
+            {
+                if (gameManager.isMultiplayer)
+                {
+                    playerFortsManager.AddFortRpc(fort.hexPosition, fort.id);
+                }
+                else
+                {
+                    playerFortsManager.AddFort(fort.hexPosition, fort.id);
+                }
             }
         }
     }
 
-    public void CreateFort() {
-        Vector3Int hexPosition = selected.GetComponent<UnitController>().unitMove.hexPosition;
+    public void CreateFort()
+    {
+        Vector3Int hexPosition = newSelected.GetComponent<UnitController>().unitMove.hexPosition;
         if (gameManager.isMultiplayer)
         {
-	        playerFortsManager.AddFortRpc(hexPosition, 0);
+            playerFortsManager.AddFortRpc(hexPosition, 0);
         }
         else
         {
-	        playerFortsManager.AddFort(hexPosition, 0);
+            playerFortsManager.AddFort(hexPosition, 0);
         }
-		selected.GetComponent<UnitController>().canPlaceFort = false;
-	    selected.GetComponent<UnitController>().turnsSinceFortPlaced = 0;
-	    gold -= costOfFort;
+        newSelected.GetComponent<UnitController>().canPlaceFort = false;
+        newSelected.GetComponent<UnitController>().turnsSinceFortPlaced = 0;
+        gold -= costOfFort;
     }
 
-    public void AddGold(int amount) {
+    public void AddGold(int amount)
+    {
         gold += amount;
         SetGoldText(gold.ToString());
     }
 
-    public void RemoveGold(int amount) {
+    public void RemoveGold(int amount)
+    {
         gold -= amount;
         SetGoldText(gold.ToString());
     }
 
-    public void SetGoldText(string gold) {
+    public void SetGoldText(string gold)
+    {
         goldText.GetComponent<TMPro.TextMeshProUGUI>().text = "gold: " + gold;
     }
 
-    public void SetGoldIncome() {
+    public void SetGoldIncome()
+    {
         // option no 1:
-        if(gameManager.turnNumber % 2 == 0) {
+        if (gameManager.turnNumber % 2 == 0)
+        {
             goldIncome += 1;
         }
         // option no 2: (if the gold income would increase too fast with the first method)
@@ -356,7 +403,7 @@ public class PlayerManager : NetworkBehaviour
         int goldForUnits = playerUnitsManager.GetUnitCount() / 2;
         goldIncome += goldForUnits;
         // here we can do some more advanced calculations, for example based on level of city
-        int goldForCities = playerCitiesManager.GetNumberOfCities()*2;
+        int goldForCities = playerCitiesManager.GetNumberOfCities() * 2;
         goldIncome += goldForCities;
     }
 
@@ -378,24 +425,27 @@ public class PlayerManager : NetworkBehaviour
             }
             else if (IsOwner)
             {
-				isSpectator = false;
-			}
+                isSpectator = false;
+            }
             else if (!IsOwner)
             {
-	            Debug.Log("Another player plays his turn");
-	            isSpectator = true;
-			}
+                Debug.Log("Another player plays his turn");
+                isSpectator = true;
+            }
             gameManager.SetNextTurnButtonText();
-        } else if (isComputer) DoTurn();
+        }
+        else if (isComputer) DoTurn();
     }
 
-    public void StartTurn() {
+    public void StartTurn()
+    {
         playerSupplyManager.CheckSupplyLines();
         playerCitiesManager.StartCitiesTurn();
 
-		playerUnitsManager.StartUnitsTurn();
+        playerUnitsManager.StartUnitsTurn();
 
-        if (gameManager.turnNumber != 1) {
+        if (gameManager.turnNumber != 1)
+        {
             AddGold(playerCitiesManager.GetGoldIncome());
         }
         SetGoldText(gold.ToString());
@@ -404,40 +454,52 @@ public class PlayerManager : NetworkBehaviour
         HandleComputerOrMultiplayerActions();
     }
 
-    public UnitController getSelectedUnit() {
-        if(selected == null) {
+    public UnitController getSelectedUnit()
+    {
+        if (selected == null)
+        {
             return null;
         }
         return selected.GetComponent<UnitController>();
     }
 
-    public void SelectUnitFromList(UnitController selectedUnit) {
-        if(selected) selected.GetComponent<UnitController>().Deactivate();
+    public void SelectUnitFromList(UnitController selectedUnit)
+    {
+        if (selected) selected.GetComponent<UnitController>().Deactivate();
         selected = selectedUnit.gameObject;
         selectedUnit.Activate();
     }
 
-    public bool isAlive() {
-	    bool isAlive = playerUnitsManager.GetUnitCount() > 0;
-	    if(playerCitiesManager.GetNumberOfCities() > 0) {
-		    isAlive = true;
-	    }
-	    return isAlive;
+    public bool isAlive()
+    {
+        bool isAlive = playerUnitsManager.GetUnitCount() > 0;
+        if (playerCitiesManager.GetNumberOfCities() > 0)
+        {
+            isAlive = true;
+        }
+        return isAlive;
     }
 
     [Rpc(SendTo.Everyone)]
-	public void ResearchTreeRpc(int currResearchItem1, string currResearchItem2)
-	{
-		ResearchTree(currResearchItem1, currResearchItem2);
-	}
-	public void ResearchTree(int currResearchItem1, string currResearchItem2)
+    public void ResearchTreeRpc(int currResearchItem1, string currResearchItem2)
     {
-	    var branch = currResearchItem2.Equals("Power")
-		    ? gameManager.activePlayer.powerEvolution
-		    : gameManager.activePlayer.strategyEvolution;
+        ResearchTree(currResearchItem1, currResearchItem2);
+    }
+    public void ResearchTree(int currResearchItem1, string currResearchItem2)
+    {
+        var branch = currResearchItem2.Equals("Power")
+            ? gameManager.activePlayer.powerEvolution
+            : gameManager.activePlayer.strategyEvolution;
 
-	    branch[currResearchItem1][2] = "true";
-	    branch[currResearchItem1][3] = "0";
-	    gameManager.activePlayer.researchNode = (-1, "NONE");
-	}
+        branch[currResearchItem1][2] = "true";
+        branch[currResearchItem1][3] = "0";
+        gameManager.activePlayer.researchNode = (-1, "NONE");
+    }
+
+    public void ShowAvailableFortPositions()
+    {
+        this.playerUnitsManager.HighlitUnits();
+        this.playerFortsManager.creatingFort = true;
+        this.playerFortsManager.justActivated = true;
+    }
 }
