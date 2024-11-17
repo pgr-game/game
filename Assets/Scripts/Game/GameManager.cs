@@ -34,6 +34,7 @@ public class GameManager : NetworkBehaviour
     public GameObject playerPrefab;
     public GameSettings gameSettings;
     public PlayerTreeManager playerTreeManager;
+    public FortButtonManager fortButtonManager;
 
     // Turn elements
     public int turnNumber = 1;
@@ -76,6 +77,7 @@ public class GameManager : NetworkBehaviour
 	{
 		isInit = true;
         playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
+        fortButtonManager = UI.gameObject.transform.Find("CreateFortButton").GetComponent<FortButtonManager>();
         unitStatsMenuController = UI.gameObject.GetComponent<UnitStatsMenuController>();
         nextTurnMenuController = UI.gameObject.GetComponent<NextTurnMenuController>();
         InitStaticVariables();
@@ -121,6 +123,7 @@ public class GameManager : NetworkBehaviour
         playerTreeManager.Init(this);
         mapManager.Init(this);
         cityMenuManager.Init(this);
+        fortButtonManager.Init(this);
 
         players = new PlayerManager[sceneLoadData.numberOfPlayers];
 
@@ -314,6 +317,7 @@ public class GameManager : NetworkBehaviour
 	    SetPlayerUIColor(players[activePlayerIndex].color);
 		players[activePlayerIndex].StartTurn();
 	    playerTreeManager.reserachProgress();
+        fortButtonManager.CheckIfFortResearched(activePlayer);
 	}
 
     public void CheckIfGameIsEnded() {

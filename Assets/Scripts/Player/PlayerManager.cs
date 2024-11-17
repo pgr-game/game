@@ -199,9 +199,17 @@ public class PlayerManager : NetworkBehaviour
                     CityTile cityTile = newSelected.GetComponent<CityTile>();
                     HandleCityClick(cityTile.city);
                 }
+                else if (newSelected.GetComponent<Fort>() && !isInMenu && this.playerFortsManager.deletingFort)
+                {
+                    Fort fort = newSelected.GetComponent<Fort>();
+                    playerFortsManager.deletingFort = false;
+                    this.playerFortsManager.UnhighlightAllForst();
+                    fort.DestroyAndRefundFort(mapManager.TileEntityFromPosition(fort.hexPosition));
+
+                }
 
             }
-
+            bool fortManaging = this.playerFortsManager.creatingFort || this.playerFortsManager.deletingFort;
             if (this.playerFortsManager.creatingFort && !playerFortsManager.justActivated)
             {
                 if (Input.GetMouseButtonUp(0))
@@ -210,7 +218,15 @@ public class PlayerManager : NetworkBehaviour
                     this.playerUnitsManager.UnhighlitUnits();
                 }
             }
-            if (this.playerFortsManager.creatingFort && playerFortsManager.justActivated)
+            if (this.playerFortsManager.deletingFort && !playerFortsManager.justActivated)
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    playerFortsManager.deletingFort = false;
+                    this.playerFortsManager.UnhighlightAllForst();
+                }
+            }
+            if (fortManaging && playerFortsManager.justActivated)
             {
                 if (Input.GetMouseButtonUp(0))
                 {
@@ -498,8 +514,21 @@ public class PlayerManager : NetworkBehaviour
 
     public void ShowAvailableFortPositions()
     {
-        this.playerUnitsManager.HighlitUnits();
-        this.playerFortsManager.creatingFort = true;
-        this.playerFortsManager.justActivated = true;
+        int availableUnits = this.playerUnitsManager.HighlitUnits();
+        if (availableUnits != 0)
+        {
+            this.playerFortsManager.creatingFort = true;
+            this.playerFortsManager.justActivated = true;
+        }
+    }
+
+    public void ShowAvailableFortsForDeletion()
+    {
+        int availableForts = this.playerFortsManager.HighlightAllForst();
+        if (availableForts != 0)
+        {
+            this.playerFortsManager.deletingFort = true;
+            this.playerFortsManager.justActivated=true;
+        }
     }
 }

@@ -201,8 +201,9 @@ public class PlayerUnitsManager : NetworkBehaviour
 	    }
 	}
 
-    public void HighlitUnits()
+    public int HighlitUnits()
     {
+        int availableUnits = 0;
         foreach (UnitController unit in units)
         {
             if (!unit.CanPlaceFortOnTile())
@@ -214,7 +215,9 @@ public class PlayerUnitsManager : NetworkBehaviour
                 continue;
             }
             unit.unitMove.UnitShow();
+            availableUnits++;
         }
+        return availableUnits;
     }
 
     public void UnhighlitUnits()

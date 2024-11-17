@@ -1,4 +1,6 @@
 using RedBjorn.ProtoTiles;
+using RedBjorn.ProtoTiles.Example;
+using RedBjorn.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,16 +28,32 @@ public class Fort : MonoBehaviour
     public GameObject barText;
     public GameObject wholeBar;
 
+    public AreaOutline Area;
+    public AreaOutline AreaPrefab;
 
-    // returns 1 if successful, 0 if not
-    public int Init(int id, PlayerManager owner, Vector3Int hexPosition)
+    public void UnitShow()
     {
+        AreaHide();
+        var tile = owner.mapManager.MapEntity.WalkableBorder(transform.position, 0);
+        Area.Show(tile, owner.mapManager.MapEntity);
+    }
+
+    public void AreaHide()
+    {
+        Area.Hide();
+    }
+    // returns 1 if successful, 0 if not
+    public int Init(int id, PlayerManager owner, Vector3Int hexPosition,AreaOutline areaOutline)
+    {
+        this.AreaPrefab = areaOutline;
         this.id = id;
         this.owner = owner;
         this.hexPosition = hexPosition;
         this.isBuilt = false;
         this.turnsUntilBuilt = 10;
 
+        Area = Spawner.Spawn(AreaPrefab, Vector3.zero, Quaternion.identity);
+        AreaHide();
         sprite = GetComponentInChildren<SpriteRenderer>();
         if(sprite == null)
         {
@@ -59,6 +77,7 @@ public class Fort : MonoBehaviour
             Debug.LogError("Image index is out of range for the 'images' array. Please check if all images are assigned.");
             return 0;
         }
+
     }
 
     public void BuildComplete()
@@ -98,6 +117,15 @@ public class Fort : MonoBehaviour
         fortTile.FortPresent = null;
 
         owner.playerFortsManager.RemoveFort(this, adjacentCity);
+    }
+
+    public void DestroyAndRefundFort(TileEntity fortTile)
+    {
+        if(turnsUntilBuilt > 0)
+        {
+            this.owner.gold += PlayerManager.costOfFort / turnsUntilBuilt;
+        }
+        Destroy(fortTile);
     }
 
     public void ProgressBuild(TileEntity tile)
