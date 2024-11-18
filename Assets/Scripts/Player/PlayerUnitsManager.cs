@@ -227,4 +227,11 @@ public class PlayerUnitsManager : NetworkBehaviour
             unit.unitMove.Deactivate();
         }
     }
+
+    public void DoTurn()
+    {
+	    units.ForEach(unit => {
+		    unit.DoTurn();
+	    });    
+    }
 }

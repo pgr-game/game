@@ -193,4 +193,19 @@ public class MapManager : MonoBehaviour
 
         return new Vector3(sumX / points.Count, sumY / points.Count, 0f);
     }
+
+    public List<TileEntity> GetTilesInRange(int range , Vector3Int hexPosition)
+    {
+        List<TileEntity> tilesInRange = new List<TileEntity>();
+        List<Vector3> positionsInRange = MapEntity.AreaExistedPositions(MapEntity.Tile(hexPosition), range);
+        foreach(Vector3 position in positionsInRange)
+        {
+            TileEntity tile = MapEntity.Tile(position);
+            if(tile != null)
+            {
+                tilesInRange.Add(tile);
+            }
+        }
+        return tilesInRange;
+    }
 }

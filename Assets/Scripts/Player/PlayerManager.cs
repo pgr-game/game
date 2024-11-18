@@ -270,7 +270,8 @@ public class PlayerManager : NetworkBehaviour
         // 2. Trees research
         if(researchNode.Item1 == -1) DecideOnResearch();
         
-        // 
+        // 3. Units movement and other actions
+        playerUnitsManager.DoTurn();
         
         
         // only for computer because it is skipped otherwise in game manager
@@ -606,7 +607,6 @@ public class PlayerManager : NetworkBehaviour
         playerUnitsManager.TryAutoMoveAll();
         playerUnitsManager.DeactivateAll();
         gameObject.SetActive(false);
-
     }
 
     public void ShowAvailableFortPositions()

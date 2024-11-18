@@ -400,6 +400,38 @@ public class UnitController : NetworkBehaviour, INetworkSerializable
             unitStatsMenuController.UpdateUnitStatisticsWindow(unitStatsMenuController.activeUnit);
         }
     }
+
+    public void DoTurn()
+    {
+        Debug.Log(unitMove.hexPosition);
+    }
+    
+    public List<UnitController> FindUnitsInRange(int range, Vector3Int hexPosition)
+    {
+        var tilesInRange = owner.mapManager.GetTilesInRange(range, hexPosition);
+        var unitsInRange = (from tile in tilesInRange where tile.UnitPresent != null select tile.UnitPresent).ToList();
+        
+        // remove self
+        unitsInRange.Remove(this);
+        return unitsInRange;
+    }
+    
+    public List<City> FindCitiesInRange(int range, Vector3Int hexPosition)
+    {
+        var tilesInRange = owner.mapManager.GetTilesInRange(range, hexPosition);
+        var citiesInRange = (from tile in tilesInRange where tile.CityTilePresent != null select tile.CityTilePresent.city).ToList();
+        
+        // remove repetition
+        citiesInRange = citiesInRange.Distinct().ToList();
+        return citiesInRange;
+    }
+
+    public List<Fort> FindFortsInRange(int range, Vector3Int hexPosition)
+    {
+        var tilesInRange = owner.mapManager.GetTilesInRange(range, hexPosition);
+        return (from tile in tilesInRange where tile.FortPresent != null select tile.FortPresent).ToList();
+    }
+    
 	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
 	{
 		serializer.SerializeValue(ref maxHealth);
