@@ -448,4 +448,111 @@ public class UnitController : NetworkBehaviour, INetworkSerializable
 		serializer.SerializeValue(ref canPlaceFort);
 		serializer.SerializeValue(ref turnsSinceFortPlaced);
 	}
+
+    public float GetRiskOfAttacking(UnitController enemy)
+    {
+        // high risk -> 1, don't attack, low risk -> 0, attakck
+        
+        // things to consider:
+        // 1. enemy attack, enemy defense, enemy health,
+        // 2. player attack, player defense, player health
+        // 3. distance between units
+        // 4. enemy and friendly units nearby
+        // 5. forts or cities nearby enemy (healing and defense bonus)
+        
+        // how many hits for enemy to kill player/enemy
+        int hitsToKillPlayer = (int)Math.Ceiling(this.currentHealth / (float)(enemy.GetAttack() - this.GetDefense()));
+        int hitsToKillEnemy = (int)Math.Ceiling(enemy.currentHealth / (float)(this.GetAttack() - enemy.GetDefense()));
+        float hitsRatio = hitsToKillEnemy / (float)hitsToKillPlayer;
+        
+        // distance between units
+        var distance = mapManager.MapEntity.Distance(this.unitMove.hexPosition, enemy.unitMove.hexPosition);
+        int howManyTurnsToGetThere = (int) Math.Ceiling(distance / this.unitMove.Range);
+        
+        // units close (5 tiles) to player and enemy
+        var unitsInRange5OfPlayer = FindUnitsInRange(5, this.unitMove.hexPosition);
+        var unitsInRange5OfEnemy = FindUnitsInRange(5, enemy.unitMove.hexPosition);
+
+        List<UnitController> friendlyUnitsClose = new List<UnitController>();
+        List<UnitController> enemyUnitsClose = new List<UnitController>();
+        foreach (var unit in unitsInRange5OfPlayer)
+        {
+            if (unit.owner == this.owner)
+            {
+                friendlyUnitsClose.Add(unit);
+            }
+            else
+            {
+                enemyUnitsClose.Add(unit);
+            }
+        }
+        foreach (var unit in unitsInRange5OfEnemy)
+        {
+            if (unit.owner == this.owner)
+            {
+                friendlyUnitsClose.Add(unit);
+            }
+            else
+            {
+                enemyUnitsClose.Add(unit);
+            }
+        }
+        float closeUnitsRatio = 
+            enemyUnitsClose.Count * enemyUnitsClose.Sum(unit => unit.currentHealth) * enemyUnitsClose.Sum(unit => unit.attack) / 
+            (float)friendlyUnitsClose.Count * friendlyUnitsClose.Sum(unit => unit.currentHealth) * friendlyUnitsClose.Sum(unit => unit.attack);
+        
+        // units far (10 tiles) to player and enemy
+        var unitsInRange10OfPlayer = FindUnitsInRange(10, this.unitMove.hexPosition);
+        var unitsInRange10OfEnemy = FindUnitsInRange(10, enemy.unitMove.hexPosition);
+        
+        List<UnitController> friendlyUnitsFar = new List<UnitController>();
+        List<UnitController> enemyUnitsFar = new List<UnitController>();
+        foreach (var unit in unitsInRange10OfPlayer)
+        {
+            if (unit.owner == this.owner)
+            {
+                friendlyUnitsFar.Add(unit);
+            }
+            else
+            {
+                enemyUnitsFar.Add(unit);
+            }
+        }
+        foreach (var unit in unitsInRange10OfEnemy)
+        {
+            if (unit.owner == this.owner)
+            {
+                friendlyUnitsFar.Add(unit);
+            }
+            else
+            {
+                enemyUnitsFar.Add(unit);
+            }
+        }
+        float farUnitsRatio = 
+            enemyUnitsFar.Count * enemyUnitsFar.Sum(unit => unit.currentHealth) * enemyUnitsFar.Sum(unit => unit.attack)/ 
+            (float)friendlyUnitsFar.Count * friendlyUnitsFar.Sum(unit => unit.currentHealth) * friendlyUnitsFar.Sum(unit => unit.attack);
+        
+        // cities and forts of enemy close
+        var citiesInRange5OfEnemy = FindCitiesInRange(5, enemy.unitMove.hexPosition)
+            .Where(city => city.Owner == enemy.owner)
+            .ToList();
+
+        var fortsInRange5OfEnemy = FindFortsInRange(5, enemy.unitMove.hexPosition)
+            .Where(fort => fort.owner == enemy.owner)
+            .ToList();
+        
+        var citiesInRange10OfEnemy = FindCitiesInRange(10, enemy.unitMove.hexPosition)
+            .Where(city => city.Owner == enemy.owner)
+            .ToList();
+        
+        var fortsInRange10OfEnemy = FindFortsInRange(10, enemy.unitMove.hexPosition)
+            .Where(fort => fort.owner == enemy.owner)
+            .ToList();
+        
+        float citiesAndFortsHelp = 0.1f*(citiesInRange5OfEnemy.Count + fortsInRange5OfEnemy.Count) +
+                                   0.05f*(citiesInRange10OfEnemy.Count + fortsInRange10OfEnemy.Count);
+        
+
+    }
 }
