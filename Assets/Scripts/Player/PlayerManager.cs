@@ -180,6 +180,7 @@ public class PlayerManager : NetworkBehaviour
                     playerSupplyManager.justActivated = false;
                 }
             }
+
             newSelected = SelectObject();
             if (newSelected && !playerSupplyManager.drawingSupplyLine)
             {
@@ -267,16 +268,16 @@ public class PlayerManager : NetworkBehaviour
          */
         
         // 2. Trees research
-        if(researchNode.Item1 == -1)
-        {
-            Debug.Log("DECIDING ON RESEARCH (AI)");
-            DecideOnResearch();
-        }
+        if(researchNode.Item1 == -1) DecideOnResearch();
+        
+        // 
         
         
+        // only for computer because it is skipped otherwise in game manager
+        gameManager.playerTreeManager.reserachProgress();
         
         isSpectator = false;
-        //SkipTurn();
+        SkipTurn();
     }
 
     private void DecideOnResearch()
