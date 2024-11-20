@@ -273,10 +273,6 @@ public class PlayerManager : NetworkBehaviour
         // 3. Units movement and other actions
         playerUnitsManager.DoTurn();
         
-        
-        // only for computer because it is skipped otherwise in game manager
-        gameManager.playerTreeManager.reserachProgress();
-        
         isSpectator = false;
         SkipTurn();
     }
@@ -554,6 +550,7 @@ public class PlayerManager : NetworkBehaviour
         SetGoldText(gold.ToString());
         SetGoldIncome();
         gold += goldIncome;
+        gameManager.playerTreeManager.reserachProgress();
         HandleComputerOrMultiplayerActions();
     }
 

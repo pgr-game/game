@@ -463,7 +463,7 @@ public class UnitController : NetworkBehaviour, INetworkSerializable
         citiesFortsHelpRatio /= maxCitiesFortsHelpRatio;
 
 
-        // TODO: adjust the weights
+        // TODO: adjust the weights if needed
         // IF turns to get there is less than 2, then close units ratio and hits ratio is more important, if its more than 10
         if (howManyTurnsToGetThere < 2)
             return (0.5f * hitsRatio + 0.3f * closeUnitsRatio + 0.2f * farUnitsRatio + 0.2f * citiesFortsHelpRatio) /
