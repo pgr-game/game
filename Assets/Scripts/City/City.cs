@@ -208,4 +208,10 @@ public class City
 
         UpdateProductionLock();
     }
+
+    public bool CanProduceUnit()
+    {
+        return UnitInProduction == null ||
+               UnitInProductionTurnsLeft == UnitInProduction.GetProductionTurns();
+    }
 }

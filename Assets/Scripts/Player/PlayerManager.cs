@@ -261,11 +261,14 @@ public class PlayerManager : NetworkBehaviour
         
         // TODO: Decide what to do on computer turn
         /*
-         * 1. Cities production
-         * 2. Trees research - predefined strategy with some randomness (e.g. if something was researched, then 2 options are available, chosen randomly)
+         * 1. Cities production 
+         * 2. Trees research - DONE
          * 3. Units movement and other actions (fort, healing, etc.) - decission tree
          * 4. Placing supply lines
          */
+        
+        // 1. Cities production
+        playerCitiesManager.DoTurn();
         
         // 2. Trees research
         if(researchNode.Item1 == -1) DecideOnResearch();
@@ -536,7 +539,6 @@ public class PlayerManager : NetworkBehaviour
 
     public void StartTurn()
     {
-        Debug.Log(researchNode.Item1);
         playerSupplyManager.CheckSupplyLines();
         playerCitiesManager.StartCitiesTurn();
 
