@@ -51,6 +51,7 @@ public class CityMenuManager : MonoBehaviour
         }
         bool isSupplyLineReaserched = this.gameManager.playerTreeManager.isNodeResearched(4, "Strategy");
         createSupplyLineButton.GetComponent<Button>().interactable = isSupplyLineReaserched;
+
         if (city.besieged && !city.supplied)
         {
             foreach (var item in unitEntriesInList)

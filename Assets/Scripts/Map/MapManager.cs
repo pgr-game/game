@@ -128,7 +128,7 @@ public class MapManager : MonoBehaviour
         return null;
     }
 
-    TileEntity TileEntityFromPosition(Vector3 position) {
+    public TileEntity TileEntityFromPosition(Vector3 position) {
         TileEntity tileEntity = MapEntity.Tile(position);
         return tileEntity;
     }

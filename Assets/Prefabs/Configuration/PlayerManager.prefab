@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4026202524
+  GlobalObjectIdHash: 3187381886
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -94,6 +94,7 @@ MonoBehaviour:
   gold: 0
   goldText: {fileID: 0}
   goldIncome: 5
+  isInit: 1
 --- !u!114 &2786874101670556190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,6 +134,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  AreaPrefab: {fileID: 114964435729023602, guid: fe2319e9d6e840f409af77b3e7a85259, type: 3}
+  creatingFort: 0
+  justActivated: 0
 --- !u!114 &3801431291732027362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,6 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   playerManager: {fileID: 0}
+  hexHighlitPrefab: {fileID: 0}
   gameManager: {fileID: 0}
   drawingSupplyLine: 0
   justActivated: 1
