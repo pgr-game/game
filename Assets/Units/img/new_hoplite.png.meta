@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      new_hoplite_0: 4753516472476022810
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

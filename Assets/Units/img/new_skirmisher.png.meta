@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      new_skirmisher_0: 693712070612971693
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
