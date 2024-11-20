@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 159042730252340600, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 61f3b22743760624090bf47dbc68d13f, type: 3}
+      objectReference: {fileID: 4753516472476022810, guid: f4f2d0dabf85bb94d9f1fac6fcc49573, type: 3}
     - target: {fileID: 159042730252340600, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_SortingLayer
       value: 0
@@ -113,12 +113,24 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.26497218
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.26497218
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.26497218
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.053
+      value: 0.2061
       objectReference: {fileID: 0}
     - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.543
+      value: 0.6152
       objectReference: {fileID: 0}
     - target: {fileID: 5182180520385955251, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: Range
@@ -147,6 +159,10 @@ PrefabInstance:
     - target: {fileID: 6127514921344172424, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_Center.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8355726912931331907, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 811379660
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

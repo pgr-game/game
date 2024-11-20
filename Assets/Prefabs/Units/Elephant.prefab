@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1559023031812748953, guid: ca717453591233d4790991323c6ac06b, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2182599090
+      objectReference: {fileID: 0}
     - target: {fileID: 2431257491815091305, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: Range
       value: 3
@@ -22,11 +26,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2478602145919130195, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.144
+      value: 0.121
       objectReference: {fileID: 0}
     - target: {fileID: 2478602145919130195, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.557
+      value: 0.626
       objectReference: {fileID: 0}
     - target: {fileID: 3701409341896165458, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: m_Height
@@ -73,25 +77,25 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
-      propertyPath: moveSounds.Array.data[0]
+      propertyPath: 'moveSounds.Array.data[0]'
       value: 
       objectReference: {fileID: 8300000, guid: d42d849f47f8ea84cb32653ec59cd453, type: 3}
     - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
-      propertyPath: moveSounds.Array.data[1]
+      propertyPath: 'moveSounds.Array.data[1]'
       value: 
       objectReference: {fileID: 8300000, guid: cc60d4d56de90ff428e8aacb97771bc4, type: 3}
     - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
-      propertyPath: moveSounds.Array.data[2]
+      propertyPath: 'moveSounds.Array.data[2]'
       value: 
       objectReference: {fileID: 8300000, guid: e49b68949b6c0cb458ca8381a951b843, type: 3}
     - target: {fileID: 6705293244505061812, guid: ca717453591233d4790991323c6ac06b, type: 3}
-      propertyPath: moveSounds.Array.data[3]
+      propertyPath: 'moveSounds.Array.data[3]'
       value: 
       objectReference: {fileID: 8300000, guid: 6f96b238856393042924c9bf20ef496c, type: 3}
     - target: {fileID: 7233426354256217250, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 96419d8d7962f7040967da6fd02324d6, type: 3}
+      objectReference: {fileID: -4711709163706727417, guid: 1e8440529570e214ea988ab04d41999d, type: 3}
     - target: {fileID: 8614096055907355324, guid: ca717453591233d4790991323c6ac06b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -133,7 +137,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7440418477138296644, guid: ca717453591233d4790991323c6ac06b, type: 3}
+    - {fileID: 5671285820421333069, guid: ca717453591233d4790991323c6ac06b, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca717453591233d4790991323c6ac06b, type: 3}
