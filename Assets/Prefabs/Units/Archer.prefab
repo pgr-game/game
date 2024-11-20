@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 159042730252340600, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 03649448cee5fd64fae97536ce07ab48, type: 3}
+      objectReference: {fileID: 423736694998668889, guid: 6234bf750d99d47479a3d15a5b3cbc95, type: 3}
     - target: {fileID: 159042730252340600, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_SortingLayer
       value: 0
@@ -109,12 +109,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8418249694806479903, guid: d76f6c21670a5794db7889e3d1b3006e, type: 3}
     - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.22941738
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.22941738
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.22941738
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.037
+      value: -0.009
       objectReference: {fileID: 0}
     - target: {fileID: 4914133012778537865, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.233
+      value: 0.501
       objectReference: {fileID: 0}
     - target: {fileID: 5182180520385955251, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: Speed
@@ -139,6 +151,10 @@ PrefabInstance:
     - target: {fileID: 6127514921344172424, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
       propertyPath: m_Center.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8355726912931331907, guid: a3d8f7800758a1f449897da05b721fa4, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 478319931
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
