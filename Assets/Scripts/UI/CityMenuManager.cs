@@ -77,15 +77,36 @@ public class CityMenuManager : MonoBehaviour
             //no unit was previously selected
             SelectProductionUnit(clickedEntry, unitController, prefab);
         }
+        else if (unitController == city.UnitInProduction)
+        {
+            if(city.UnitInProductionTurnsLeft != city.UnitInProduction.GetProductionTurns())
+            {
+                uDialog.NewDialog()
+                    .SetTitleText("Cancelling production")
+                    .SetContentText("Are you sure? Production progress for currently produced unit will be lost!")
+                    .SetDimensions(468, 192)
+                    .SetModal()
+                    .SetShowTitleCloseButton(false)
+                    .AddButton("Cancel production", () =>
+                    {
+                        ClearProduction();
+                    })
+                    .AddButton("Don't cancel", () => { })
+                    .SetCloseWhenAnyButtonClicked(true)
+                    .SetDestroyAfterClose(true)
+                    .SetShowAnimation(eShowAnimation.None)
+                    .SetCloseAnimation(eCloseAnimation.None)
+                    .SetParent(dialogContainer);
+            }
+            else
+            {
+                ClearProduction();
+            }
+        }
         else if (city.UnitInProductionTurnsLeft == city.UnitInProduction.GetProductionTurns())
         {
             //changing unit that has not progressed its production does not require dialog confirmation
             SelectProductionUnit(clickedEntry, unitController, prefab);
-        }
-        else if (unitController == city.UnitInProduction)
-        {
-            //clicking on the currently produced unit should do nothing
-            return;
         }
         else
         {
@@ -103,6 +124,12 @@ public class CityMenuManager : MonoBehaviour
                    .SetCloseAnimation(eCloseAnimation.None)
                    .SetParent(dialogContainer);
         }
+    }
+
+    private void ClearProduction()
+    {
+        city.ClearProduction();
+        SetEntryColorToSelected(null);
     }
 
     public void SelectProductionUnit(string name)
