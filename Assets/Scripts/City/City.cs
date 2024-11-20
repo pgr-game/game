@@ -26,6 +26,7 @@ public class City
     public List<TileEntity> adjacentTiles { get; private set; }
     public bool besieged { get; private set; }
     public bool supplied { get; private set; }
+    public bool isUnderAttack { get; set; }
     public List<PlayerManager> attackingPlayers { get; private set; }
 
     public void InitCity(MapManager mapManager, Color? playerColor, GameObject CityUIPrefab, string name)
@@ -45,6 +46,7 @@ public class City
             UI.SetName(name);
         }
         InitAdjacentTiles();
+        isUnderAttack = false;
     }
 
     public void StartTurn()
@@ -211,6 +213,7 @@ public class City
 
     public bool CanProduceUnit()
     {
+        if (besieged && !supplied) return false;
         return UnitInProduction == null ||
                UnitInProductionTurnsLeft == UnitInProduction.GetProductionTurns();
     }
