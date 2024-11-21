@@ -11,6 +11,7 @@ public class UnitStatsMenuController : MonoBehaviour
     public TextMeshProUGUI unitLevelText;
     public TextMeshProUGUI unitHealthText;
     public TextMeshProUGUI unitDefenseText;
+    public TextMeshProUGUI unitFortCooldownText;
     public GameObject unitBox;
     public GameObject xpSlider;
     public GameObject maxLvlText;
@@ -53,6 +54,27 @@ public class UnitStatsMenuController : MonoBehaviour
             xpSlider.GetComponent<Slider>().value = (float)unitController.experience / (float)System.Math.Pow(2, unitController.level);
         }
         
+        // fort cooldown
+        var isFortPlacingUnlocked = unitController.gameManager.playerTreeManager.isNodeOfPlayerResearched(1, "Strategy", unitController.owner);
+
+        if (isFortPlacingUnlocked)
+        {
+             if ((10 - unitController.turnsSinceFortPlaced) <= 0)
+             {
+                 unitFortCooldownText.text = "CAN PLACE"; 
+                 unitFortCooldownText.color = new Color32(0, 255, 0, 255);
+             }
+             else
+             { 
+                 unitFortCooldownText.text = (10 - unitController.turnsSinceFortPlaced).ToString(); 
+                 unitFortCooldownText.color = new Color32(255, 255, 255, 255);
+             }
+        }
+        else
+        {
+            unitFortCooldownText.text = "UNLOCK FORTS";
+            unitFortCooldownText.color = new Color32(255, 0, 0, 255);
+        }
 
     }
 
