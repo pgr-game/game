@@ -534,5 +534,9 @@ public class PlayerManager : NetworkBehaviour
             this.playerFortsManager.deletingFort = true;
             this.playerFortsManager.justActivated=true;
         }
+        else
+        {
+            gameManager.dialogController.ShowSimpleDialog("No forts available", "There is no fort that can be deleted or cancelled.", true);
+        }
     }
 }
