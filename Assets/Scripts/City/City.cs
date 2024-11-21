@@ -78,16 +78,21 @@ public class City
         UI.SetUnitInProduction(Owner.gameManager.getUnitSprite(unit.unitType));
         UI.SetTurnsLeft(UnitInProductionTurnsLeft);
     }
+    
+    public void ClearProduction()
+    {
+        this.UnitInProduction = null;
+        this.unitInProductionPrefab = null;
+        this.UnitInProductionTurnsLeft = 0;
+        UI.SetUnitInProduction(null);
+        UI.SetTurnsLeft(-1);
+    }
 
     private void UpdateProductionLock()
     {
         if (besieged && !supplied)
         {
-            this.UnitInProduction = null;
-            this.unitInProductionPrefab = null;
-            this.UnitInProductionTurnsLeft = 0;
-            UI.SetUnitInProduction(null);
-            UI.SetTurnsLeft(-1);
+            ClearProduction();
         }
     }
 
