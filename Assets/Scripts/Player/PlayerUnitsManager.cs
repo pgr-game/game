@@ -167,7 +167,7 @@ public class PlayerUnitsManager : NetworkBehaviour
         return units.Count;
     }
 
-    public List<UnitController> GetUnitsForSave()
+    public List<UnitController> GetUnits()
     {
         return units;
     }

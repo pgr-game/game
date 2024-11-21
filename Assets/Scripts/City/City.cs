@@ -26,8 +26,10 @@ public class City
     public List<TileEntity> adjacentTiles { get; private set; }
     public bool besieged { get; private set; }
     public bool supplied { get; private set; }
-    public bool isUnderAttack { get; set; }
+    public bool isUnderAttack = false;
     public List<PlayerManager> attackingPlayers { get; private set; }
+    public int turnsSinceAttacked = 5;
+    
 
     public void InitCity(MapManager mapManager, Color? playerColor, GameObject CityUIPrefab, string name)
     {
@@ -46,11 +48,11 @@ public class City
             UI.SetName(name);
         }
         InitAdjacentTiles();
-        isUnderAttack = false;
     }
 
     public void StartTurn()
     {
+        turnsSinceAttacked++;
         if (UnitInProductionTurnsLeft != 0)
         {
             UnitInProductionTurnsLeft = UnitInProductionTurnsLeft - 1;
@@ -70,6 +72,7 @@ public class City
             }
             UI.SetTurnsLeft(UnitInProductionTurnsLeft);
         }
+        UpdateIsUnderAttack();
     }
 
     public void SetUnitInProduction(UnitController unit, GameObject unitInProductionPrefab)
@@ -148,6 +151,7 @@ public class City
         {
             this.Death(attacker);
         }
+        turnsSinceAttacked = 0;
     }
 
     public void Death(UnitController killer)
@@ -163,6 +167,7 @@ public class City
         killer.GainXP(this.Level);
         UpdateHealth();
         UpdateBesiegedStatus();
+        UpdateIsUnderAttack();
     }
 
     public void CreateSupplyLine()
@@ -217,4 +222,51 @@ public class City
         return UnitInProduction == null ||
                UnitInProductionTurnsLeft == UnitInProduction.GetProductionTurns();
     }
+
+    public void UpdateIsUnderAttack()
+    {
+        var currentAttackStatus = isUnderAttack;
+        isUnderAttack = false;
+        
+        // is besieged (TODO: check if its necessary)
+        if(!besieged) return;
+
+        // how many enemy units are in range 5 of the city (>5)
+        var unitsInRange = FindUnitsInRangeOfCity(5);
+        if (unitsInRange.Count <= 5) return;
+        
+        // was attacked in the last 5 turns
+        if (turnsSinceAttacked > 5) return;
+        
+        // does enemy have catapult in range 5
+        var catapults = unitsInRange.Where(unit => unit.unitType.ToString() == "Catapult").ToList();
+        if(catapults.Count == 0) return;
+        
+        // if all of the above are true, city is under attack
+        isUnderAttack = true;
+        
+        if(currentAttackStatus == false && isUnderAttack == true && Owner.isComputer == false)
+        {
+            // notification
+            Owner.gameManager.dialogController.ShowSimpleDialog("Under attack!", "Your city " + this.Name + " is under attack!", true);
+        }
+    }
+
+    public List<UnitController> FindUnitsInRangeOfCity(int range)
+    {
+        var allUnits = new List<UnitController>();
+        var owner = this.Owner;
+        foreach (var cityTile in cityTiles)
+        {
+            var hexPosition = cityTile.tile.Position;
+            var tilesInRange = cityTile.city.mapManager.GetTilesInRange(range, hexPosition);
+            var unitsInRange = (from tile in tilesInRange where tile.UnitPresent != null select tile.UnitPresent).ToList();
+            allUnits.AddRange(unitsInRange);
+        }
+
+        // remove repetitions and filter units with owner == this.Owner
+        return allUnits.Distinct().Where(unit => unit.owner.index != owner.index).ToList();
+    }
+
+
 }

@@ -14,9 +14,11 @@ public class PlayerCitiesManager : NetworkBehaviour
     private PlayerManager playerManager;
     private MapManager mapManager;
     private Dictionary<string, int> unitAmountTarget = new Dictionary<string, int>();
+    public int attackedCitiesCount = 0;
 
     public void StartCitiesTurn() {
         cities.ForEach(city => city.StartTurn());
+        attackedCitiesCount = cities.Count(city => city.isUnderAttack);
     }
 
     public void Init(PlayerManager playerManager, string startingCityName, List<CityLoadData> cityLoadData) {
@@ -73,7 +75,7 @@ public class PlayerCitiesManager : NetworkBehaviour
 
     public void DoTurn()
     {
-        var playerUnits = playerManager.playerUnitsManager.GetUnitsForSave();
+        var playerUnits = playerManager.playerUnitsManager.GetUnits();
         // count units by type
         var unitTypeCount = new Dictionary<string, int>();
         foreach (var unit in playerUnits)
@@ -190,7 +192,8 @@ public class PlayerCitiesManager : NetworkBehaviour
                 randomUnitTypes.Add(randomUnitType);
             }
             
-            unitsAssignedToCities.AddRange(randomUnitTypes);
+            // add randomUnitTypes to unitsAssignedToCities with ToString() mapping
+            unitsAssignedToCities.AddRange(randomUnitTypes.Select(unitType => unitType.ToString()));
         }
         
         
