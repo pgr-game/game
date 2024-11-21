@@ -524,7 +524,7 @@ public class PlayerManager : NetworkBehaviour
 
     public void ShowAvailableFortsForDeletion()
     {
-        int availableForts = this.playerFortsManager.HighlightAllForst();
+        int availableForts = this.playerFortsManager.HighlightAllForts();
         if (availableForts != 0)
         {
             this.playerFortsManager.deletingFort = true;
