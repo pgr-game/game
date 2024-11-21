@@ -25,6 +25,7 @@ public class CityMenuManager : MonoBehaviour
         this.unitEntriesInList = new List<GameObject>();
         this.cityNameText = this.gameObject.transform.Find("Info/CityName/Text").GetComponent<Text>();
         this.unitsContainer = this.gameObject.transform.Find("Scroll View/Viewport/Content").gameObject;
+        this.dialogContainer = GameObject.Find("UI/DialogContainer").GetComponent<RectTransform>();
     }
 
     public void Deactivate()

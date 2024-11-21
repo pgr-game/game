@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System.Linq;
 using RedBjorn.ProtoTiles;
 using TMPro;
+using UI;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
@@ -56,6 +57,7 @@ public class GameManager : NetworkBehaviour
     public NextTurnMenuController nextTurnMenuController;
     public GameObject UI;
     public TileTag cityTag;
+    public DialogController dialogController;
 
     // Multiplayer
     public bool isMultiplayer;
@@ -78,6 +80,7 @@ public class GameManager : NetworkBehaviour
 		isInit = true;
         playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
         fortButtonManager = UI.gameObject.transform.Find("CreateFortButton").GetComponent<FortButtonManager>();
+        dialogController = UI.gameObject.transform.Find("DialogController").GetComponent<DialogController>();
         unitStatsMenuController = UI.gameObject.GetComponent<UnitStatsMenuController>();
         nextTurnMenuController = UI.gameObject.GetComponent<NextTurnMenuController>();
         InitStaticVariables();
