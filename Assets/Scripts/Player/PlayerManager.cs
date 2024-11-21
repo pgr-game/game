@@ -457,7 +457,7 @@ public class PlayerManager : NetworkBehaviour
 
     public void CreateFort()
     {
-        Vector3Int hexPosition = selected.GetComponent<UnitController>().unitMove.hexPosition;
+        Vector3Int hexPosition = newSelected.GetComponent<UnitController>().unitMove.hexPosition;
         if (gameManager.isMultiplayer)
         {
             playerFortsManager.AddFortRpc(hexPosition, 0);
@@ -552,7 +552,6 @@ public class PlayerManager : NetworkBehaviour
         SetGoldText(gold.ToString());
         SetGoldIncome();
         gold += goldIncome;
-        gameManager.playerTreeManager.reserachProgress();
         HandleComputerOrMultiplayerActions();
     }
 

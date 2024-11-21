@@ -315,8 +315,8 @@ public class GameManager : NetworkBehaviour
 		    DisplayTurnNumber(turnNumber);
 	    }
 	    SetPlayerUIColor(players[activePlayerIndex].color);
-		players[activePlayerIndex].StartTurn();
 	    playerTreeManager.reserachProgress();
+		players[activePlayerIndex].StartTurn();
         fortButtonManager.CheckIfFortResearched(activePlayer);
 	}
 
