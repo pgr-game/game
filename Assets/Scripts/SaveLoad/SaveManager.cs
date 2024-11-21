@@ -65,6 +65,9 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>("turnNumber", gameManager.turnNumber);
         quickSaveWriter.Write<int>("activePlayerIndex", gameManager.activePlayerIndex);
         quickSaveWriter.Write<Vector3[]>("playerPositions", gameManager.playerPositions);
+        quickSaveWriter.Write<string>("difficulty", gameManager.sceneLoadData.difficulty);
+        quickSaveWriter.Write<bool[]>("isComputer", gameManager.sceneLoadData.isComputer);
+        quickSaveWriter.Write<bool>("isMultiplayer", gameManager.sceneLoadData.isMultiplayer);
         quickSaveWriter.Commit();
     }
 

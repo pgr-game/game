@@ -100,8 +100,11 @@ public class LoadManager : MonoBehaviour
         sceneLoadData.turnNumber = quickSaveReader.Read<int>("turnNumber");
         sceneLoadData.activePlayerIndex = quickSaveReader.Read<int>("activePlayerIndex");
         sceneLoadData.playerPositions = quickSaveReader.Read<Vector3[]>("playerPositions");
+        sceneLoadData.difficulty = quickSaveReader.Read<string>("difficulty");
+        sceneLoadData.isComputer = quickSaveReader.Read<bool[]>("isComputer");
+        sceneLoadData.isMultiplayer = quickSaveReader.Read<bool>("isMultiplayer");
 
-        return sceneLoadData;
+		return sceneLoadData;
     }
 
     private StartingResources LoadPlayer(QuickSaveReader quickSaveReader, int index) 
