@@ -46,7 +46,7 @@ public class PlayerFortsManager : NetworkBehaviour
         forts.Add(fort.GetComponent<Fort>());
     }
 
-    public int HighlightAllForst()
+    public int HighlightAllForts()
     {
         int availableForts = 0;
         foreach (var fort in forts)

@@ -292,6 +292,22 @@ public class PlayerTreeManager : MonoBehaviour
         }
         return false;
     }
+    
+    public bool isNodeOfPlayerResearched(int nodeID,string branchType, PlayerManager player)
+    {
+        Dictionary<int, List<string>> powerEvolvCurrPLayer = player.powerEvolution;
+        Dictionary<int, List<string>> strategyEvolvCurrPLayer = player.strategyEvolution;
+
+        if (branchType.Equals("Strategy"))
+        {
+            return bool.Parse(strategyEvolvCurrPLayer[nodeID][2]);
+        }
+        else if (branchType.Equals("Power"))
+        {
+            return bool.Parse(powerEvolvCurrPLayer[nodeID][2]);
+        }
+        return false;
+    }
 
     public bool isUnitUnlocked(string unitName)
     {

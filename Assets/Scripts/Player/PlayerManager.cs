@@ -520,15 +520,23 @@ public class PlayerManager : NetworkBehaviour
             this.playerFortsManager.creatingFort = true;
             this.playerFortsManager.justActivated = true;
         }
+        else
+        {
+            gameManager.dialogController.ShowSimpleDialog("No units available for placing fort", "There is no unit that can place a fort. It may be because they are standing on wrong tile or because they are on cooldown.", true);
+        }
     }
 
     public void ShowAvailableFortsForDeletion()
     {
-        int availableForts = this.playerFortsManager.HighlightAllForst();
+        int availableForts = this.playerFortsManager.HighlightAllForts();
         if (availableForts != 0)
         {
             this.playerFortsManager.deletingFort = true;
             this.playerFortsManager.justActivated=true;
+        }
+        else
+        {
+            gameManager.dialogController.ShowSimpleDialog("No forts available", "There is no fort that can be deleted or cancelled.", true);
         }
     }
 }
