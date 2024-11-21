@@ -229,7 +229,7 @@ public class City
         isUnderAttack = false;
         
         // is besieged (TODO: check if its necessary)
-        if(!besieged) return;
+        // if(!besieged) return;
 
         // how many enemy units are in range 5 of the city (>5)
         var unitsInRange = FindUnitsInRangeOfCity(5);
