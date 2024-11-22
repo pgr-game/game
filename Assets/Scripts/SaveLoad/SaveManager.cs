@@ -82,7 +82,7 @@ public class SaveManager : MonoBehaviour
         SavePlayerTree(player, quickSaveWriter, playerKey);
        
         int i = 0;
-        foreach(UnitController unit in player.playerUnitsManager.GetUnitsForSave())
+        foreach(UnitController unit in player.playerUnitsManager.GetUnits())
         {
             SaveUnit(unit, quickSaveWriter, playerKey, i);    
             i++;      

@@ -300,11 +300,8 @@ public class GameManager : NetworkBehaviour
     {
 	    this.activePlayer.playerSupplyManager.ClearSupplyLineCreator();
 	    this.cityMenuManager.Deactivate();
-	    // this needs to happen before the next player is activated, because next player may be dead
 	    CheckIfGameIsEnded();
-	    players[activePlayerIndex].playerUnitsManager.TryAutoMoveAll();
-	    players[activePlayerIndex].playerUnitsManager.DeactivateAll();
-	    players[activePlayerIndex].gameObject.SetActive(false);
+	    players[activePlayerIndex].PerformAfterTurnActions();
 	    GameObject unitList = UI.transform.Find("UnitList").gameObject;
 	    unitList.SetActive(false);
 
@@ -318,17 +315,17 @@ public class GameManager : NetworkBehaviour
 		    DisplayTurnNumber(turnNumber);
 	    }
 	    SetPlayerUIColor(players[activePlayerIndex].color);
-		players[activePlayerIndex].StartTurn();
 	    playerTreeManager.reserachProgress();
+		players[activePlayerIndex].StartTurn();
         fortButtonManager.CheckIfFortResearched(activePlayer);
 	}
 
-    public void CheckIfGameIsEnded() {
+    private void CheckIfGameIsEnded() {
         bool gameEnded = false;
         int indexOfWinner = -1;
         bool[] playersAlive = new bool[numberOfPlayers];
         for(int i = 0; i < numberOfPlayers; i++) {
-            playersAlive[i] = players[i].isAlive();
+            playersAlive[i] = players[i].IsAlive();
         }
         if(playersAlive.Count(x => x) == 1) {
             gameEnded = true;
