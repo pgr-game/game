@@ -54,6 +54,7 @@ public class PlayerManager : NetworkBehaviour
     
     // 0 - power, 1 - strategy
     private float strategicPowerRatio = 0;
+    public List<City> citiesAttacked = new List<City>();
 
     public override void OnNetworkSpawn()
     {

@@ -225,11 +225,13 @@ public class City
 
     public void UpdateIsUnderAttack()
     {
+        // cleanup
         var currentAttackStatus = isUnderAttack;
         isUnderAttack = false;
-        
-        // is besieged (TODO: check if its necessary)
-        // if(!besieged) return;
+        foreach(var player in Owner.gameManager.players)
+        {
+            player.citiesAttacked.Remove(this);
+        }
 
         // how many enemy units are in range 5 of the city (>5)
         var unitsInRange = FindUnitsInRangeOfCity(5);
@@ -244,6 +246,21 @@ public class City
         
         // if all of the above are true, city is under attack
         isUnderAttack = true;
+        
+        // get all players attacking the city
+        var attackingPlayers = new List<PlayerManager>();
+        foreach (var unit in unitsInRange)
+        {
+            if (!attackingPlayers.Contains(unit.owner))
+            {
+                attackingPlayers.Add(unit.owner);
+            }
+        }
+
+        foreach (var player in attackingPlayers)
+        {
+            player.citiesAttacked.Add(this);
+        }
         
         if(currentAttackStatus == false && isUnderAttack == true && Owner.isComputer == false)
         {

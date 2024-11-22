@@ -1,17 +1,19 @@
 using RedBjorn.ProtoTiles;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class PlayerUnitsManager : NetworkBehaviour
 {
     private PlayerManager playerManager;
     private GameManager gameManager;
     private List<UnitController> units = new List<UnitController>();
+    
+    // AI PARAMS, units state ratio, all ratios sum to 1
+    public float attackingCityRatio = 0.0f;
+    public float protectingCityRatio = 0.5f;
+    public float freeWanderingRatio = 0.5f;
 
     public void Init(PlayerManager playerManager, StartingResources startingResources)
     {
@@ -230,8 +232,158 @@ public class PlayerUnitsManager : NetworkBehaviour
 
     public void DoTurn()
     {
+	    if(gameManager.turnNumber == 1)
+	    {
+		    AssignStatesToUnits();
+	    }
+	    
+	    CalculateRatios();
+	    
+	    AssignStatesToUnits();
+	    
+	    // decide if should attack a new city
+	    if (playerManager.gameManager.playerTreeManager.isUnitUnlocked("Catapult"))
+	    {
+		    // get cities possible for attack
+		    var allCities = gameManager.players.SelectMany(player => player.playerCitiesManager.cities).ToList();
+		    allCities.RemoveAll(city => city.Owner == playerManager);	// remove own cities
+		    allCities.RemoveAll(playerManager.citiesAttacked.Contains);		// remove cities already attacking
+		    var freeWanderingUnits = units.Where(unit => unit.unitState == UnitState.FreeWandering).ToList();
+	    
+		    if(freeWanderingUnits.Count > 0 && allCities.Count > 0)
+		    {
+			    var cityWithChance = new Dictionary<City, float>();
+			    foreach (var city in allCities) cityWithChance.Add(city, calculateCityAttackChance(city));
+		    }
+	    }
+	    
+	    
+	    // reassign states if needed
+	    // AssignStatesToUnits();
+	    
+	    // TODO: assign units targets (attacking/protecting city)
+	    
 	    units.ForEach(unit => {
 		    unit.DoTurn();
-	    });    
+	    });
+	    
+    }
+
+    public float calculateCityAttackChance(City city)
+    {
+	    return 0.5f;
+    }
+
+    // TODO: make it more complex, for example with only one city left that is being attacked, more units should go and protect it, or when city is being surrounded by enemies units should also come back
+    private void CalculateRatios()
+    {
+	    var citiesUnderAttack = playerManager.playerCitiesManager.attackedCitiesCount;
+	    var citiesAttacking = playerManager.citiesAttacked.Count;
+	    var citiesOwned = playerManager.playerCitiesManager.cities.Count;
+	    
+	    int initialAttackingCityRatio = 0, initialProtectingCityRatio = 0, initialFreeWanderingRatio = 20;
+
+	    for(var i = 0; i < citiesOwned; i++)
+	    {
+		    initialProtectingCityRatio += 1;
+		    initialFreeWanderingRatio -= 1;
+	    }
+
+	    for(var i = 0; i < citiesUnderAttack; i++)
+	    {
+		    initialProtectingCityRatio += 2;
+		    initialFreeWanderingRatio -= 2;
+		    if(initialFreeWanderingRatio <= 0) break;
+	    }
+	    
+	    if(initialFreeWanderingRatio > 0) {
+		    for(var i = 0; i< citiesAttacking; i++)
+		    {
+			    initialAttackingCityRatio += 1;
+			    initialFreeWanderingRatio -= 1;
+			    if(initialFreeWanderingRatio <= 0) break;
+		    }
+	    }
+	    
+	    attackingCityRatio = (float)initialAttackingCityRatio / 20;
+	    protectingCityRatio = (float)initialProtectingCityRatio / 20;
+	    freeWanderingRatio = (float)initialFreeWanderingRatio / 20;
+    }
+
+    public void AssignStatesToUnits()
+    {
+	    // check if current state needs changing
+	    int attackingCount = 0, protectingCount = 0, freeWanderingCount = 0;
+
+	    foreach (var unit in units)
+	    {
+		    if(unit.unitState == UnitState.AttackingCity)
+		    {
+			    attackingCount++;
+		    }
+		    else if(unit.unitState == UnitState.ProtectingCity)
+		    {
+			    protectingCount++;
+		    }
+		    else if(unit.unitState == UnitState.FreeWandering)
+		    {
+			    freeWanderingCount++;
+		    }
+	    }
+	    
+	    float currentAttackingRatio = (float)attackingCount / units.Count;
+	    float currentProtectingRatio = (float)protectingCount / units.Count;
+	    float currentFreeWanderingRatio = (float)freeWanderingCount / units.Count;
+	    
+	    // calculate diff between target and current ratios
+	    float attackingDiff = attackingCityRatio - currentAttackingRatio;
+	    float protectingDiff = protectingCityRatio - currentProtectingRatio;
+	    float freeWanderingDiff = freeWanderingRatio - currentFreeWanderingRatio;
+
+	    // list of units that need to change state
+	    List<UnitController> unitsToAttacking = new List<UnitController>();
+	    List<UnitController> unitsToProtecting = new List<UnitController>();
+	    List<UnitController> unitsToFreeWandering = new List<UnitController>();
+
+	    // categorization
+	    foreach (var unit in units)
+	    {
+	        if (unit.unitState == UnitState.AttackingCity && attackingDiff < 0)
+	            unitsToFreeWandering.Add(unit);
+	        else if (unit.unitState == UnitState.ProtectingCity && protectingDiff < 0)
+	            unitsToFreeWandering.Add(unit);
+	        else if (unit.unitState == UnitState.FreeWandering)
+	        {
+	            if (attackingDiff > 0)
+	                unitsToAttacking.Add(unit);
+	            else if (protectingDiff > 0)
+	                unitsToProtecting.Add(unit); 
+	        }
+	    }
+
+	    // change units states
+	    while (attackingDiff > 0 && unitsToAttacking.Count > 0)
+	    {
+	        var unit = unitsToAttacking[0];
+	        unitsToAttacking.RemoveAt(0);
+	        unit.unitState = UnitState.AttackingCity;
+	        attackingDiff -= 1f / units.Count;
+	    }
+
+	    while (protectingDiff > 0 && unitsToProtecting.Count > 0)
+	    {
+	        var unit = unitsToProtecting[0];
+	        unitsToProtecting.RemoveAt(0);
+	        unit.unitState = UnitState.ProtectingCity;
+	        protectingDiff -= 1f / units.Count;
+	    }
+
+	    while (freeWanderingDiff > 0 && unitsToFreeWandering.Count > 0)
+	    {
+	        var unit = unitsToFreeWandering[0];
+	        unitsToFreeWandering.RemoveAt(0);
+	        unit.unitState = UnitState.FreeWandering;
+	        freeWanderingDiff -= 1f / units.Count;
+	    }
     }
 }

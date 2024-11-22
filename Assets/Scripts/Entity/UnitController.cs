@@ -6,6 +6,12 @@ using Unity.Netcode;
 using UnityEngine;
 
 //using UnityEditor.Experimental.GraphView;
+public enum UnitState
+{
+    AttackingCity,
+    ProtectingCity,
+    FreeWandering
+}
 
 public class UnitController : NetworkBehaviour, INetworkSerializable
 {
@@ -38,6 +44,10 @@ public class UnitController : NetworkBehaviour, INetworkSerializable
 
     // Multiplayer
     public NetworkVariable<int> ownerIndex = new();
+    
+    // AI variables
+    public UnitState unitState = UnitState.FreeWandering;
+    public GameObject target;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
