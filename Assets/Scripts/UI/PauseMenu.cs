@@ -86,6 +86,19 @@ public class PauseMenu : MonoBehaviour
         button.interactable = true;
     }
 
+    public void SettingsButtonPress()
+    {
+        if(saveManager.gameManager.activePlayer.isInMenu)
+        {
+            ResumeGame();
+        }
+        else
+        {
+            unitList.SetActive(false);
+            cityMenu.SetActive(false);
+            PauseGame();
+        }
+    }
     public void PauseGame()
     {
         saveManager.gameManager.activePlayer.isInMenu = true;
