@@ -21,7 +21,7 @@ public class PlayerManager : NetworkBehaviour
     public int index;
 
     //selecting units and settlements
-    private bool isInMenu = false;
+    public bool isInMenu = false;
     public bool isSpectator { get; private set; } = true;
     private GameObject selected;
     private GameObject newSelected;
@@ -194,7 +194,7 @@ public class PlayerManager : NetworkBehaviour
                     HandleUnitClick(currentUnit);
 
                 }
-                else if (newSelected.GetComponent<CityTile>() && selected == null)
+                else if (newSelected.GetComponent<CityTile>() && selected == null && !isInMenu)
                 {
                     CityTile cityTile = newSelected.GetComponent<CityTile>();
                     HandleCityClick(cityTile.city);
@@ -320,7 +320,7 @@ public class PlayerManager : NetworkBehaviour
             isInMenu = false;
             return;
         }
-        isInMenu = false;
+        isInMenu = true;
         gameManager.cityMenuManager.setValues(city);
         gameManager.cityMenuManager.Activate();
     }

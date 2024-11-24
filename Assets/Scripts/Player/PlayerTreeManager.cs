@@ -153,6 +153,10 @@ public class PlayerTreeManager : MonoBehaviour
     }
     public void togleEvolutionTree()
     {
+        if(gameManager.activePlayer.isInMenu && !panelActive)
+        {
+            return;
+        }
         Dictionary<int, List<string>> powerEvolvCurrPLayer = gameManager.activePlayer.powerEvolution;
         Dictionary<int, List<string>> strategyEvolvCurrPLayer = gameManager.activePlayer.strategyEvolution;
         (int, string) currResearch = gameManager.activePlayer.researchNode;
@@ -175,11 +179,13 @@ public class PlayerTreeManager : MonoBehaviour
 
             ProgressButtonText.SetActive(true);
             ProgressBurronIcon.SetActive(false);
+            gameManager.activePlayer.isInMenu = true;
         }
         else
         {
             ProgressButtonText.SetActive(false);
             ProgressBurronIcon.SetActive(true);
+            gameManager.activePlayer.isInMenu = false;
         }
     }
 

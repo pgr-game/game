@@ -30,6 +30,7 @@ public class CityMenuManager : MonoBehaviour
 
     public void Deactivate()
     {
+        gameManager.activePlayer.isInMenu = false;
         this.gameObject.SetActive(false);
         PauseMenu.isPaused = false;
         Time.timeScale = 1f;
@@ -37,6 +38,7 @@ public class CityMenuManager : MonoBehaviour
 
     public void Activate()
     {
+        gameManager.activePlayer.isInMenu = true;
         this.gameObject.SetActive(true);
         PauseMenu.isPaused = true;
         Time.timeScale = 0f;
