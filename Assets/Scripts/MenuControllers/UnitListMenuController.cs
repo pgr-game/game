@@ -17,6 +17,10 @@ public class UnitList : MonoBehaviour
 	    {
 		    return;
 	    }
+        if (gameManager.activePlayer.isInMenu)
+        {
+            return;
+        }
         GameObject content = unitList.transform.Find("Scroll View/Viewport/Content").gameObject;
         unitList.SetActive(!unitList.activeSelf);
         if (unitList.activeSelf)

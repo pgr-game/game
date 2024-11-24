@@ -317,10 +317,10 @@ public class PlayerManager : NetworkBehaviour
         {
             gameManager.cityMenuManager.setValues(null);
             gameManager.cityMenuManager.Deactivate();
-            isInMenu = false;
+            
             return;
         }
-        isInMenu = true;
+        
         gameManager.cityMenuManager.setValues(city);
         gameManager.cityMenuManager.Activate();
     }
