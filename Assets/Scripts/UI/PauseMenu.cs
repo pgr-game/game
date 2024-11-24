@@ -88,6 +88,7 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
+        saveManager.gameManager.activePlayer.isInMenu = true;
         pauseMenu.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
@@ -95,6 +96,7 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        saveManager.gameManager.activePlayer.isInMenu = false;
         pauseMenu.SetActive(false);
         saveNameInputWindow.SetActive(false);
         Time.timeScale = 1f;

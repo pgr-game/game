@@ -379,9 +379,12 @@ public class UnitController : NetworkBehaviour, INetworkSerializable
 
     void OnMouseOver()
     {
-        unitStatsMenuController.UpdateUnitStatisticsWindow(this);
-        unitStatsMenuController.ShowUnitBox();
-        unitMove.ShowLongPath();
+        if (!gameManager.activePlayer.isInMenu)
+        {
+            unitStatsMenuController.UpdateUnitStatisticsWindow(this);
+            unitStatsMenuController.ShowUnitBox();
+            unitMove.ShowLongPath();
+        }
     }
 
     void OnMouseExit()

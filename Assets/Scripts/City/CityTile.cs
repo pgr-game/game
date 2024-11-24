@@ -17,12 +17,6 @@ public class CityTile : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void Init(GameManager gameManager) {
         this.gameManager = gameManager;
         tile = gameManager.mapManager.MapEntity.Tile(this.transform.position);
