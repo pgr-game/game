@@ -15,16 +15,24 @@ public class UnitList : MonoBehaviour
     {
 	    if (gameManager.isMultiplayer && !gameManager.activePlayer.IsOwner)
 	    {
+
 		    return;
 	    }
         if (gameManager.activePlayer.isInMenu)
         {
+            if (unitList.activeSelf)
+            {
+                PauseMenu.isPaused = false;
+                gameManager.activePlayer.isInMenu = false;
+                unitList.SetActive(!unitList.activeSelf);
+            }
             return;
         }
         GameObject content = unitList.transform.Find("Scroll View/Viewport/Content").gameObject;
         unitList.SetActive(!unitList.activeSelf);
         if (unitList.activeSelf)
         {
+            gameManager.activePlayer.isInMenu = true;
             PauseMenu.isPaused = true;
             foreach (Transform child in content.transform)
             {
@@ -55,6 +63,7 @@ public class UnitList : MonoBehaviour
         else
         {
             PauseMenu.isPaused = false;
+            gameManager.activePlayer.isInMenu = false;
         }
     }
     public void CreateUnitList()

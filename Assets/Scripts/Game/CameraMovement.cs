@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.LowLevel;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -10,7 +11,9 @@ public class CameraMovement : MonoBehaviour
 
     [SerializeField]
     private float zoomSpeed, minZoom, maxZoom;
-
+    Vector3 touchStart;
+    public float zoomOutMin = 1;
+    public float zoomOutMax = 8;
     private Vector3 dragOrigin;
 
     void Start()
@@ -22,8 +25,37 @@ public class CameraMovement : MonoBehaviour
     {
         if (!PauseMenu.isPaused)
         {
-            panCamera();
-            zoomCamera();
+            if (!Application.isMobilePlatform)
+            {
+                panCamera();
+                zoomCamera();
+            }
+            else
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    touchStart = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                }
+                if (Input.touchCount == 2)
+                {
+                    Touch touchZero = Input.GetTouch(0);
+                    Touch touchOne = Input.GetTouch(1);
+
+                    Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+                    Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+                    float prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+                    float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
+
+                    float difference = currentMagnitude - prevMagnitude;
+                    Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize - (difference * 0.01f), minZoom, maxZoom);
+                }
+                else if (Input.GetMouseButton(0))
+                {
+                    Vector3 direction = touchStart - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    Camera.main.transform.position += direction;
+                }
+            }
         }
     }
 
