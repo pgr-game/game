@@ -106,19 +106,13 @@ public class GameManager : NetworkBehaviour
 			{
 				sceneLoadData = LoadDataFromSettingsCreator();
 				networkSceneLoadData.Value = sceneLoadData;
-			}
+            }
 			else
 			{
 				loadManager.SetSaveRoot(saveRoot);
 				sceneLoadData = loadManager.Load();
-			}
-		}
-
-
-		startingResources = new StartingResources[sceneLoadData.numberOfPlayers];
-		for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
-		{
-			startingResources[i] = getStartingResourcesByDifficulty(sceneLoadData.difficulty);
+                startingResources = sceneLoadData.startingResources;
+            }
 		}
 
         LoadGameData(sceneLoadData);
@@ -182,8 +176,14 @@ public class GameManager : NetworkBehaviour
         bool[] isComputer = gameSettings?.isComputer ?? new [] { false, false };
         isMultiplayer = gameSettings?.isMultiplayer ?? true;
         string difficulty = gameSettings?.difficulty ?? "Medium";
+        startingResources = new StartingResources[sceneLoadData.numberOfPlayers];
+        for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
+        {
+            startingResources[i] = getStartingResourcesByDifficulty(sceneLoadData.difficulty);
+        }
 
-        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InPlayerColors, InStartingCityNames, 1, 0, isComputer, isMultiplayer, difficulty);
+        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InPlayerColors, InStartingCityNames, 1,
+            0, isComputer, isMultiplayer, difficulty, startingResources);
     }
 
     public StartingResources getStartingResourcesByDifficulty(string difficulty) {

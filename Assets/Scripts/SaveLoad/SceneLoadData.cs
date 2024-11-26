@@ -10,7 +10,7 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 	public SceneLoadData(int numberOfPlayers, Vector3[] playerPositions,
 	Color32[] playerColors, string[] startingCityNames, int turnNumber,
 	int activePlayerIndex, bool[] isComputer, bool isMultiplayer,
-	string difficulty)
+	string difficulty, StartingResources[] startingResources)
 	{
 		this.numberOfPlayers = numberOfPlayers;
 		this.playerPositions = playerPositions;
@@ -21,7 +21,8 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 		this.isComputer = isComputer;
 		this.isMultiplayer = isMultiplayer;
 		this.difficulty = difficulty;
-	}
+		this.startingResources = startingResources;
+    }
 
 	public SceneLoadData() { }
 	public int numberOfPlayers;
@@ -33,8 +34,9 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 	public bool[] isComputer;
 	public bool isMultiplayer;
 	public string difficulty;
+	public StartingResources[] startingResources;
 
-	public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
 	{
 		serializer.SerializeValue(ref numberOfPlayers);
 		serializer.SerializeValue(ref playerPositions);
