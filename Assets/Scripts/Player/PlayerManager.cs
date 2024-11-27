@@ -72,6 +72,10 @@ public class PlayerManager : NetworkBehaviour
 
     public void Init(GameManager gameManager)
     {
+        
+        //gameObject.SetActive(false);
+    
+
         this.gameManager = gameManager;
 
         int index = 0;
@@ -151,6 +155,8 @@ public class PlayerManager : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        var r = Application.isMobilePlatform;
         if (!PauseMenu.isPaused && !isSpectator)
         {
             if (playerSupplyManager.drawingSupplyLine && !playerSupplyManager.justActivated)
