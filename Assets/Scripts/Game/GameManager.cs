@@ -176,10 +176,10 @@ public class GameManager : NetworkBehaviour
         bool[] isComputer = gameSettings?.isComputer ?? new [] { false, false };
         isMultiplayer = gameSettings?.isMultiplayer ?? true;
         string difficulty = gameSettings?.difficulty ?? "Medium";
-        startingResources = new StartingResources[sceneLoadData.numberOfPlayers];
-        for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
+        startingResources = new StartingResources[InNumberOfPlayers];
+        for (int i = 0; i < InNumberOfPlayers; i++)
         {
-            startingResources[i] = getStartingResourcesByDifficulty(sceneLoadData.difficulty);
+            startingResources[i] = getStartingResourcesByDifficulty(difficulty);
         }
 
         return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InPlayerColors, InStartingCityNames, 1,
