@@ -77,6 +77,7 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>(playerKey + "numberOfUnits", player.playerUnitsManager.GetUnitCount());
         quickSaveWriter.Write<int>(playerKey + "numberOfForts", player.playerFortsManager.forts.Count);
         quickSaveWriter.Write<int>(playerKey + "numberOfCities", player.playerCitiesManager.cities.Count);
+        quickSaveWriter.Write<int>(playerKey + "numberOfSupplyLines", player.playerSupplyManager.GetSupplyLineCount());
         quickSaveWriter.Write<bool>(playerKey + "isComputer", player.isComputer);
         quickSaveWriter.Write<string>(playerKey + "color", ColorUtility.ToHtmlStringRGBA(player.color));
         quickSaveWriter.Write<int>(playerKey + "gold", player.gold);
@@ -103,6 +104,13 @@ public class SaveManager : MonoBehaviour
         {
             SaveCity(city, quickSaveWriter, playerKey, i);    
             i++;      
+        }
+
+        i = 0;
+        foreach (SupplyLoadData supplyLoadData in player.playerSupplyManager.GetSupplyLoadData())
+        {
+            SaveSupplyLine(supplyLoadData, quickSaveWriter, playerKey, i);
+            i++;
         }
 
         quickSaveWriter.Commit();
@@ -171,6 +179,14 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>(cityKey + "level", city.Level);
         quickSaveWriter.Write<string>(cityKey + "unitInProduction", city.UnitInProduction ? city.UnitInProduction.name : "");
         quickSaveWriter.Write<int>(cityKey + "unitInProductionTurnsLeft", city.UnitInProductionTurnsLeft);
+        quickSaveWriter.Commit();
+    }
+
+    private void SaveSupplyLine(SupplyLoadData supplyLoadData, QuickSaveWriter quickSaveWriter, string playerKey, int index)
+    {
+        string supplyLineKey = playerKey + "supplyLine" + index;
+        quickSaveWriter.Write<Vector3>(supplyLineKey + "startPosition", supplyLoadData.startPosition);
+        quickSaveWriter.Write<Vector3>(supplyLineKey + "endPosition", supplyLoadData.endPosition);
         quickSaveWriter.Commit();
     }
 

@@ -4,10 +4,12 @@ using UnityEngine;
 
 public record SupplyLoadData
 {
-    public List<SupplyLineController> supplyLines;
+    public Vector3 startPosition;
+    public Vector3 endPosition;
 
-    public SupplyLoadData(List<SupplyLineController> supplyLines)
+    public SupplyLoadData(Vector3 startPosition, Vector3 endPosition)
     {
-        this.supplyLines = supplyLines;
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
     }
 }

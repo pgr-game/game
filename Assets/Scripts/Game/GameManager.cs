@@ -422,7 +422,7 @@ public class GameManager : NetworkBehaviour
 
     public void SetNextTurnButtonText()
     {
-	    if (activePlayer.isSpectator)
+	    if (activePlayer == null || activePlayer.isSpectator)
 	    {
 		    nextTurnMenuController.SetText("WAIT FOR OTHER PLAYER");
 	    }

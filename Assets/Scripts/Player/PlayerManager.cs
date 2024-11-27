@@ -347,7 +347,7 @@ public class PlayerManager : NetworkBehaviour
         playerCitiesManager.Init(this, startingCityName, cityLoadData);
     }
 
-    void InitSupplyLines(SupplyLoadData supplyLoadData)
+    void InitSupplyLines(List<SupplyLoadData> supplyLoadData)
     {
         playerSupplyManager.Init(this, supplyLoadData, hexHighlitPrefab);
     }

@@ -96,4 +96,10 @@ public class SupplyLineController
         }
         UnityEngine.Object.Destroy(supplyLineDrawer.gameObject);
     }
+
+    public SupplyLoadData GetSupplyLoadData()
+    {
+        return new SupplyLoadData(mapManager.MapEntity.WorldPosition(path.First().Position), 
+            mapManager.MapEntity.WorldPosition(path.Last().Position));
+    }
 }

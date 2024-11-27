@@ -121,6 +121,9 @@ public class LoadManager : MonoBehaviour
         int numberOfCities = quickSaveReader.Read<int>(playerKey + "numberOfCities");
         startingResources.cityLoadData = new List<CityLoadData>();
 
+        int numberOfSupplyLines = quickSaveReader.Read<int>(playerKey + "numberOfSupplyLines");
+        startingResources.supplyLoadData = new List<SupplyLoadData>();
+
         //player.isComputer = quickSaveReader.Read<bool>(playerKey + "isComputer");
         startingResources.gold = quickSaveReader.Read<int>(playerKey + "gold");
         //player.goldIncome = quickSaveReader.Read<int>(playerKey + "goldIncome");
@@ -140,6 +143,11 @@ public class LoadManager : MonoBehaviour
         for(int i = 0; i < numberOfCities; i++)
         {
             startingResources.cityLoadData.Add(LoadCityData(quickSaveReader, playerKey, i));          
+        }
+
+        for (int i = 0; i < numberOfSupplyLines; i++)
+        {
+            startingResources.supplyLoadData.Add(LoadSupplyLineData(quickSaveReader, playerKey, i));
         }
 
         startingResources.treeLoadData = LoadTreeData(quickSaveReader, playerKey);
@@ -208,6 +216,18 @@ public class LoadManager : MonoBehaviour
         );
 
         return cityLoadData;
+    }
+
+    private SupplyLoadData LoadSupplyLineData(QuickSaveReader quickSaveReader, string playerKey, int index)
+    {
+        string supplyLineKey = playerKey + "supplyLine" + index;
+
+        SupplyLoadData supplyLoadData = new SupplyLoadData(
+            quickSaveReader.Read<Vector3>(supplyLineKey + "startPosition"),
+            quickSaveReader.Read<Vector3>(supplyLineKey + "endPosition")
+        );
+
+        return supplyLoadData;
     }
 
     private TreeLoadData LoadTreeData(QuickSaveReader quickSaveReader, string playerKey)
