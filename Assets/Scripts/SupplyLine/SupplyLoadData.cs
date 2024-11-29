@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public record SupplyLoadData
+public record SupplyLoadData : INetworkSerializable
 {
     public Vector3 startPosition;
     public Vector3 endPosition;
@@ -11,5 +12,11 @@ public record SupplyLoadData
     {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref startPosition);
+        serializer.SerializeValue(ref endPosition);
     }
 }

@@ -54,8 +54,12 @@ public class HostSingleton : MonoBehaviour
     {
 	    var gameSettings = GameObject.Find("GameSettings")?.GetComponent<GameSettings>();
 	    maxConnections = gameSettings.numberOfPlayers;
+        if (gameSettings.numberOfPlayers == 0)
+        {
+            maxConnections = 4; //TODO save this in SaveRoot
+        }
 
-	    Allocation allocation = null;
+        Allocation allocation = null;
 
         try
         {

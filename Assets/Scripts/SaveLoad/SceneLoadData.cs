@@ -37,42 +37,63 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 	public StartingResources[] startingResources;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-	{
-		serializer.SerializeValue(ref numberOfPlayers);
-		serializer.SerializeValue(ref playerPositions);
-		serializer.SerializeValue(ref playerColors);
-		serializer.SerializeValue(ref turnNumber);
-		serializer.SerializeValue(ref activePlayerIndex);
-		serializer.SerializeValue(ref isComputer);
-		serializer.SerializeValue(ref isMultiplayer);
-		serializer.SerializeValue(ref difficulty);
+    {
+        serializer.SerializeValue(ref numberOfPlayers);
+        serializer.SerializeValue(ref playerPositions);
+        serializer.SerializeValue(ref playerColors);
+        serializer.SerializeValue(ref turnNumber);
+        serializer.SerializeValue(ref activePlayerIndex);
+        serializer.SerializeValue(ref isComputer);
+        serializer.SerializeValue(ref isMultiplayer);
+        serializer.SerializeValue(ref difficulty);
 
-		// Serialize string array manually
-		if (serializer.IsReader)
-		{
-			int length = 0;
-			serializer.SerializeValue(ref length);
-			startingCityNames = new string[length];
-			for (int i = 0; i < length; i++)
-			{
-				string cityName = string.Empty;
-				serializer.SerializeValue(ref cityName);
-				startingCityNames[i] = cityName;
-			}
-		}
-		else
-		{
-			int length = startingCityNames.Length;
-			serializer.SerializeValue(ref length);
-			for (int i = 0; i < length; i++)
-			{
-				string cityName = startingCityNames[i];
-				serializer.SerializeValue(ref cityName);
-			}
-		}
-	}
+        // Serialize string array manually
+        if (serializer.IsReader)
+        {
+            int length = 0;
+            serializer.SerializeValue(ref length);
+            startingCityNames = new string[length];
+            for (int i = 0; i < length; i++)
+            {
+                string cityName = string.Empty;
+                serializer.SerializeValue(ref cityName);
+                startingCityNames[i] = cityName;
+            }
 
-	public bool Equals(SceneLoadData other)
+            // Deserialize startingResources array
+            serializer.SerializeValue(ref length);
+            startingResources = new StartingResources[length];
+            for (int i = 0; i < length; i++)
+            {
+                StartingResources resource = new StartingResources();
+                // Assuming StartingResources has a similar serialization method
+                resource.NetworkSerialize(serializer);
+                startingResources[i] = resource;
+            }
+        }
+        else
+        {
+            int length = startingCityNames.Length;
+            serializer.SerializeValue(ref length);
+            for (int i = 0; i < length; i++)
+            {
+                string cityName = startingCityNames[i];
+                serializer.SerializeValue(ref cityName);
+            }
+
+            // Serialize startingResources array
+            length = startingResources.Length;
+            serializer.SerializeValue(ref length);
+            for (int i = 0; i < length; i++)
+            {
+                StartingResources resource = startingResources[i];
+                // Assuming StartingResources has a similar serialization method
+                resource.NetworkSerialize(serializer);
+            }
+        }
+    }
+
+    public bool Equals(SceneLoadData other)
 	{
 		if (other == null) return false;
 		return numberOfPlayers == other.numberOfPlayers &&

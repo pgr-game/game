@@ -89,6 +89,7 @@ public class GameManager : NetworkBehaviour
         string saveRoot = SaveRoot.saveRoot;
 
         sceneLoadData = networkSceneLoadData?.Value;
+        startingResources = sceneLoadData?.startingResources;
 
         if (sceneLoadData == null)
         {
@@ -112,6 +113,7 @@ public class GameManager : NetworkBehaviour
 				loadManager.SetSaveRoot(saveRoot);
 				sceneLoadData = loadManager.Load();
                 startingResources = sceneLoadData.startingResources;
+                networkSceneLoadData.Value = sceneLoadData;
             }
 		}
 
