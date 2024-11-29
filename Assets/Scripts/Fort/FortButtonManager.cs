@@ -22,12 +22,18 @@ public class FortButtonManager : MonoBehaviour
     }
     public void CreateFortButtonPress()
     {
-        this.gameManager.activePlayer.ShowAvailableFortPositions();
+        if (!gameManager.activePlayer.isInMenu)
+        {
+            this.gameManager.activePlayer.ShowAvailableFortPositions();
+        }
     }
 
     public void DeleteFortButtonPress()
     {
-        this.gameManager.activePlayer.ShowAvailableFortsForDeletion();
+        if (!gameManager.activePlayer.isInMenu)
+        {
+            this.gameManager.activePlayer.ShowAvailableFortsForDeletion();
+        }
     }
 
     private void EnableCreationButton()

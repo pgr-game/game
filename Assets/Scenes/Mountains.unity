@@ -10381,6 +10381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee444ad54272a7645a1af23ee3dc5cf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
 --- !u!114 &319505133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10421,6 +10422,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 6202811586810600753, guid: 737370e2dcee64847a4ede0cb6b98416, type: 3}
   gameSettings: {fileID: 0}
   playerTreeManager: {fileID: 0}
+  fortButtonManager: {fileID: 0}
   turnNumber: 1
   turnText: {fileID: 1524804338}
   activePlayerIndex: 0
@@ -10428,7 +10430,6 @@ MonoBehaviour:
   numberOfPlayers: 0
   players: []
   playerPositions: []
-  units: []
   unitPrefabs:
   - {fileID: 8575496969159499362, guid: 53c3e0bb9c45c5143bf8109f60b435ce, type: 3}
   - {fileID: 3783203255126780123, guid: ca717453591233d4790991323c6ac06b, type: 3}
@@ -10446,10 +10447,12 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   unitStatsMenuController: {fileID: 0}
-  nextTurnButtonImage: {fileID: 1560324830}
+  nextTurnMenuController: {fileID: 0}
   UI: {fileID: 1326028657}
   cityTag: {fileID: 0}
+  dialogController: {fileID: 0}
   isMultiplayer: 0
+  isInit: 0
 --- !u!4 &319505135
 Transform:
   m_ObjectHideFlags: 0
@@ -24049,6 +24052,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1068726426832124384, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 319505133}
+    - target: {fileID: 1068726426832124384, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SettingsButtonPress
+      objectReference: {fileID: 0}
+    - target: {fileID: 1068726426832124384, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PauseMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1194645006335653441, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -48163,17 +48178,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7365716079596273168, guid: 605a843c5cc03ea4994b55f293f8db99, type: 3}
   m_PrefabInstance: {fileID: 1559884290}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1560324830 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1195072745183761439, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
-  m_PrefabInstance: {fileID: 777570907}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1561860628
 PrefabInstance:
   m_ObjectHideFlags: 0

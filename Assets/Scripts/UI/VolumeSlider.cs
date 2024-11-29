@@ -35,9 +35,4 @@ public class VolumeSlider : MonoBehaviour
     {
         PlayerPrefs.SetFloat("musicVolume",volumeSlider.value);
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

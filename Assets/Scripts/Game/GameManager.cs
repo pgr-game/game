@@ -277,7 +277,8 @@ public class GameManager : NetworkBehaviour
 
     public void NextPlayer()
     {
-	    if (!activePlayer.isSpectator)
+
+	    if (!activePlayer.isSpectator && !activePlayer.isInMenu)
 	    {
 		    if (isMultiplayer)
 		    {

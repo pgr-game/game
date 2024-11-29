@@ -21,7 +21,7 @@ public class PlayerManager : NetworkBehaviour
     public int index;
 
     //selecting units and settlements
-    private bool isInMenu = false;
+    public bool isInMenu = false;
     public bool isSpectator { get; private set; } = true;
     private GameObject selected;
     private GameObject newSelected;
@@ -72,6 +72,10 @@ public class PlayerManager : NetworkBehaviour
 
     public void Init(GameManager gameManager)
     {
+        
+        //gameObject.SetActive(false);
+    
+
         this.gameManager = gameManager;
 
         int index = 0;
@@ -151,6 +155,8 @@ public class PlayerManager : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        var r = Application.isMobilePlatform;
         if (!PauseMenu.isPaused && !isSpectator)
         {
             if (playerSupplyManager.drawingSupplyLine && !playerSupplyManager.justActivated)
@@ -194,7 +200,7 @@ public class PlayerManager : NetworkBehaviour
                     HandleUnitClick(currentUnit);
 
                 }
-                else if (newSelected.GetComponent<CityTile>() && selected == null)
+                else if (newSelected.GetComponent<CityTile>() && selected == null && !isInMenu)
                 {
                     CityTile cityTile = newSelected.GetComponent<CityTile>();
                     HandleCityClick(cityTile.city);
@@ -317,10 +323,10 @@ public class PlayerManager : NetworkBehaviour
         {
             gameManager.cityMenuManager.setValues(null);
             gameManager.cityMenuManager.Deactivate();
-            isInMenu = false;
+            
             return;
         }
-        isInMenu = false;
+        
         gameManager.cityMenuManager.setValues(city);
         gameManager.cityMenuManager.Activate();
     }

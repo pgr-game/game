@@ -7,7 +7,7 @@ using System.Linq;
 
 public class SaveManager : MonoBehaviour
 {
-    private GameManager gameManager;
+    public GameManager gameManager;
     private string saveRoot;
 
     public void Init(GameManager gameManager) {
