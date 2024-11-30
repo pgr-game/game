@@ -78,19 +78,33 @@ public class LoadManager : MonoBehaviour
         QuickSaveReader quickSaveReader = QuickSaveReader.Create(saveRoot);
         sceneLoadData = LoadGameManager(sceneLoadData, quickSaveReader);
         
-        StartingResources[] startingResources = new StartingResources[sceneLoadData.numberOfPlayers];
         sceneLoadData.playerColors = new Color32[sceneLoadData.numberOfPlayers];
         sceneLoadData.startingCityNames = new string[sceneLoadData.numberOfPlayers];
 
         for(int i = 0; i < sceneLoadData.numberOfPlayers; i++) {
-            startingResources[i] = LoadPlayer(quickSaveReader, i);
             string colorString = "#" + quickSaveReader.Read<string>("Player" + i + "color");
             Color convertedColor = ColorUtility.TryParseHtmlString(colorString, out convertedColor) ? convertedColor : new Color();
             Color32 convertedColor32 = (Color32)convertedColor;
             sceneLoadData.playerColors[i] = convertedColor32;
         }
-        sceneLoadData.startingResources = startingResources;
+
         return sceneLoadData;
+    }
+
+    public StartingResources[] LoadStartingResources(int numberOfPlayers)
+    {
+        QuickSaveReader quickSaveReader = QuickSaveReader.Create(saveRoot);
+        StartingResources[] startingResources = new StartingResources[numberOfPlayers];
+        for (int i = 0; i < numberOfPlayers; i++)
+        {
+            startingResources[i] = LoadPlayer(quickSaveReader, i);
+            //startingResources[i].unitLoadData = null;
+            startingResources[i].treeLoadData = null;
+            //startingResources[i].supplyLoadData = null;
+            //startingResources[i].fortLoadData = null;
+        }
+
+        return startingResources;
     }
 
     private SceneLoadData LoadGameManager(SceneLoadData sceneLoadData, QuickSaveReader quickSaveReader)

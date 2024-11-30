@@ -10,7 +10,7 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 	public SceneLoadData(int numberOfPlayers, Vector3[] playerPositions,
 	Color32[] playerColors, string[] startingCityNames, int turnNumber,
 	int activePlayerIndex, bool[] isComputer, bool isMultiplayer,
-	string difficulty, StartingResources[] startingResources)
+	string difficulty)
 	{
 		this.numberOfPlayers = numberOfPlayers;
 		this.playerPositions = playerPositions;
@@ -21,7 +21,6 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 		this.isComputer = isComputer;
 		this.isMultiplayer = isMultiplayer;
 		this.difficulty = difficulty;
-		this.startingResources = startingResources;
     }
 
 	public SceneLoadData() { }
@@ -34,7 +33,6 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
 	public bool[] isComputer;
 	public bool isMultiplayer;
 	public string difficulty;
-	public StartingResources[] startingResources;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
@@ -59,17 +57,6 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
                 serializer.SerializeValue(ref cityName);
                 startingCityNames[i] = cityName;
             }
-
-            // Deserialize startingResources array
-            serializer.SerializeValue(ref length);
-            startingResources = new StartingResources[length];
-            for (int i = 0; i < length; i++)
-            {
-                StartingResources resource = new StartingResources();
-                // Assuming StartingResources has a similar serialization method
-                resource.NetworkSerialize(serializer);
-                startingResources[i] = resource;
-            }
         }
         else
         {
@@ -78,17 +65,11 @@ public class SceneLoadData : INetworkSerializable, IEquatable<SceneLoadData>
             for (int i = 0; i < length; i++)
             {
                 string cityName = startingCityNames[i];
-                serializer.SerializeValue(ref cityName);
-            }
-
-            // Serialize startingResources array
-            length = startingResources.Length;
-            serializer.SerializeValue(ref length);
-            for (int i = 0; i < length; i++)
-            {
-                StartingResources resource = startingResources[i];
-                // Assuming StartingResources has a similar serialization method
-                resource.NetworkSerialize(serializer);
+                // starting cities are null when initializing game from a save file
+                if (cityName != null)
+                {
+                    serializer.SerializeValue(ref cityName);
+                }
             }
         }
     }

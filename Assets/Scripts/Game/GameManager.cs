@@ -63,6 +63,14 @@ public class GameManager : NetworkBehaviour
     public bool isMultiplayer;
     public SceneLoadData sceneLoadData { get; private set; }
     private NetworkVariable<SceneLoadData> networkSceneLoadData = new NetworkVariable<SceneLoadData>();
+    private NetworkVariable<StartingResources>[] networkStartingResources = 
+        new NetworkVariable<StartingResources>[]
+        {
+            new NetworkVariable<StartingResources>(new StartingResources()),
+            new NetworkVariable<StartingResources>(new StartingResources()),
+            new NetworkVariable<StartingResources>(new StartingResources()),
+            new NetworkVariable<StartingResources>(new StartingResources())
+        };
     public StartingResources[] startingResources;
     public bool isInit = false;
 
@@ -89,13 +97,20 @@ public class GameManager : NetworkBehaviour
         string saveRoot = SaveRoot.saveRoot;
 
         sceneLoadData = networkSceneLoadData?.Value;
-        startingResources = sceneLoadData?.startingResources;
 
         if (sceneLoadData == null)
         {
 	        sceneLoadData = new SceneLoadData();
         }
-        else isMultiplayer = sceneLoadData.isMultiplayer;
+        else
+        {
+            isMultiplayer = sceneLoadData.isMultiplayer;
+            startingResources = new StartingResources[sceneLoadData.numberOfPlayers];
+            for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
+            {
+                startingResources[i] = networkStartingResources[i]?.Value;
+            }
+        }
 
 		saveManager.Init(this);
         loadManager.Init(this);
@@ -107,15 +122,24 @@ public class GameManager : NetworkBehaviour
 			{
 				sceneLoadData = LoadDataFromSettingsCreator();
 				networkSceneLoadData.Value = sceneLoadData;
+                for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
+                {
+                    //networkStartingResources[i] = new NetworkVariable<StartingResources>(startingResources[i]);
+                    networkStartingResources[i].Value.gold = startingResources[i].gold;
+                }
             }
 			else
 			{
 				loadManager.SetSaveRoot(saveRoot);
 				sceneLoadData = loadManager.Load();
-                startingResources = sceneLoadData.startingResources;
+                startingResources = loadManager.LoadStartingResources(sceneLoadData.numberOfPlayers);
                 networkSceneLoadData.Value = sceneLoadData;
+                for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
+                {
+                    networkStartingResources[i] = new NetworkVariable<StartingResources>(startingResources[i]);
+                }
             }
-		}
+        }
 
         LoadGameData(sceneLoadData);
 
@@ -185,7 +209,7 @@ public class GameManager : NetworkBehaviour
         }
 
         return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InPlayerColors, InStartingCityNames, 1,
-            0, isComputer, isMultiplayer, difficulty, startingResources);
+            0, isComputer, isMultiplayer, difficulty);
     }
 
     public StartingResources getStartingResourcesByDifficulty(string difficulty) {

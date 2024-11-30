@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class CityLoadData : INetworkSerializable
 {
+    public Vector3 position;
+    public string name;
+    public int level;
+    public string unitInProduction;
+    public int unitInProductionTurnsLeft;
     public CityLoadData(Vector3 position, string name, int level, 
         string unitInProduction, int unitInProductionTurnsLeft)
     {
@@ -14,12 +19,8 @@ public class CityLoadData : INetworkSerializable
         this.unitInProduction = unitInProduction;
         this.unitInProductionTurnsLeft = unitInProductionTurnsLeft;
     }
-    public Vector3 position;
-    public string name;
-    public int level;
-    public string unitInProduction;
-    public int unitInProductionTurnsLeft;
 
+    public CityLoadData() { }
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref position);

@@ -5,15 +5,17 @@ using UnityEngine;
 
 public class FortLoadData : INetworkSerializable
 {
+    public Vector3 position;
+    public Vector3Int hexPosition;
+    public int id;
     public FortLoadData(Vector3 position, Vector3Int hexPosition, int id)
     {
         this.position = position;
         this.hexPosition = hexPosition;
         this.id = id;
     }
-    public Vector3 position;
-    public Vector3Int hexPosition;
-    public int id;
+
+    public FortLoadData() {}
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {

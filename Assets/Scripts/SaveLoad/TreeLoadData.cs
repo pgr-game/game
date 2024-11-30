@@ -16,6 +16,8 @@ public class TreeLoadData : INetworkSerializable
         this.researchNode = researchNode;
     }
 
+    public TreeLoadData() { }
+
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         SerializeDictionary(serializer, ref powerEvolution);

@@ -14,6 +14,8 @@ public record SupplyLoadData : INetworkSerializable
         this.endPosition = endPosition;
     }
 
+    public SupplyLoadData() { }
+
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref startPosition);
