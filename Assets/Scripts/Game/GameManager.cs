@@ -24,6 +24,8 @@ public enum UnitTypes {
 }
 
 [GenerateSerializationForType(typeof(SceneLoadData))]
+[GenerateSerializationForType(typeof(StartingResources))]
+[GenerateSerializationForType(typeof(Test))]
 public class GameManager : NetworkBehaviour
 {
     public MapManager mapManager;
@@ -63,6 +65,7 @@ public class GameManager : NetworkBehaviour
     public bool isMultiplayer;
     public SceneLoadData sceneLoadData { get; private set; }
     private NetworkVariable<SceneLoadData> networkSceneLoadData = new NetworkVariable<SceneLoadData>();
+    private NetworkVariable<Test> test = new NetworkVariable<Test>();
     private NetworkVariable<StartingResources>[] networkStartingResources = 
         new NetworkVariable<StartingResources>[]
         {
@@ -82,8 +85,10 @@ public class GameManager : NetworkBehaviour
 	    }
 	}
 
-	[GenerateSerializationForType(typeof(SceneLoadData))]
-	public void Init()
+    [GenerateSerializationForType(typeof(SceneLoadData))]
+    [GenerateSerializationForType(typeof(StartingResources))]
+    [GenerateSerializationForType(typeof(Test))]
+    public void Init()
 	{
 		isInit = true;
         playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
@@ -97,6 +102,28 @@ public class GameManager : NetworkBehaviour
         string saveRoot = SaveRoot.saveRoot;
 
         sceneLoadData = networkSceneLoadData?.Value;
+        Test test1 = new Test();
+        test1.gold = 110;
+        test1.fortLoadData = new List<FortLoadData>()
+        {
+            new FortLoadData(
+                new Vector3(1, 1, 1),
+                new Vector3Int(2, 3, 4),
+                5)
+        };
+        test1.cityLoadData = new List<CityLoadData>()
+        {
+            new CityLoadData(new Vector3(3, 4, 5),
+                "name",
+                4,
+                "LightInfantry",
+                1)
+        };
+        test1.supplyLoadData = new List<SupplyLoadData>()
+        {
+            new SupplyLoadData(new Vector3(5, 7, 8),
+                new Vector3(3, 4, 5))
+        };
 
         if (sceneLoadData == null)
         {
@@ -122,10 +149,11 @@ public class GameManager : NetworkBehaviour
 			{
 				sceneLoadData = LoadDataFromSettingsCreator();
 				networkSceneLoadData.Value = sceneLoadData;
+                test.Value = test1;
                 for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
                 {
                     //networkStartingResources[i] = new NetworkVariable<StartingResources>(startingResources[i]);
-                    networkStartingResources[i].Value.gold = startingResources[i].gold;
+                    networkStartingResources[i].Value = startingResources[i];
                 }
             }
 			else
@@ -134,6 +162,7 @@ public class GameManager : NetworkBehaviour
 				sceneLoadData = loadManager.Load();
                 startingResources = loadManager.LoadStartingResources(sceneLoadData.numberOfPlayers);
                 networkSceneLoadData.Value = sceneLoadData;
+                test.Value = test1;
                 for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
                 {
                     networkStartingResources[i] = new NetworkVariable<StartingResources>(startingResources[i]);
