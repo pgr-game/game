@@ -12,7 +12,7 @@ public class Test : INetworkSerializable, IEquatable<Test>
     public List<FortLoadData> fortLoadData;
     public List<CityLoadData> cityLoadData;
     public List<SupplyLoadData> supplyLoadData;
-    //public TreeLoadData treeLoadData;
+    public TreeLoadData treeLoadData;
     public int gold;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -27,6 +27,12 @@ public class Test : INetworkSerializable, IEquatable<Test>
 
         supplyLoadData ??= new List<SupplyLoadData>();
         SerializeList(serializer, ref supplyLoadData);
+
+        treeLoadData ??= new TreeLoadData(
+            new Dictionary<int, List<string>>(),
+            new Dictionary<int, List<string>>(),
+            (1, "node"));
+        treeLoadData.NetworkSerialize(serializer);
     }
 
     private static void SerializeList<T, TValue>(BufferSerializer<T> serializer, ref List<TValue> list)

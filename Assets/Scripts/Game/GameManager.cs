@@ -124,6 +124,10 @@ public class GameManager : NetworkBehaviour
             new SupplyLoadData(new Vector3(5, 7, 8),
                 new Vector3(3, 4, 5))
         };
+        test1.treeLoadData = new TreeLoadData(
+            new Dictionary<int, List<string>>() {{1, new List<string>() {"a", "b", "c"}}, { 2, new List<string>() { "d", "e", "f" } } },
+            new Dictionary<int, List<string>>() { { 3, new List<string>() { "a", "b", "c" } }, { 4, new List<string>() { "d", "e", "f" } } },
+            (1, "node"));
 
         if (sceneLoadData == null)
         {
