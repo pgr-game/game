@@ -66,15 +66,12 @@ public class GameManager : NetworkBehaviour
     public SceneLoadData sceneLoadData { get; private set; }
     private NetworkVariable<SceneLoadData> networkSceneLoadData = new NetworkVariable<SceneLoadData>();
     private NetworkVariable<Test> test = new NetworkVariable<Test>();
-    private NetworkVariable<StartingResources>[] networkStartingResources = 
-        new NetworkVariable<StartingResources>[]
-        {
-            new NetworkVariable<StartingResources>(new StartingResources()),
-            new NetworkVariable<StartingResources>(new StartingResources()),
-            new NetworkVariable<StartingResources>(new StartingResources()),
-            new NetworkVariable<StartingResources>(new StartingResources())
-        };
+    private NetworkVariable<StartingResources> networkStartingResources0 = new NetworkVariable<StartingResources>();
+    private NetworkVariable<StartingResources> networkStartingResources1 = new NetworkVariable<StartingResources>();
+    private NetworkVariable<StartingResources> networkStartingResources2 = new NetworkVariable<StartingResources>();
+    private NetworkVariable<StartingResources> networkStartingResources3 = new NetworkVariable<StartingResources>();
     public StartingResources[] startingResources;
+    public StartingUnits[] startingUnits;
     public bool isInit = false;
 
     void Start()
@@ -108,7 +105,7 @@ public class GameManager : NetworkBehaviour
         {
             new FortLoadData(
                 new Vector3(1, 1, 1),
-                new Vector3Int(2, 3, 4),
+                new Vector3Int(2, 3, 4), 
                 5)
         };
         test1.cityLoadData = new List<CityLoadData>()
@@ -125,7 +122,7 @@ public class GameManager : NetworkBehaviour
                 new Vector3(3, 4, 5))
         };
         test1.treeLoadData = new TreeLoadData(
-            new Dictionary<int, List<string>>() {{1, new List<string>() {"a", "b", "c"}}, { 2, new List<string>() { "d", "e", "f" } } },
+           new Dictionary<int, List<string>>() {{1, new List<string>() {"a", "b", "c"}}, { 2, new List<string>() { "d", "e", "f" } } },
             new Dictionary<int, List<string>>() { { 3, new List<string>() { "a", "b", "c" } }, { 4, new List<string>() { "d", "e", "f" } } },
             (1, "node"));
 
@@ -136,10 +133,19 @@ public class GameManager : NetworkBehaviour
         else
         {
             isMultiplayer = sceneLoadData.isMultiplayer;
+            var tempStartingResources = new StartingResources[sceneLoadData.numberOfPlayers];
             startingResources = new StartingResources[sceneLoadData.numberOfPlayers];
+            if (sceneLoadData.numberOfPlayers > 0)
+                tempStartingResources[0] = networkStartingResources0.Value;
+            if (sceneLoadData.numberOfPlayers > 1)
+                tempStartingResources[1] = networkStartingResources1.Value;
+            if (sceneLoadData.numberOfPlayers > 2)
+                tempStartingResources[2] = networkStartingResources2.Value;
+            if (sceneLoadData.numberOfPlayers > 3)
+                tempStartingResources[3] = networkStartingResources3.Value;
             for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
             {
-                startingResources[i] = networkStartingResources[i]?.Value;
+                startingResources[i] = DeepCopyStartingResources(tempStartingResources[i]);
             }
         }
 
@@ -154,23 +160,48 @@ public class GameManager : NetworkBehaviour
 				sceneLoadData = LoadDataFromSettingsCreator();
 				networkSceneLoadData.Value = sceneLoadData;
                 test.Value = test1;
+
+                if (sceneLoadData.numberOfPlayers > 0)
+                    networkStartingResources0.Value = startingResources[0];
+                else networkStartingResources0.Value = NewStartingResources();
+                if (sceneLoadData.numberOfPlayers > 1)
+                    networkStartingResources1.Value = startingResources[1];
+                else networkStartingResources1.Value = NewStartingResources();
+                if (sceneLoadData.numberOfPlayers > 2)
+                    networkStartingResources2.Value = startingResources[2];
+                else networkStartingResources2.Value = NewStartingResources();
+                if (sceneLoadData.numberOfPlayers > 3)
+                    networkStartingResources3.Value = startingResources[3];
+                else networkStartingResources3.Value = NewStartingResources();
+
+                var tempStartingResources = new StartingResources[sceneLoadData.numberOfPlayers];
                 for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
                 {
-                    //networkStartingResources[i] = new NetworkVariable<StartingResources>(startingResources[i]);
-                    networkStartingResources[i].Value = startingResources[i];
+                    tempStartingResources[i] = DeepCopyStartingResources(startingResources[i]);
                 }
+
+                startingResources = tempStartingResources;
             }
 			else
 			{
 				loadManager.SetSaveRoot(saveRoot);
 				sceneLoadData = loadManager.Load();
                 startingResources = loadManager.LoadStartingResources(sceneLoadData.numberOfPlayers);
+                startingUnits = loadManager.LoadStartingUnits(sceneLoadData.numberOfPlayers);
                 networkSceneLoadData.Value = sceneLoadData;
                 test.Value = test1;
-                for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
-                {
-                    networkStartingResources[i] = new NetworkVariable<StartingResources>(startingResources[i]);
-                }
+                if (sceneLoadData.numberOfPlayers > 0)
+                    networkStartingResources0.Value = startingResources[0];
+                else networkStartingResources0.Value = NewStartingResources();
+                if (sceneLoadData.numberOfPlayers > 1)
+                    networkStartingResources1.Value = startingResources[1];
+                else networkStartingResources1.Value = NewStartingResources();
+                if (sceneLoadData.numberOfPlayers > 2)
+                    networkStartingResources2.Value = startingResources[2];
+                else networkStartingResources2.Value = NewStartingResources();
+                if (sceneLoadData.numberOfPlayers > 3)
+                    networkStartingResources3.Value = startingResources[3];
+                else networkStartingResources3.Value = NewStartingResources();
             }
         }
 
@@ -196,7 +227,145 @@ public class GameManager : NetworkBehaviour
         }
 	}
 
-	private void InitPlayersThatSpawnedBeforeThis()
+    public StartingResources NewStartingResources()
+    {
+        StartingResources startingResources = new StartingResources();
+        startingResources.fortLoadData = new List<FortLoadData>()
+        {
+            new FortLoadData(
+                new Vector3(float.MaxValue, float.MaxValue, float.MaxValue),
+                new Vector3Int(int.MaxValue, int.MaxValue, int.MaxValue),
+                int.MaxValue)
+        };
+        startingResources.cityLoadData = new List<CityLoadData>()
+        {
+            new CityLoadData(new Vector3(float.MaxValue, float.MaxValue, float.MaxValue),
+                "NULL",
+                int.MaxValue,
+                "NULL",
+                int.MaxValue)
+        };
+        startingResources.supplyLoadData = new List<SupplyLoadData>()
+        {
+            new SupplyLoadData(new Vector3(float.MaxValue, float.MaxValue, float.MaxValue),
+                new Vector3(float.MaxValue, float.MaxValue, float.MaxValue))
+        };
+        startingResources.treeLoadData = new TreeLoadData(
+            new Dictionary<int, List<string>>()
+            {
+                { int.MaxValue, new List<string>() { "a", "b", "c" } }, 
+                { 0, new List<string>() { "d", "e", "f" } }
+            },
+            new Dictionary<int, List<string>>()
+            {
+                { int.MaxValue, new List<string>() { "a", "b", "c" } }, 
+                { 0, new List<string>() { "d", "e", "f" } }
+            },
+            (int.MaxValue, "NULL"));
+
+        return startingResources;
+    }
+
+    private StartingResources DeepCopyStartingResources(StartingResources startingResources)
+    {
+        StartingResources newStartingResources = new StartingResources();
+        newStartingResources.gold = startingResources.gold;
+
+        if (startingResources.fortLoadData != null 
+            && startingResources.fortLoadData.Count > 0
+            && startingResources.fortLoadData.First().id == int.MaxValue)
+        {
+            newStartingResources.fortLoadData = new List<FortLoadData>();
+        }
+        else if(startingResources.fortLoadData != null)
+        {
+            newStartingResources.fortLoadData = new List<FortLoadData>();
+            for (int i = 0; i < startingResources.fortLoadData.Count; i++)
+            {
+                newStartingResources.fortLoadData.Add(
+                    new FortLoadData(startingResources.fortLoadData[i].position, 
+                        startingResources.fortLoadData[i].hexPosition, 
+                        startingResources.fortLoadData[i].id));
+            }
+        }
+
+
+        if (startingResources.cityLoadData != null 
+            && startingResources.cityLoadData.Count > 0 
+            && startingResources.cityLoadData.First().level == int.MaxValue) 
+        {
+            newStartingResources.cityLoadData = new List<CityLoadData>();
+        }
+        else if (startingResources.cityLoadData != null)
+        {
+            newStartingResources.cityLoadData = new List<CityLoadData>();
+            for (int i = 0; i < startingResources.cityLoadData.Count; i++)
+            {
+                newStartingResources.cityLoadData.Add(
+                    new CityLoadData(startingResources.cityLoadData[i].position,
+                        startingResources.cityLoadData[i].name,
+                        startingResources.cityLoadData[i].level,
+                        startingResources.cityLoadData[i].unitInProduction,
+                        startingResources.cityLoadData[i].unitInProductionTurnsLeft));
+            }
+        }
+
+
+        if (startingResources.supplyLoadData != null 
+            && startingResources.supplyLoadData.Count > 0 
+            && startingResources.supplyLoadData.First().startPosition.x == float.MaxValue)
+        {
+            newStartingResources.supplyLoadData = new List<SupplyLoadData>();
+        }
+        else if (startingResources.supplyLoadData != null)
+        {
+            newStartingResources.supplyLoadData = new List<SupplyLoadData>();
+            for (int i = 0; i < startingResources.supplyLoadData.Count; i++)
+            {
+                newStartingResources.supplyLoadData.Add(
+                    new SupplyLoadData(startingResources.supplyLoadData[i].startPosition,
+                        startingResources.supplyLoadData[i].endPosition));
+            }
+        }
+
+
+        if (startingResources.treeLoadData != null && startingResources.treeLoadData.researchNode.Item1 == int.MaxValue)
+        {
+            newStartingResources.treeLoadData = null; //new TreeLoadData();
+        }
+        else if (startingResources.treeLoadData != null && startingResources.treeLoadData.powerEvolution != null)
+        {
+            newStartingResources.treeLoadData = new TreeLoadData();
+            newStartingResources.treeLoadData.researchNode = startingResources.treeLoadData.researchNode;
+            newStartingResources.treeLoadData.powerEvolution =
+                new Dictionary<int, List<string>>();
+            newStartingResources.treeLoadData.strategyEvolution =
+                new Dictionary<int, List<string>>();
+            foreach (var keyValuePair in startingResources.treeLoadData.powerEvolution)
+            {
+                var newList = new List<string>();
+                foreach (var listItem in keyValuePair.Value)
+                {
+                    newList.Add(listItem);
+                }
+                newStartingResources.treeLoadData.powerEvolution.Add(keyValuePair.Key, newList);
+            }
+
+            foreach (var keyValuePair in startingResources.treeLoadData.strategyEvolution)
+            {
+                var newList = new List<string>();
+                foreach (var listItem in keyValuePair.Value)
+                {
+                    newList.Add(listItem);
+                }
+                newStartingResources.treeLoadData.strategyEvolution.Add(keyValuePair.Key, newList);
+            }
+        }
+
+        return newStartingResources;
+    }
+
+    private void InitPlayersThatSpawnedBeforeThis()
 	{
 		// Players that have spawned before GameManager need initialization
 
@@ -236,16 +405,17 @@ public class GameManager : NetworkBehaviour
         isMultiplayer = gameSettings?.isMultiplayer ?? true;
         string difficulty = gameSettings?.difficulty ?? "Medium";
         startingResources = new StartingResources[InNumberOfPlayers];
+        startingUnits = new StartingUnits[InNumberOfPlayers];
         for (int i = 0; i < InNumberOfPlayers; i++)
         {
-            startingResources[i] = getStartingResourcesByDifficulty(difficulty);
+            (startingResources[i], startingUnits[i]) = getStartingResourcesByDifficulty(difficulty);
         }
 
         return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InPlayerColors, InStartingCityNames, 1,
             0, isComputer, isMultiplayer, difficulty);
     }
 
-    public StartingResources getStartingResourcesByDifficulty(string difficulty) {
+    public (StartingResources, StartingUnits) getStartingResourcesByDifficulty(string difficulty) {
         if(difficulty == "Easy") {
             return getStartingResourcesEasy();
         } else if(difficulty == "Medium") {
@@ -258,35 +428,38 @@ public class GameManager : NetworkBehaviour
 
     }
 
-    public StartingResources getStartingResourcesEasy() {
-        StartingResources InStartingResources = new StartingResources();
-        InStartingResources.units = new List<UnitController>();
-        InStartingResources.units.Add(unitPrefabs.ElementAt(5).GetComponent<UnitController>());
-        InStartingResources.units.Add(unitPrefabs.ElementAt(6).GetComponent<UnitController>());
-        InStartingResources.unitLoadData = new List<UnitLoadData>();
+    public (StartingResources, StartingUnits) getStartingResourcesEasy() {
+        StartingResources InStartingResources = NewStartingResources();
+        StartingUnits inStartingUnits = new StartingUnits();
+        inStartingUnits.units = new List<UnitController>();
+        inStartingUnits.units.Add(unitPrefabs.ElementAt(5).GetComponent<UnitController>());
+        inStartingUnits.units.Add(unitPrefabs.ElementAt(6).GetComponent<UnitController>());
+        inStartingUnits.unitLoadData = new List<UnitLoadData>();
         InStartingResources.gold = 300;
 
-        return InStartingResources;
+        return (InStartingResources, inStartingUnits);
     }
 
-    public StartingResources getStartingResourcesMedium() {
-        StartingResources InStartingResources = new StartingResources();
-        InStartingResources.units = new List<UnitController>();
-        InStartingResources.units.Add(unitPrefabs.ElementAt(5).GetComponent<UnitController>());
-        InStartingResources.unitLoadData = new List<UnitLoadData>();
+    public (StartingResources, StartingUnits) getStartingResourcesMedium() {
+        StartingResources InStartingResources = NewStartingResources();
+        StartingUnits inStartingUnits = new StartingUnits();
+        inStartingUnits.units = new List<UnitController>();
+        inStartingUnits.units.Add(unitPrefabs.ElementAt(5).GetComponent<UnitController>());
+        inStartingUnits.unitLoadData = new List<UnitLoadData>();
         InStartingResources.gold = 200;
-        
-        return InStartingResources;
+
+        return (InStartingResources, inStartingUnits);
     }
 
-    public StartingResources getStartingResourcesHard() {
-        StartingResources InStartingResources = new StartingResources();
-        InStartingResources.units = new List<UnitController>();
-        InStartingResources.units.Add(unitPrefabs.ElementAt(6).GetComponent<UnitController>());
-        InStartingResources.unitLoadData = new List<UnitLoadData>();
+    public (StartingResources, StartingUnits) getStartingResourcesHard() {
+        StartingResources InStartingResources = NewStartingResources();
+        StartingUnits inStartingUnits = new StartingUnits();
+        inStartingUnits.units = new List<UnitController>();
+        inStartingUnits.units.Add(unitPrefabs.ElementAt(6).GetComponent<UnitController>());
+        inStartingUnits.unitLoadData = new List<UnitLoadData>();
         InStartingResources.gold = 100;
-        
-        return InStartingResources;
+
+        return (InStartingResources, inStartingUnits);
     }
     
     public void LoadGameData(SceneLoadData sceneLoadData) {
@@ -309,7 +482,7 @@ public class GameManager : NetworkBehaviour
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
             if (!isMultiplayer)
             {
-	            players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], isComputer[i], i);
+	            players[i].Init(this, mapManager, startingResources[i], startingUnits[i], playerColors[i], startingCityNames[i], isComputer[i], i);
 			}
             players[i].index = i;
         }
@@ -513,29 +686,6 @@ public class GameManager : NetworkBehaviour
         }
         //should also check if positions in bounds or sth
         return true;
-    }
-
-    StartingResources[] CreateExampleGameStart() {
-        StartingResources[] InStartingResources = new StartingResources[2] {
-            new StartingResources(),
-            new StartingResources()
-        };
-        
-        InStartingResources[0].units = new List<UnitController>();
-        InStartingResources[1].units = new List<UnitController>();
-        
-        InStartingResources[0].units.Add(unitPrefabs.ElementAt(0).GetComponent<UnitController>());
-        InStartingResources[0].units.Add(unitPrefabs.ElementAt(3).GetComponent<UnitController>());
-
-        InStartingResources[1].units.Add(unitPrefabs.ElementAt(4).GetComponent<UnitController>());
-
-        InStartingResources[0].unitLoadData = new List<UnitLoadData>();
-        InStartingResources[1].unitLoadData = new List<UnitLoadData>();
-
-        InStartingResources[0].gold = 100;
-        InStartingResources[1].gold = 100;
-
-        return InStartingResources;
     }
 
     public GameObject getUnitPrefabByName(String unitType) {
