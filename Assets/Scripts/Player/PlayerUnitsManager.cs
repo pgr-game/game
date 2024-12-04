@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using Random = System.Random;
 
 public class PlayerUnitsManager : NetworkBehaviour
 {
@@ -25,6 +26,8 @@ public class PlayerUnitsManager : NetworkBehaviour
 	    { UnitTypes.LightInfantry, new int[] { 1, 2, 0 } },
 	    { UnitTypes.Skirmisher,    new int[] { 2, 1, 0 } }
     };
+
+    public City newCityToAttack;
 
     public void Init(PlayerManager playerManager, StartingResources startingResources)
     {
@@ -247,10 +250,12 @@ public class PlayerUnitsManager : NetworkBehaviour
 	    {
 		    AssignStatesToUnits();
 	    }
+	    newCityToAttack = null;
 	    
 	    CalculateRatios();
 	    
 	    AssignStatesToUnits();
+	    
 	    
 	    // decide if should attack a new city
 	    if (playerManager.gameManager.playerTreeManager.isUnitUnlocked("Catapult"))
@@ -261,23 +266,70 @@ public class PlayerUnitsManager : NetworkBehaviour
 		    allCities.RemoveAll(playerManager.citiesAttacked.Contains);		// remove cities already attacking
 		    var freeWanderingUnits = units.Where(unit => unit.unitState == UnitState.FreeWandering).ToList();
 	    
-		    if(freeWanderingUnits.Count > 0 && allCities.Count > 0)
+		    if(freeWanderingUnits.Count > 5 && allCities.Count > 0)
 		    {
 			    var cityWithChance = new Dictionary<City, float>();
 			    foreach (var city in allCities) cityWithChance.Add(city, CalculateCityAttackChance(city));
+				    
+			    // remove cities with chances less than 0.6f
+			    cityWithChance = cityWithChance.Where(item => item.Value > 0.6f).ToDictionary(item => item.Key, item => item.Value);
+			    
+			    if (cityWithChance.Count > 0)
+			    {
+				    // Find the maximum chance
+				    float maxChance = cityWithChance.Values.Max();
+
+				    // Get all cities with the maximum chance
+				    var topCities = cityWithChance.Where(item => item.Value == maxChance).Select(item => item.Key).ToList();
+
+				    // Choose a city randomly from topCities
+				    var selectedCity = topCities[new Random().Next(topCities.Count)];
+
+				    // Logic for using the selected city
+				    newCityToAttack = selectedCity;
+
+				    CalculateRatios();
+				    AssignStatesToUnits();
+			    }
 		    }
 	    }
 	    
-	    
-	    // reassign states if needed
-	    // AssignStatesToUnits();
-	    
 	    // TODO: assign units targets (attacking/protecting city)
+	    AssignUnitsTargets();
 	    
 	    units.ForEach(unit => {
 		    unit.DoTurn();
 	    });
 	    
+    }
+
+    private void AssignUnitsTargets()
+    {
+	    var freeWanderingUnits = units.Where(unit => unit.unitState == UnitState.FreeWandering).ToList();
+	    var attackingCityUnits = units.Where(unit => unit.unitState == UnitState.AttackingCity).ToList();
+	    var protectingCityUnits = units.Where(unit => unit.unitState == UnitState.ProtectingCity).ToList();
+
+	    
+	    // assign targets to attacking units
+	    var citiesUnderAttack = playerManager.citiesAttacked;
+	    if(newCityToAttack != null) citiesUnderAttack.Add(newCityToAttack);
+	    var unitPerCity = (int)Math.Ceiling(attackingCityUnits.Count / (float)citiesUnderAttack.Count);
+	    
+	    
+    }
+
+    public int CalculateDistanceBetweenUnitAndCity(City city, UnitController unitController)
+    {
+	    int shortestDistance = 1000;
+	    foreach (var cityTile in city.cityTiles)
+	    {
+		    var distance =
+			    playerManager.gameManager.mapManager.CalculateDistanceBetweenTiles(cityTile.tile.Position,
+				    unitController.unitMove.hexPosition);
+		    if (distance < shortestDistance) shortestDistance = distance;
+	    }
+	    
+	    return shortestDistance;
     }
 
     // TODO: add more variables if possible
@@ -303,7 +355,7 @@ public class PlayerUnitsManager : NetworkBehaviour
 	    if (healthAttackRatio > 10) return 0f;
 	    if (healthAttackRatio < 1) return 1f;
 
-	    var chance = 0.6f;
+	    var chance = 0.4f;
 	    
 	    if(playerManager.gameManager.playerTreeManager.isNodeOfPlayerResearched(3, "Strategy", city.Owner)) chance-=0.2f;
 	    if(playerManager.gameManager.playerTreeManager.isNodeOfPlayerResearched(2, "Strategy", city.Owner)) chance-=0.2f;
@@ -343,6 +395,12 @@ public class PlayerUnitsManager : NetworkBehaviour
 			    initialFreeWanderingRatio -= 1;
 			    if(initialFreeWanderingRatio <= 0) break;
 		    }
+	    }
+
+	    if (initialFreeWanderingRatio > 0 && newCityToAttack != null)
+	    {
+		    initialAttackingCityRatio += 1;
+		    initialFreeWanderingRatio -= 1;
 	    }
 	    
 	    attackingCityRatio = (float)initialAttackingCityRatio / 20;

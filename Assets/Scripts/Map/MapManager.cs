@@ -208,4 +208,9 @@ public class MapManager : MonoBehaviour
         }
         return tilesInRange;
     }
+    
+    public int CalculateDistanceBetweenTiles(Vector3Int tile1, Vector3Int tile2)
+    {
+        return MapEntity.PathTiles(tile1, tile2, float.MaxValue).Count;
+    }
 }
