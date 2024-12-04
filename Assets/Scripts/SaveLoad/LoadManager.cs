@@ -86,6 +86,7 @@ public class LoadManager : MonoBehaviour
             Color convertedColor = ColorUtility.TryParseHtmlString(colorString, out convertedColor) ? convertedColor : new Color();
             Color32 convertedColor32 = (Color32)convertedColor;
             sceneLoadData.playerColors[i] = convertedColor32;
+            sceneLoadData.startingCityNames[i] = "NULL";
         }
 
         return sceneLoadData;

@@ -158,29 +158,6 @@ public class GameManager : NetworkBehaviour
 			if (saveRoot == null)
 			{
 				sceneLoadData = LoadDataFromSettingsCreator();
-				networkSceneLoadData.Value = sceneLoadData;
-                test.Value = test1;
-
-                if (sceneLoadData.numberOfPlayers > 0)
-                    networkStartingResources0.Value = startingResources[0];
-                else networkStartingResources0.Value = NewStartingResources();
-                if (sceneLoadData.numberOfPlayers > 1)
-                    networkStartingResources1.Value = startingResources[1];
-                else networkStartingResources1.Value = NewStartingResources();
-                if (sceneLoadData.numberOfPlayers > 2)
-                    networkStartingResources2.Value = startingResources[2];
-                else networkStartingResources2.Value = NewStartingResources();
-                if (sceneLoadData.numberOfPlayers > 3)
-                    networkStartingResources3.Value = startingResources[3];
-                else networkStartingResources3.Value = NewStartingResources();
-
-                var tempStartingResources = new StartingResources[sceneLoadData.numberOfPlayers];
-                for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
-                {
-                    tempStartingResources[i] = DeepCopyStartingResources(startingResources[i]);
-                }
-
-                startingResources = tempStartingResources;
             }
 			else
 			{
@@ -188,21 +165,31 @@ public class GameManager : NetworkBehaviour
 				sceneLoadData = loadManager.Load();
                 startingResources = loadManager.LoadStartingResources(sceneLoadData.numberOfPlayers);
                 startingUnits = loadManager.LoadStartingUnits(sceneLoadData.numberOfPlayers);
-                networkSceneLoadData.Value = sceneLoadData;
-                test.Value = test1;
-                if (sceneLoadData.numberOfPlayers > 0)
-                    networkStartingResources0.Value = startingResources[0];
-                else networkStartingResources0.Value = NewStartingResources();
-                if (sceneLoadData.numberOfPlayers > 1)
-                    networkStartingResources1.Value = startingResources[1];
-                else networkStartingResources1.Value = NewStartingResources();
-                if (sceneLoadData.numberOfPlayers > 2)
-                    networkStartingResources2.Value = startingResources[2];
-                else networkStartingResources2.Value = NewStartingResources();
-                if (sceneLoadData.numberOfPlayers > 3)
-                    networkStartingResources3.Value = startingResources[3];
-                else networkStartingResources3.Value = NewStartingResources();
             }
+
+            networkSceneLoadData.Value = sceneLoadData;
+            test.Value = test1;
+
+            if (sceneLoadData.numberOfPlayers > 0)
+                networkStartingResources0.Value = startingResources[0];
+            else networkStartingResources0.Value = NewStartingResources();
+            if (sceneLoadData.numberOfPlayers > 1)
+                networkStartingResources1.Value = startingResources[1];
+            else networkStartingResources1.Value = NewStartingResources();
+            if (sceneLoadData.numberOfPlayers > 2)
+                networkStartingResources2.Value = startingResources[2];
+            else networkStartingResources2.Value = NewStartingResources();
+            if (sceneLoadData.numberOfPlayers > 3)
+                networkStartingResources3.Value = startingResources[3];
+            else networkStartingResources3.Value = NewStartingResources();
+
+            var tempStartingResources = new StartingResources[sceneLoadData.numberOfPlayers];
+            for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
+            {
+                tempStartingResources[i] = DeepCopyStartingResources(startingResources[i]);
+            }
+
+            startingResources = tempStartingResources;
         }
 
         LoadGameData(sceneLoadData);
@@ -271,17 +258,14 @@ public class GameManager : NetworkBehaviour
         StartingResources newStartingResources = new StartingResources();
         newStartingResources.gold = startingResources.gold;
 
-        if (startingResources.fortLoadData != null 
-            && startingResources.fortLoadData.Count > 0
-            && startingResources.fortLoadData.First().id == int.MaxValue)
+
+        newStartingResources.fortLoadData = new List<FortLoadData>();
+        if (startingResources.fortLoadData != null)
         {
-            newStartingResources.fortLoadData = new List<FortLoadData>();
-        }
-        else if(startingResources.fortLoadData != null)
-        {
-            newStartingResources.fortLoadData = new List<FortLoadData>();
             for (int i = 0; i < startingResources.fortLoadData.Count; i++)
             {
+                if (startingResources.fortLoadData[i].id == int.MaxValue)
+                    continue;
                 newStartingResources.fortLoadData.Add(
                     new FortLoadData(startingResources.fortLoadData[i].position, 
                         startingResources.fortLoadData[i].hexPosition, 
@@ -290,17 +274,13 @@ public class GameManager : NetworkBehaviour
         }
 
 
-        if (startingResources.cityLoadData != null 
-            && startingResources.cityLoadData.Count > 0 
-            && startingResources.cityLoadData.First().level == int.MaxValue) 
+        newStartingResources.cityLoadData = new List<CityLoadData>();
+        if (startingResources.cityLoadData != null)
         {
-            newStartingResources.cityLoadData = new List<CityLoadData>();
-        }
-        else if (startingResources.cityLoadData != null)
-        {
-            newStartingResources.cityLoadData = new List<CityLoadData>();
             for (int i = 0; i < startingResources.cityLoadData.Count; i++)
             {
+                if (startingResources.cityLoadData[i].level == int.MaxValue)
+                    continue;
                 newStartingResources.cityLoadData.Add(
                     new CityLoadData(startingResources.cityLoadData[i].position,
                         startingResources.cityLoadData[i].name,
@@ -311,17 +291,13 @@ public class GameManager : NetworkBehaviour
         }
 
 
-        if (startingResources.supplyLoadData != null 
-            && startingResources.supplyLoadData.Count > 0 
-            && startingResources.supplyLoadData.First().startPosition.x == float.MaxValue)
+        newStartingResources.supplyLoadData = new List<SupplyLoadData>();
+        if (startingResources.supplyLoadData != null)
         {
-            newStartingResources.supplyLoadData = new List<SupplyLoadData>();
-        }
-        else if (startingResources.supplyLoadData != null)
-        {
-            newStartingResources.supplyLoadData = new List<SupplyLoadData>();
             for (int i = 0; i < startingResources.supplyLoadData.Count; i++)
             {
+                if (startingResources.supplyLoadData[i].startPosition.x == float.MaxValue)
+                    continue;
                 newStartingResources.supplyLoadData.Add(
                     new SupplyLoadData(startingResources.supplyLoadData[i].startPosition,
                         startingResources.supplyLoadData[i].endPosition));
