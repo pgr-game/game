@@ -25,7 +25,6 @@ public enum UnitTypes {
 
 [GenerateSerializationForType(typeof(SceneLoadData))]
 [GenerateSerializationForType(typeof(StartingResources))]
-[GenerateSerializationForType(typeof(Test))]
 public class GameManager : NetworkBehaviour
 {
     public MapManager mapManager;
@@ -70,7 +69,6 @@ public class GameManager : NetworkBehaviour
     // Multiplayer
     public bool isMultiplayer;
     private NetworkVariable<SceneLoadData> networkSceneLoadData = new NetworkVariable<SceneLoadData>();
-    private NetworkVariable<Test> test = new NetworkVariable<Test>();
     private NetworkVariable<StartingResources> networkStartingResources0 = new NetworkVariable<StartingResources>();
     private NetworkVariable<StartingResources> networkStartingResources1 = new NetworkVariable<StartingResources>();
     private NetworkVariable<StartingResources> networkStartingResources2 = new NetworkVariable<StartingResources>();
@@ -87,7 +85,6 @@ public class GameManager : NetworkBehaviour
 
     [GenerateSerializationForType(typeof(SceneLoadData))]
     [GenerateSerializationForType(typeof(StartingResources))]
-    [GenerateSerializationForType(typeof(Test))]
     public void Init()
 	{
 		isInit = true;
@@ -102,32 +99,6 @@ public class GameManager : NetworkBehaviour
         string saveRoot = SaveRoot.saveRoot;
 
         sceneLoadData = networkSceneLoadData?.Value;
-        Test test1 = new Test();
-        test1.gold = 110;
-        test1.fortLoadData = new List<FortLoadData>()
-        {
-            new FortLoadData(
-                new Vector3(1, 1, 1),
-                new Vector3Int(2, 3, 4), 
-                5)
-        };
-        test1.cityLoadData = new List<CityLoadData>()
-        {
-            new CityLoadData(new Vector3(3, 4, 5),
-                "name",
-                4,
-                "LightInfantry",
-                1)
-        };
-        test1.supplyLoadData = new List<SupplyLoadData>()
-        {
-            new SupplyLoadData(new Vector3(5, 7, 8),
-                new Vector3(3, 4, 5))
-        };
-        test1.treeLoadData = new TreeLoadData(
-           new Dictionary<int, List<string>>() {{1, new List<string>() {"a", "b", "c"}}, { 2, new List<string>() { "d", "e", "f" } } },
-            new Dictionary<int, List<string>>() { { 3, new List<string>() { "a", "b", "c" } }, { 4, new List<string>() { "d", "e", "f" } } },
-            (1, "node"));
 
         if (sceneLoadData == null)
         {
@@ -172,7 +143,6 @@ public class GameManager : NetworkBehaviour
 
             isMultiplayer = sceneLoadData.isMultiplayer;
             networkSceneLoadData.Value = sceneLoadData;
-            test.Value = test1;
 
             if (sceneLoadData.numberOfPlayers > 0)
                 networkStartingResources0.Value = startingResources[0];
