@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CI.QuickSave;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class SaveManager : MonoBehaviour
 {
@@ -54,7 +55,7 @@ public class SaveManager : MonoBehaviour
         QuickSaveWriter quickSaveWriter = QuickSaveWriter.Create("SavesList");
         quickSaveWriter.Write<int>("numberOfSavedGames", numberOfSavedGames + 1);
         quickSaveWriter.Write<string>("saveString"+numberOfSavedGames, saveRoot);
-        quickSaveWriter.Write<string>("mapName"+numberOfSavedGames, gameManager.gameSettings.mapName);
+        quickSaveWriter.Write<string>("mapName"+numberOfSavedGames, SceneManager.GetActiveScene().name);
         quickSaveWriter.Write<string>("saveDate"+numberOfSavedGames, DateTime.Now.ToString());
         quickSaveWriter.Commit();
     }

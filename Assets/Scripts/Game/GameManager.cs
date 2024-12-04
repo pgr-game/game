@@ -49,6 +49,7 @@ public class GameManager : NetworkBehaviour
     public int numberOfPlayers;
     public PlayerManager[] players;
     public Vector3[] playerPositions;
+
     // Unit types
     private const int amountOfUnitTypes = 7;
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
@@ -61,17 +62,19 @@ public class GameManager : NetworkBehaviour
     public TileTag cityTag;
     public DialogController dialogController;
 
+    // Initial game state
+    public SceneLoadData sceneLoadData { get; private set; }
+    public StartingResources[] startingResources;
+    public StartingUnits[] startingUnits;
+
     // Multiplayer
     public bool isMultiplayer;
-    public SceneLoadData sceneLoadData { get; private set; }
     private NetworkVariable<SceneLoadData> networkSceneLoadData = new NetworkVariable<SceneLoadData>();
     private NetworkVariable<Test> test = new NetworkVariable<Test>();
     private NetworkVariable<StartingResources> networkStartingResources0 = new NetworkVariable<StartingResources>();
     private NetworkVariable<StartingResources> networkStartingResources1 = new NetworkVariable<StartingResources>();
     private NetworkVariable<StartingResources> networkStartingResources2 = new NetworkVariable<StartingResources>();
     private NetworkVariable<StartingResources> networkStartingResources3 = new NetworkVariable<StartingResources>();
-    public StartingResources[] startingResources;
-    public StartingUnits[] startingUnits;
     public bool isInit = false;
 
     void Start()
@@ -205,12 +208,16 @@ public class GameManager : NetworkBehaviour
         if (!isMultiplayer || IsServer)
         {
 	        InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames, sceneLoadData.isComputer, sceneLoadData.isMultiplayer);
-	        players[activePlayerIndex].StartFirstTurn();
 		}
 
         if (!IsServer)
         {
 	        InitPlayersThatSpawnedBeforeThis();
+        }
+
+        if(players[activePlayerIndex] != null && players[activePlayerIndex].IsOwner)
+        {
+            players[activePlayerIndex].StartFirstTurn();
         }
 	}
 

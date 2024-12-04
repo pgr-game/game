@@ -145,6 +145,11 @@ public class PlayerManager : NetworkBehaviour
             gameObject.SetActive(true);
             gameManager.activePlayer = this;
             gameManager.SetPlayerUIColor(this.color);
+            if (isSpectator)
+            {
+                isSpectator = false;
+                StartFirstTurn();
+            }
         }
         else
         {
