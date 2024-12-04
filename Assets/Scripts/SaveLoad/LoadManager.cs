@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using CI.QuickSave;
+using Unity.Netcode;
 
 public class LoadManager : MonoBehaviour
 {
@@ -124,16 +125,17 @@ public class LoadManager : MonoBehaviour
         sceneLoadData.playerPositions = quickSaveReader.Read<Vector3[]>("playerPositions");
         sceneLoadData.difficulty = quickSaveReader.Read<string>("difficulty");
         sceneLoadData.isComputer = quickSaveReader.Read<bool[]>("isComputer");
-        sceneLoadData.isMultiplayer = quickSaveReader.Read<bool>("isMultiplayer");
+        //sceneLoadData.isMultiplayer = quickSaveReader.Read<bool>("isMultiplayer");
+        sceneLoadData.isMultiplayer = (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient);
 
-		return sceneLoadData;
+        return sceneLoadData;
     }
 
     private StartingResources LoadPlayer(QuickSaveReader quickSaveReader, int index) 
     {
         string playerKey = "Player" + index;
-        StartingResources startingResources = gameManager.NewStartingResources();
-        
+        StartingResources startingResources = StartingResources.NewTransferable();
+
         int numberOfForts = quickSaveReader.Read<int>(playerKey + "numberOfForts");
         int numberOfCities = quickSaveReader.Read<int>(playerKey + "numberOfCities");
         int numberOfSupplyLines = quickSaveReader.Read<int>(playerKey + "numberOfSupplyLines");
