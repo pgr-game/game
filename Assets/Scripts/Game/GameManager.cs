@@ -167,6 +167,7 @@ public class GameManager : NetworkBehaviour
                 startingUnits = loadManager.LoadStartingUnits(sceneLoadData.numberOfPlayers);
             }
 
+            isMultiplayer = sceneLoadData.isMultiplayer;
             networkSceneLoadData.Value = sceneLoadData;
             test.Value = test1;
 
@@ -210,7 +211,6 @@ public class GameManager : NetworkBehaviour
         if (!IsServer)
         {
 	        InitPlayersThatSpawnedBeforeThis();
-
         }
 	}
 
