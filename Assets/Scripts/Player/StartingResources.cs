@@ -21,9 +21,9 @@ public class StartingResources : INetworkSerializable, IEquatable<StartingResour
         serializer.SerializeValue(ref gold);
 
         // Serialize each list
-        SerializeList(serializer, ref fortLoadData);
-        SerializeList(serializer, ref cityLoadData);
-        SerializeList(serializer, ref supplyLoadData);
+        SerializerUtility.SerializeList(serializer, ref fortLoadData);
+        SerializerUtility.SerializeList(serializer, ref cityLoadData);
+        SerializerUtility.SerializeList(serializer, ref supplyLoadData);
 
         // Serialize treeLoadData
         treeLoadData ??= new TreeLoadData(
@@ -31,31 +31,6 @@ public class StartingResources : INetworkSerializable, IEquatable<StartingResour
             new Dictionary<int, List<string>>(),
             (1, "node"));
         treeLoadData.NetworkSerialize(serializer);
-    }
-
-    private static void SerializeList<T, TValue>(BufferSerializer<T> serializer, ref List<TValue> list)
-        where T : IReaderWriter where TValue : INetworkSerializable, new()
-    {
-        int count = serializer.IsReader ? 0 : list.Count;
-        serializer.SerializeValue(ref count);
-
-        if (serializer.IsReader)
-        {
-            list = new List<TValue>(count);
-            for (int i = 0; i < count; i++)
-            {
-                TValue value = new TValue();
-                value.NetworkSerialize(serializer);
-                list.Add(value);
-            }
-        }
-        else
-        {
-            foreach (var value in list)
-            {
-                value.NetworkSerialize(serializer);
-            }
-        }
     }
 
     public bool Equals(StartingResources other)

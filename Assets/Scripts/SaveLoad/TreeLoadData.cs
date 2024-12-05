@@ -38,7 +38,7 @@ public class TreeLoadData : INetworkSerializable
                 int key = 0;
                 List<string> value = new List<string>();
                 serializer.SerializeValue(ref key);
-                SerializeList(serializer, ref value);
+                SerializerUtility.SerializeList(serializer, ref value);
                 dictionary[key] = value;
             }
         }
@@ -49,32 +49,7 @@ public class TreeLoadData : INetworkSerializable
                 int key = kvp.Key;
                 List<string> value = kvp.Value;
                 serializer.SerializeValue(ref key);
-                SerializeList(serializer, ref value);
-            }
-        }
-    }
-
-    private void SerializeList<T>(BufferSerializer<T> serializer, ref List<string> list) where T : IReaderWriter
-    {
-        int count = list?.Count ?? 0;
-        serializer.SerializeValue(ref count);
-
-        if (serializer.IsReader)
-        {
-            list = new List<string>(count);
-            for (int i = 0; i < count; i++)
-            {
-                string item = string.Empty;
-                serializer.SerializeValue(ref item);
-                list.Add(item);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < count; i++)
-            {
-                string item = list[i];
-                serializer.SerializeValue(ref item);
+                SerializerUtility.SerializeList(serializer, ref value);
             }
         }
     }

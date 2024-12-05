@@ -69,10 +69,7 @@ public class GameManager : NetworkBehaviour
     // Multiplayer
     public bool isMultiplayer;
     private NetworkVariable<SceneLoadData> networkSceneLoadData = new NetworkVariable<SceneLoadData>();
-    private NetworkVariable<StartingResources> networkStartingResources0 = new NetworkVariable<StartingResources>();
-    private NetworkVariable<StartingResources> networkStartingResources1 = new NetworkVariable<StartingResources>();
-    private NetworkVariable<StartingResources> networkStartingResources2 = new NetworkVariable<StartingResources>();
-    private NetworkVariable<StartingResources> networkStartingResources3 = new NetworkVariable<StartingResources>();
+    private NetworkVariable<StartingResourcesList> networkStartingResources = new NetworkVariable<StartingResourcesList>();
     public bool isInit = false;
 
     void Start()
@@ -508,18 +505,9 @@ public class GameManager : NetworkBehaviour
     // The cursed section
     private void SetNetworkStartingResources()
     {
-        if (sceneLoadData.numberOfPlayers > 0)
-            networkStartingResources0.Value = startingResources[0];
-        else networkStartingResources0.Value = StartingResources.NewTransferable();
-        if (sceneLoadData.numberOfPlayers > 1)
-            networkStartingResources1.Value = startingResources[1];
-        else networkStartingResources1.Value = StartingResources.NewTransferable();
-        if (sceneLoadData.numberOfPlayers > 2)
-            networkStartingResources2.Value = startingResources[2];
-        else networkStartingResources2.Value = StartingResources.NewTransferable();
-        if (sceneLoadData.numberOfPlayers > 3)
-            networkStartingResources3.Value = startingResources[3];
-        else networkStartingResources3.Value = StartingResources.NewTransferable();
+        int index = 0;
+        networkStartingResources.Value = new StartingResourcesList();
+        networkStartingResources.Value.list = startingResources.ToList();
 
         var tempStartingResources = new StartingResources[sceneLoadData.numberOfPlayers];
         for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
@@ -532,19 +520,13 @@ public class GameManager : NetworkBehaviour
 
     private StartingResources[] GetDeepCopyFromNetwork()
     {
-        var tempStartingResources = new StartingResources[sceneLoadData.numberOfPlayers];
         var newStartingResources = new StartingResources[sceneLoadData.numberOfPlayers];
-        if (sceneLoadData.numberOfPlayers > 0)
-            tempStartingResources[0] = networkStartingResources0.Value;
-        if (sceneLoadData.numberOfPlayers > 1)
-            tempStartingResources[1] = networkStartingResources1.Value;
-        if (sceneLoadData.numberOfPlayers > 2)
-            tempStartingResources[2] = networkStartingResources2.Value;
-        if (sceneLoadData.numberOfPlayers > 3)
-            tempStartingResources[3] = networkStartingResources3.Value;
-        for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
+
+        int index = 0;
+        foreach (var resources in networkStartingResources.Value.list)
         {
-            newStartingResources[i] = tempStartingResources[i].DeepCopy();
+            newStartingResources[index] = resources.DeepCopy();
+            index++;
         }
 
         return newStartingResources;
