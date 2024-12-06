@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using CI.QuickSave;
+using Unity.Netcode;
 
 public class LoadManager : MonoBehaviour
 {
@@ -78,20 +79,42 @@ public class LoadManager : MonoBehaviour
         QuickSaveReader quickSaveReader = QuickSaveReader.Create(saveRoot);
         sceneLoadData = LoadGameManager(sceneLoadData, quickSaveReader);
         
-        StartingResources[] startingResources = new StartingResources[sceneLoadData.numberOfPlayers];
         sceneLoadData.playerColors = new Color32[sceneLoadData.numberOfPlayers];
         sceneLoadData.startingCityNames = new string[sceneLoadData.numberOfPlayers];
 
         for(int i = 0; i < sceneLoadData.numberOfPlayers; i++) {
-            startingResources[i] = LoadPlayer(quickSaveReader, i);
             string colorString = "#" + quickSaveReader.Read<string>("Player" + i + "color");
             Color convertedColor = ColorUtility.TryParseHtmlString(colorString, out convertedColor) ? convertedColor : new Color();
             Color32 convertedColor32 = (Color32)convertedColor;
             sceneLoadData.playerColors[i] = convertedColor32;
+            sceneLoadData.startingCityNames[i] = "NULL";
         }
-        //TODO
-        //sceneLoadData.startingResources = startingResources;
+
         return sceneLoadData;
+    }
+
+    public StartingResources[] LoadStartingResources(int numberOfPlayers)
+    {
+        QuickSaveReader quickSaveReader = QuickSaveReader.Create(saveRoot);
+        StartingResources[] startingResources = new StartingResources[numberOfPlayers];
+        for (int i = 0; i < numberOfPlayers; i++)
+        {
+            startingResources[i] = LoadPlayer(quickSaveReader, i);
+        }
+
+        return startingResources;
+    }
+
+    public StartingUnits[] LoadStartingUnits(int numberOfPlayers)
+    {
+        QuickSaveReader quickSaveReader = QuickSaveReader.Create(saveRoot);
+        StartingUnits[] startingUnits = new StartingUnits[numberOfPlayers];
+        for (int i = 0; i < numberOfPlayers; i++)
+        {
+            startingUnits[i] = LoadPlayerUnits(quickSaveReader, i);
+        }
+
+        return startingUnits;
     }
 
     private SceneLoadData LoadGameManager(SceneLoadData sceneLoadData, QuickSaveReader quickSaveReader)
@@ -100,6 +123,10 @@ public class LoadManager : MonoBehaviour
         sceneLoadData.turnNumber = quickSaveReader.Read<int>("turnNumber");
         sceneLoadData.activePlayerIndex = quickSaveReader.Read<int>("activePlayerIndex");
         sceneLoadData.playerPositions = quickSaveReader.Read<Vector3[]>("playerPositions");
+        sceneLoadData.difficulty = quickSaveReader.Read<string>("difficulty");
+        sceneLoadData.isComputer = quickSaveReader.Read<bool[]>("isComputer");
+        //sceneLoadData.isMultiplayer = quickSaveReader.Read<bool>("isMultiplayer");
+        sceneLoadData.isMultiplayer = (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient);
 
         return sceneLoadData;
     }
@@ -107,28 +134,12 @@ public class LoadManager : MonoBehaviour
     private StartingResources LoadPlayer(QuickSaveReader quickSaveReader, int index) 
     {
         string playerKey = "Player" + index;
-        StartingResources startingResources = new StartingResources();
-    
-        int numberOfUnits = quickSaveReader.Read<int>(playerKey + "numberOfUnits");
-        startingResources.units = new List<UnitController>();
-        startingResources.unitLoadData = new List<UnitLoadData>();
+        StartingResources startingResources = StartingResources.NewTransferable();
 
         int numberOfForts = quickSaveReader.Read<int>(playerKey + "numberOfForts");
-        startingResources.fortLoadData = new List<FortLoadData>();
-
         int numberOfCities = quickSaveReader.Read<int>(playerKey + "numberOfCities");
-        startingResources.cityLoadData = new List<CityLoadData>();
-
-        //player.isComputer = quickSaveReader.Read<bool>(playerKey + "isComputer");
+        int numberOfSupplyLines = quickSaveReader.Read<int>(playerKey + "numberOfSupplyLines");
         startingResources.gold = quickSaveReader.Read<int>(playerKey + "gold");
-        //player.goldIncome = quickSaveReader.Read<int>(playerKey + "goldIncome");
-
-        for(int i = 0; i < numberOfUnits; i++)
-        {
-            string unitType = quickSaveReader.Read<string>(playerKey + "unit" + i + "unitType");
-            startingResources.units.Add(LoadUnitPrefab(unitType));          
-            startingResources.unitLoadData.Add(LoadUnitData(quickSaveReader, playerKey, i));          
-        }
 
         for(int i = 0; i < numberOfForts; i++)
         {
@@ -140,9 +151,34 @@ public class LoadManager : MonoBehaviour
             startingResources.cityLoadData.Add(LoadCityData(quickSaveReader, playerKey, i));          
         }
 
+        for (int i = 0; i < numberOfSupplyLines; i++)
+        {
+            startingResources.supplyLoadData.Add(LoadSupplyLineData(quickSaveReader, playerKey, i));
+        }
+
         startingResources.treeLoadData = LoadTreeData(quickSaveReader, playerKey);
 
         return startingResources;
+    }
+
+    private StartingUnits LoadPlayerUnits(QuickSaveReader quickSaveReader, int index)
+    {
+        string playerKey = "Player" + index;
+        StartingUnits startingUnits = new StartingUnits();
+
+        int numberOfUnits = quickSaveReader.Read<int>(playerKey + "numberOfUnits");
+        startingUnits.units = new List<UnitController>();
+        startingUnits.unitLoadData = new List<UnitLoadData>();
+
+
+        for (int i = 0; i < numberOfUnits; i++)
+        {
+            string unitType = quickSaveReader.Read<string>(playerKey + "unit" + i + "unitType");
+            startingUnits.units.Add(LoadUnitPrefab(unitType));
+            startingUnits.unitLoadData.Add(LoadUnitData(quickSaveReader, playerKey, i));
+        }
+
+        return startingUnits;
     }
 
     private UnitController LoadUnitPrefab(string unitType)
@@ -206,6 +242,18 @@ public class LoadManager : MonoBehaviour
         );
 
         return cityLoadData;
+    }
+
+    private SupplyLoadData LoadSupplyLineData(QuickSaveReader quickSaveReader, string playerKey, int index)
+    {
+        string supplyLineKey = playerKey + "supplyLine" + index;
+
+        SupplyLoadData supplyLoadData = new SupplyLoadData(
+            quickSaveReader.Read<Vector3>(supplyLineKey + "startPosition"),
+            quickSaveReader.Read<Vector3>(supplyLineKey + "endPosition")
+        );
+
+        return supplyLoadData;
     }
 
     private TreeLoadData LoadTreeData(QuickSaveReader quickSaveReader, string playerKey)

@@ -13,7 +13,7 @@ public class PlayerUnitsManager : NetworkBehaviour
     private GameManager gameManager;
     private List<UnitController> units = new List<UnitController>();
 
-    public void Init(PlayerManager playerManager, StartingResources startingResources)
+    public void Init(PlayerManager playerManager, StartingResources startingResources, StartingUnits startingUnits)
     {
         this.playerManager = playerManager;
         this.gameManager = playerManager.gameManager;
@@ -40,10 +40,10 @@ public class PlayerUnitsManager : NetworkBehaviour
 	        return;
         };
 
-        if (startingResources.unitLoadData.Count > 0)
+        if (startingUnits != null && startingUnits.unitLoadData != null && startingUnits.unitLoadData.Count > 0)
         {
-	        var unitControllerAndLoadData = startingResources.units.Zip(
-		        startingResources.unitLoadData, (u, d) => new { UnitController = u, UnitLoadData = d }
+	        var unitControllerAndLoadData = startingUnits.units.Zip(
+                startingUnits.unitLoadData, (u, d) => new { UnitController = u, UnitLoadData = d }
 	        );
 
 	        foreach (var ud in unitControllerAndLoadData)
@@ -58,10 +58,10 @@ public class PlayerUnitsManager : NetworkBehaviour
 				}
 			}
         }
-        else
+        else if (startingUnits != null)
         {
 	        // instantiate new without loading health, movement left etc.
-	        foreach (UnitController unit in startingResources.units)
+	        foreach (UnitController unit in startingUnits.units)
 	        {
 		        if (gameManager.isMultiplayer)
 		        {

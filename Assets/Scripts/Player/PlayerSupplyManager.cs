@@ -1,6 +1,7 @@
 using RedBjorn.ProtoTiles;
 using RedBjorn.ProtoTiles.Example;
 using RedBjorn.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ public class PlayerSupplyManager : NetworkBehaviour
     private Color supplyInactiveColor;
     private const int maxSupplyRange = 1000;
 
-    public void Init(PlayerManager playerManager, SupplyLoadData loadData, GameObject hexHighlitPrefab)
+    public void Init(PlayerManager playerManager, List<SupplyLoadData> loadData, GameObject hexHighlitPrefab)
     {
         this.playerManager = playerManager;
         this.gameManager = playerManager.gameManager;
@@ -43,7 +44,11 @@ public class PlayerSupplyManager : NetworkBehaviour
 
         if (loadData != null)
         {
-            supplyLines = loadData.supplyLines;
+            foreach (var supplyLoadData in loadData)
+            {
+                drawingStartPosition = supplyLoadData.startPosition;
+                CreateSupplyLineToPosition(supplyLoadData.endPosition);
+            }
         }
     }
 
@@ -172,7 +177,7 @@ public class PlayerSupplyManager : NetworkBehaviour
 
     public void CreateSupplyLine(Vector3 startPosition, Vector3 endPosition)
     {
-        List<TileEntity> path = playerManager.mapManager.MapEntity.PathTiles((Vector3)startPosition, endPosition, float.MaxValue);
+        List<TileEntity> path = playerManager.mapManager.MapEntity.PathTiles(startPosition, endPosition, float.MaxValue);
         if (path.Count == 0)
         {
             return;
@@ -215,5 +220,23 @@ public class PlayerSupplyManager : NetworkBehaviour
             supplyLines.Remove(overwrittenSupplyLine);
             overwrittenSupplyLine.Destroy();
         }
+    }
+
+    public SupplyLoadData[] GetSupplyLoadData()
+    {
+        SupplyLoadData[] supplyLoadData = new SupplyLoadData[supplyLines.Count];
+        int i = 0;
+        foreach (var supplyLine in supplyLines)
+        {
+            supplyLoadData[i] = supplyLine.GetSupplyLoadData();
+            i++;
+        }
+
+        return supplyLoadData;
+    }
+
+    public int GetSupplyLineCount()
+    {
+        return supplyLines.Count;
     }
 }

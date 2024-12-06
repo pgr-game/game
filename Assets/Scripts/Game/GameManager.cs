@@ -24,6 +24,7 @@ public enum UnitTypes {
 }
 
 [GenerateSerializationForType(typeof(SceneLoadData))]
+[GenerateSerializationForType(typeof(StartingResources))]
 public class GameManager : NetworkBehaviour
 {
     public MapManager mapManager;
@@ -47,6 +48,7 @@ public class GameManager : NetworkBehaviour
     public int numberOfPlayers;
     public PlayerManager[] players;
     public Vector3[] playerPositions;
+
     // Unit types
     private const int amountOfUnitTypes = 7;
     public GameObject[] unitPrefabs = new GameObject[amountOfUnitTypes];
@@ -59,11 +61,15 @@ public class GameManager : NetworkBehaviour
     public TileTag cityTag;
     public DialogController dialogController;
 
+    // Initial game state
+    public SceneLoadData sceneLoadData { get; private set; }
+    public StartingResources[] startingResources;
+    public StartingUnits[] startingUnits;
+
     // Multiplayer
     public bool isMultiplayer;
-    public SceneLoadData sceneLoadData { get; private set; }
     private NetworkVariable<SceneLoadData> networkSceneLoadData = new NetworkVariable<SceneLoadData>();
-    public StartingResources[] startingResources;
+    private NetworkVariable<StartingResourcesList> networkStartingResources = new NetworkVariable<StartingResourcesList>();
     public bool isInit = false;
 
     void Start()
@@ -74,8 +80,9 @@ public class GameManager : NetworkBehaviour
 	    }
 	}
 
-	[GenerateSerializationForType(typeof(SceneLoadData))]
-	public void Init()
+    [GenerateSerializationForType(typeof(SceneLoadData))]
+    [GenerateSerializationForType(typeof(StartingResources))]
+    public void Init()
 	{
 		isInit = true;
         playerTreeManager = UI.gameObject.transform.Find("EvolutionTreeInterface").GetComponent<PlayerTreeManager>();
@@ -94,7 +101,11 @@ public class GameManager : NetworkBehaviour
         {
 	        sceneLoadData = new SceneLoadData();
         }
-        else isMultiplayer = sceneLoadData.isMultiplayer;
+        else
+        {
+            isMultiplayer = sceneLoadData.isMultiplayer;
+            startingResources = GetDeepCopyFromNetwork();
+        }
 
 		saveManager.Init(this);
         loadManager.Init(this);
@@ -105,21 +116,19 @@ public class GameManager : NetworkBehaviour
 			if (saveRoot == null)
 			{
 				sceneLoadData = LoadDataFromSettingsCreator();
-				networkSceneLoadData.Value = sceneLoadData;
-			}
+            }
 			else
 			{
 				loadManager.SetSaveRoot(saveRoot);
 				sceneLoadData = loadManager.Load();
-			}
-		}
+                startingResources = loadManager.LoadStartingResources(sceneLoadData.numberOfPlayers);
+                startingUnits = loadManager.LoadStartingUnits(sceneLoadData.numberOfPlayers);
+            }
 
-
-		startingResources = new StartingResources[sceneLoadData.numberOfPlayers];
-		for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
-		{
-			startingResources[i] = getStartingResourcesByDifficulty(sceneLoadData.difficulty);
-		}
+            isMultiplayer = sceneLoadData.isMultiplayer;
+            networkSceneLoadData.Value = sceneLoadData;
+            SetNetworkStartingResources();
+        }
 
         LoadGameData(sceneLoadData);
 
@@ -133,17 +142,20 @@ public class GameManager : NetworkBehaviour
         if (!isMultiplayer || IsServer)
         {
 	        InstantiatePlayers(sceneLoadData.numberOfPlayers, sceneLoadData.playerPositions, startingResources, sceneLoadData.playerColors, sceneLoadData.startingCityNames, sceneLoadData.isComputer, sceneLoadData.isMultiplayer);
-	        players[activePlayerIndex].StartFirstTurn();
 		}
 
         if (!IsServer)
         {
 	        InitPlayersThatSpawnedBeforeThis();
+        }
 
+        if(players[activePlayerIndex] != null && players[activePlayerIndex].IsOwner)
+        {
+            players[activePlayerIndex].StartFirstTurn();
         }
 	}
 
-	private void InitPlayersThatSpawnedBeforeThis()
+    private void InitPlayersThatSpawnedBeforeThis()
 	{
 		// Players that have spawned before GameManager need initialization
 
@@ -182,11 +194,18 @@ public class GameManager : NetworkBehaviour
         bool[] isComputer = gameSettings?.isComputer ?? new [] { false, false };
         isMultiplayer = gameSettings?.isMultiplayer ?? true;
         string difficulty = gameSettings?.difficulty ?? "Medium";
+        startingResources = new StartingResources[InNumberOfPlayers];
+        startingUnits = new StartingUnits[InNumberOfPlayers];
+        for (int i = 0; i < InNumberOfPlayers; i++)
+        {
+            (startingResources[i], startingUnits[i]) = getStartingResourcesByDifficulty(difficulty);
+        }
 
-        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InPlayerColors, InStartingCityNames, 1, 0, isComputer, isMultiplayer, difficulty);
+        return new SceneLoadData(InNumberOfPlayers, InPlayerPositions, InPlayerColors, InStartingCityNames, 1,
+            0, isComputer, isMultiplayer, difficulty);
     }
 
-    public StartingResources getStartingResourcesByDifficulty(string difficulty) {
+    public (StartingResources, StartingUnits) getStartingResourcesByDifficulty(string difficulty) {
         if(difficulty == "Easy") {
             return getStartingResourcesEasy();
         } else if(difficulty == "Medium") {
@@ -199,35 +218,38 @@ public class GameManager : NetworkBehaviour
 
     }
 
-    public StartingResources getStartingResourcesEasy() {
-        StartingResources InStartingResources = new StartingResources();
-        InStartingResources.units = new List<UnitController>();
-        InStartingResources.units.Add(unitPrefabs.ElementAt(5).GetComponent<UnitController>());
-        InStartingResources.units.Add(unitPrefabs.ElementAt(6).GetComponent<UnitController>());
-        InStartingResources.unitLoadData = new List<UnitLoadData>();
+    public (StartingResources, StartingUnits) getStartingResourcesEasy() {
+        StartingResources InStartingResources = StartingResources.NewTransferable();
+        StartingUnits inStartingUnits = new StartingUnits();
+        inStartingUnits.units = new List<UnitController>();
+        inStartingUnits.units.Add(unitPrefabs.ElementAt(5).GetComponent<UnitController>());
+        inStartingUnits.units.Add(unitPrefabs.ElementAt(6).GetComponent<UnitController>());
+        inStartingUnits.unitLoadData = new List<UnitLoadData>();
         InStartingResources.gold = 300;
 
-        return InStartingResources;
+        return (InStartingResources, inStartingUnits);
     }
 
-    public StartingResources getStartingResourcesMedium() {
-        StartingResources InStartingResources = new StartingResources();
-        InStartingResources.units = new List<UnitController>();
-        InStartingResources.units.Add(unitPrefabs.ElementAt(5).GetComponent<UnitController>());
-        InStartingResources.unitLoadData = new List<UnitLoadData>();
+    public (StartingResources, StartingUnits) getStartingResourcesMedium() {
+        StartingResources InStartingResources = StartingResources.NewTransferable();
+        StartingUnits inStartingUnits = new StartingUnits();
+        inStartingUnits.units = new List<UnitController>();
+        inStartingUnits.units.Add(unitPrefabs.ElementAt(5).GetComponent<UnitController>());
+        inStartingUnits.unitLoadData = new List<UnitLoadData>();
         InStartingResources.gold = 200;
-        
-        return InStartingResources;
+
+        return (InStartingResources, inStartingUnits);
     }
 
-    public StartingResources getStartingResourcesHard() {
-        StartingResources InStartingResources = new StartingResources();
-        InStartingResources.units = new List<UnitController>();
-        InStartingResources.units.Add(unitPrefabs.ElementAt(6).GetComponent<UnitController>());
-        InStartingResources.unitLoadData = new List<UnitLoadData>();
+    public (StartingResources, StartingUnits) getStartingResourcesHard() {
+        StartingResources InStartingResources = StartingResources.NewTransferable();
+        StartingUnits inStartingUnits = new StartingUnits();
+        inStartingUnits.units = new List<UnitController>();
+        inStartingUnits.units.Add(unitPrefabs.ElementAt(6).GetComponent<UnitController>());
+        inStartingUnits.unitLoadData = new List<UnitLoadData>();
         InStartingResources.gold = 100;
-        
-        return InStartingResources;
+
+        return (InStartingResources, inStartingUnits);
     }
     
     public void LoadGameData(SceneLoadData sceneLoadData) {
@@ -250,7 +272,7 @@ public class GameManager : NetworkBehaviour
             players[i] = Instantiate(playerPrefab, playerPositions[i], Quaternion.identity).GetComponent<PlayerManager>();
             if (!isMultiplayer)
             {
-	            players[i].Init(this, mapManager, startingResources[i], playerColors[i], startingCityNames[i], isComputer[i], i);
+	            players[i].Init(this, mapManager, startingResources[i], startingUnits[i], playerColors[i], startingCityNames[i], isComputer[i], i);
 			}
             players[i].index = i;
         }
@@ -423,7 +445,7 @@ public class GameManager : NetworkBehaviour
 
     public void SetNextTurnButtonText()
     {
-	    if (activePlayer.isSpectator)
+	    if (activePlayer == null || activePlayer.isSpectator)
 	    {
 		    nextTurnMenuController.SetText("WAIT FOR OTHER PLAYER");
 	    }
@@ -456,29 +478,6 @@ public class GameManager : NetworkBehaviour
         return true;
     }
 
-    StartingResources[] CreateExampleGameStart() {
-        StartingResources[] InStartingResources = new StartingResources[2] {
-            new StartingResources(),
-            new StartingResources()
-        };
-        
-        InStartingResources[0].units = new List<UnitController>();
-        InStartingResources[1].units = new List<UnitController>();
-        
-        InStartingResources[0].units.Add(unitPrefabs.ElementAt(0).GetComponent<UnitController>());
-        InStartingResources[0].units.Add(unitPrefabs.ElementAt(3).GetComponent<UnitController>());
-
-        InStartingResources[1].units.Add(unitPrefabs.ElementAt(4).GetComponent<UnitController>());
-
-        InStartingResources[0].unitLoadData = new List<UnitLoadData>();
-        InStartingResources[1].unitLoadData = new List<UnitLoadData>();
-
-        InStartingResources[0].gold = 100;
-        InStartingResources[1].gold = 100;
-
-        return InStartingResources;
-    }
-
     public GameObject getUnitPrefabByName(String unitType) {
         if(Enum.IsDefined(typeof(UnitTypes), unitType)) {
             return unitPrefabs[(int)Enum.Parse(typeof(UnitTypes), unitType)];
@@ -502,4 +501,34 @@ public class GameManager : NetworkBehaviour
 	        .FirstOrDefault(client => client.PlayerObject.GetComponent<PlayerData>().index == index)?
 	        .ClientId;
 	}
+
+    // The cursed section
+    private void SetNetworkStartingResources()
+    {
+        int index = 0;
+        networkStartingResources.Value = new StartingResourcesList();
+        networkStartingResources.Value.list = startingResources.ToList();
+
+        var tempStartingResources = new StartingResources[sceneLoadData.numberOfPlayers];
+        for (int i = 0; i < sceneLoadData.numberOfPlayers; i++)
+        {
+            tempStartingResources[i] = startingResources[i].DeepCopy();
+        }
+
+        startingResources = tempStartingResources;
+    }
+
+    private StartingResources[] GetDeepCopyFromNetwork()
+    {
+        var newStartingResources = new StartingResources[sceneLoadData.numberOfPlayers];
+
+        int index = 0;
+        foreach (var resources in networkStartingResources.Value.list)
+        {
+            newStartingResources[index] = resources.DeepCopy();
+            index++;
+        }
+
+        return newStartingResources;
+    }
 }

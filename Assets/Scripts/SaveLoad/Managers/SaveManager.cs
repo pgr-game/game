@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CI.QuickSave;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class SaveManager : MonoBehaviour
 {
@@ -54,7 +55,7 @@ public class SaveManager : MonoBehaviour
         QuickSaveWriter quickSaveWriter = QuickSaveWriter.Create("SavesList");
         quickSaveWriter.Write<int>("numberOfSavedGames", numberOfSavedGames + 1);
         quickSaveWriter.Write<string>("saveString"+numberOfSavedGames, saveRoot);
-        quickSaveWriter.Write<string>("mapName"+numberOfSavedGames, gameManager.gameSettings.mapName);
+        quickSaveWriter.Write<string>("mapName"+numberOfSavedGames, SceneManager.GetActiveScene().name);
         quickSaveWriter.Write<string>("saveDate"+numberOfSavedGames, DateTime.Now.ToString());
         quickSaveWriter.Commit();
     }
@@ -65,6 +66,9 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>("turnNumber", gameManager.turnNumber);
         quickSaveWriter.Write<int>("activePlayerIndex", gameManager.activePlayerIndex);
         quickSaveWriter.Write<Vector3[]>("playerPositions", gameManager.playerPositions);
+        quickSaveWriter.Write<string>("difficulty", gameManager.sceneLoadData.difficulty);
+        quickSaveWriter.Write<bool[]>("isComputer", gameManager.sceneLoadData.isComputer);
+        quickSaveWriter.Write<bool>("isMultiplayer", gameManager.sceneLoadData.isMultiplayer);
         quickSaveWriter.Commit();
     }
 
@@ -74,6 +78,7 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>(playerKey + "numberOfUnits", player.playerUnitsManager.GetUnitCount());
         quickSaveWriter.Write<int>(playerKey + "numberOfForts", player.playerFortsManager.forts.Count);
         quickSaveWriter.Write<int>(playerKey + "numberOfCities", player.playerCitiesManager.cities.Count);
+        quickSaveWriter.Write<int>(playerKey + "numberOfSupplyLines", player.playerSupplyManager.GetSupplyLineCount());
         quickSaveWriter.Write<bool>(playerKey + "isComputer", player.isComputer);
         quickSaveWriter.Write<string>(playerKey + "color", ColorUtility.ToHtmlStringRGBA(player.color));
         quickSaveWriter.Write<int>(playerKey + "gold", player.gold);
@@ -100,6 +105,13 @@ public class SaveManager : MonoBehaviour
         {
             SaveCity(city, quickSaveWriter, playerKey, i);    
             i++;      
+        }
+
+        i = 0;
+        foreach (SupplyLoadData supplyLoadData in player.playerSupplyManager.GetSupplyLoadData())
+        {
+            SaveSupplyLine(supplyLoadData, quickSaveWriter, playerKey, i);
+            i++;
         }
 
         quickSaveWriter.Commit();
@@ -168,6 +180,14 @@ public class SaveManager : MonoBehaviour
         quickSaveWriter.Write<int>(cityKey + "level", city.Level);
         quickSaveWriter.Write<string>(cityKey + "unitInProduction", city.UnitInProduction ? city.UnitInProduction.name : "");
         quickSaveWriter.Write<int>(cityKey + "unitInProductionTurnsLeft", city.UnitInProductionTurnsLeft);
+        quickSaveWriter.Commit();
+    }
+
+    private void SaveSupplyLine(SupplyLoadData supplyLoadData, QuickSaveWriter quickSaveWriter, string playerKey, int index)
+    {
+        string supplyLineKey = playerKey + "supplyLine" + index;
+        quickSaveWriter.Write<Vector3>(supplyLineKey + "startPosition", supplyLoadData.startPosition);
+        quickSaveWriter.Write<Vector3>(supplyLineKey + "endPosition", supplyLoadData.endPosition);
         quickSaveWriter.Commit();
     }
 

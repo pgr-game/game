@@ -5,6 +5,7 @@ using System.Linq;
 using RedBjorn.ProtoTiles;
 using RedBjorn.ProtoTiles.Example;
 using Unity.Netcode;
+using Unity.VisualScripting;
 
 public class PlayerManager : NetworkBehaviour
 {
@@ -93,12 +94,13 @@ public class PlayerManager : NetworkBehaviour
             gameManager.players[index] = this;
         }
 
-        Init(gameManager, gameManager.mapManager, gameManager.startingResources[index],
+        Init(gameManager, gameManager.mapManager, gameManager.startingResources[index], gameManager.startingUnits?[index],
             gameManager.sceneLoadData.playerColors[index], gameManager.sceneLoadData.startingCityNames[index],
             gameManager.sceneLoadData.isComputer[index], index);
     }
 
-    public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources, Color32 color, string startingCityName, bool isComputer, int index)
+    public void Init(GameManager gameManager, MapManager mapManager, StartingResources startingResources,
+        StartingUnits startingUnits, Color32 color, string startingCityName, bool isComputer, int index)
     {
         this.index = index;
         this.gameManager = gameManager;
@@ -133,7 +135,7 @@ public class PlayerManager : NetworkBehaviour
         InitCities(startingCityName, startingResources.cityLoadData);
         InitForts(startingResources);
         InitSupplyLines(startingResources.supplyLoadData);
-        InitUnits(startingResources);
+        InitUnits(startingResources, startingUnits);
         this.gold = startingResources.gold;
         GameObject[] texts = GameObject.FindGameObjectsWithTag("currencyText");
         this.goldText = texts[0];
@@ -143,6 +145,11 @@ public class PlayerManager : NetworkBehaviour
             gameObject.SetActive(true);
             gameManager.activePlayer = this;
             gameManager.SetPlayerUIColor(this.color);
+            if (isSpectator)
+            {
+                isSpectator = false;
+                StartFirstTurn();
+            }
         }
         else
         {
@@ -331,9 +338,9 @@ public class PlayerManager : NetworkBehaviour
         gameManager.cityMenuManager.Activate();
     }
 
-    void InitUnits(StartingResources startingResources)
+    void InitUnits(StartingResources startingResources, StartingUnits startingUnits)
     {
-        playerUnitsManager.Init(this, startingResources);
+        playerUnitsManager.Init(this, startingResources, startingUnits);
     }
     void InitTree(TreeLoadData treeLoadData)
     {
@@ -353,7 +360,7 @@ public class PlayerManager : NetworkBehaviour
         playerCitiesManager.Init(this, startingCityName, cityLoadData);
     }
 
-    void InitSupplyLines(SupplyLoadData supplyLoadData)
+    void InitSupplyLines(List<SupplyLoadData> supplyLoadData)
     {
         playerSupplyManager.Init(this, supplyLoadData, hexHighlitPrefab);
     }
