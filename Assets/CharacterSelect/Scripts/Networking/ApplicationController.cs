@@ -4,7 +4,6 @@ using UnityEngine;
 public class ApplicationController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private ServerSingleton serverPrefab;
     [SerializeField] private ClientSingleton clientPrefab;
     [SerializeField] private HostSingleton hostSingleton;
 
@@ -26,17 +25,7 @@ public class ApplicationController : MonoBehaviour
 
         if (isServer)
         {
-            ServerSingleton serverSingleton = Instantiate(serverPrefab);
-            await serverSingleton.CreateServer();
-
-            var defaultGameInfo = new GameInfo
-            {
-                gameMode = GameMode.Default,
-                map = Map.Default,
-                gameQueue = GameQueue.Casual
-            };
-
-            await serverSingleton.Manager.StartGameServerAsync(defaultGameInfo);
+            Debug.Log("You should not be a server");
         }
         else
         {
