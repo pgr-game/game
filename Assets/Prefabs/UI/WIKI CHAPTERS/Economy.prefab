@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -626.8}
-  m_SizeDelta: {x: 682.1, y: 1253.6}
+  m_AnchoredPosition: {x: 0, y: -295.5}
+  m_SizeDelta: {x: 682.1, y: 591}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2967414963689428650
 CanvasRenderer:
@@ -71,22 +71,22 @@ MonoBehaviour:
     your level, amount of cities, etc.) you also get gold after destroying an enemy
     city or unit.
 
-    
+
 
     What can I use gold for?
 
-    Placing forts, upgrading
-    units, Upgrading cities
+    Placing forts, upgrading units,
+    Upgrading cities
 
-    
+
 
     Algorithms
 
     How much is the unit wort?
 
-    
 
-    
+
+
 
     #int
     goldValue = this.level*2;
@@ -104,28 +104,28 @@ MonoBehaviour:
     #else
     if(unitType == UnitTypes.Elephant) goldValue+=25;
 
-    #else if(unitType ==
-    UnitTypes.Hoplite) goldValue+=10;
+    #else if(unitType == UnitTypes.Hoplite)
+    goldValue+=10;
 
-    #else if(unitType == UnitTypes.LightInfantry)
-    goldValue+=5;
+    #else if(unitType == UnitTypes.LightInfantry) goldValue+=5;
 
-    #else if(unitType == UnitTypes.Skirmisher) goldValue+=5;
+    #else
+    if(unitType == UnitTypes.Skirmisher) goldValue+=5;
 
 
 
-    How
-    much does the production of unit cost?
+    How much does the production
+    of unit cost?
 
-    
 
-    #  int productionCost = this.baseProductionCost;
-    //based on unit type
+
+    #  int productionCost = this.baseProductionCost; //based
+    on unit type
 
     #  productionCost -= city.Level;
 
-    #  productionCost
-    -= (gameManager.turnNumber - city.turnCreated);
+    #  productionCost -=
+    (gameManager.turnNumber - city.turnCreated);
 
     #  return productionCost;'
   m_isRightToLeft: 0
@@ -154,8 +154,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

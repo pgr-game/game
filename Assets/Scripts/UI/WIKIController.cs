@@ -64,7 +64,7 @@ public class WIKIController : MonoBehaviour
         var save = content.transform.position;
         GameObject  nntext = Chapters.Find(x=> x.gameObject.name.Equals(i)).gameObject;
         content.GetComponent<TMP_Text>().text = nntext.GetComponent<TMP_Text>().text;
-        content.GetComponent<TMP_Text>().fontSize = nntext.GetComponent<TMP_Text>().fontSize;
+        //content.GetComponent<TMP_Text>().fontSize = nntext.GetComponent<TMP_Text>().fontSize;
         content.GetComponent<RectTransform>().sizeDelta = new Vector2(content.GetComponent<RectTransform>().sizeDelta.x, nntext.GetComponent<RectTransform>().sizeDelta.y);
         content.transform.position = new Vector3(save.x, -10000, save.z);
         
