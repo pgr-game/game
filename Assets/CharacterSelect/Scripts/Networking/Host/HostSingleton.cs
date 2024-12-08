@@ -108,7 +108,7 @@ public class HostSingleton : MonoBehaviour
         try
         {
             var createLobbyOptions = new CreateLobbyOptions();
-            createLobbyOptions.IsPrivate = false;
+            createLobbyOptions.IsPrivate = gameSettings.isPrivate;
             createLobbyOptions.Data = new Dictionary<string, DataObject>()
             {
                 {
@@ -119,7 +119,11 @@ public class HostSingleton : MonoBehaviour
                 }
             };
 
-            Lobby lobby = await Lobbies.Instance.CreateLobbyAsync("My Lobby", maxConnections, createLobbyOptions);
+            if (gameSettings.lobbyName == "")
+            {
+                gameSettings.lobbyName = "My lobby";
+            }
+            Lobby lobby = await Lobbies.Instance.CreateLobbyAsync(gameSettings.lobbyName, maxConnections, createLobbyOptions);
             lobbyId = lobby.Id;
             StartCoroutine(HeartbeatLobbyCoroutine(15));
         }
