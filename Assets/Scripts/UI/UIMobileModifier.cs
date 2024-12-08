@@ -13,7 +13,7 @@ public class UIMobileModifier : MonoBehaviour
         if (!Application.isMobilePlatform)
         {
             SettingsButton.SetActive(false);
-            EvolutionTreeButton.transform.position =  new Vector3(EvolutionTreeButton.transform.position.x, EvolutionTreeButton.transform.position.y + 150, EvolutionTreeButton.transform.position.z);
+            EvolutionTreeButton.transform.position =  new Vector3(EvolutionTreeButton.transform.position.x, EvolutionTreeButton.transform.position.y + 100, EvolutionTreeButton.transform.position.z);
         }
     }
 }
