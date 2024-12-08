@@ -10,6 +10,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject optionMenu;
     public GameObject cityMenu;
+    public GameObject wikiMenu;
     public GameObject unitList;
     public static bool isPaused;
 
@@ -24,6 +25,7 @@ public class PauseMenu : MonoBehaviour
         }
         pauseMenu.SetActive(false);
         saveNameInputWindow.SetActive(false);
+        wikiMenu.SetActive(false);
     }
 
     // Update is called once per frame
@@ -33,7 +35,8 @@ public class PauseMenu : MonoBehaviour
         {
             unitList.SetActive(false);
             cityMenu.SetActive(false);
-            if(isPaused&& optionMenu.activeSelf==true) 
+            wikiMenu.SetActive(false);
+            if (isPaused&& optionMenu.activeSelf==true) 
             {
                 optionMenu.SetActive(false);
                 saveNameInputWindow.SetActive(false);
@@ -96,6 +99,7 @@ public class PauseMenu : MonoBehaviour
         {
             unitList.SetActive(false);
             cityMenu.SetActive(false);
+            wikiMenu.SetActive(false);
             PauseGame();
         }
     }

@@ -1,0 +1,203 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6422449747667448691
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7605218207223934048}
+  - component: {fileID: 2967414963689428650}
+  - component: {fileID: 7106840000770435251}
+  m_Layer: 5
+  m_Name: Units
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7605218207223934048
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6422449747667448691}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -2735.195}
+  m_SizeDelta: {x: 682.1, y: 5470.39}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &2967414963689428650
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6422449747667448691}
+  m_CullTransparentMesh: 1
+--- !u!114 &7106840000770435251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6422449747667448691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: "Types\r\nLight Infantry\r\n\nDescription\r\nThe Light Infantry, quick
+    and nimble, serve as the agile vanguard of the battlefield. With minimal armor
+    to maximize their mobility, they are equipped with a long spear and a solid shield.
+    Their helmets, often decorated with distinctive plumes or markings, embody their
+    valor and swiftness. These warriors are adept at swift attacks and fast retreats,
+    outflanking heavier opponents with ease.\r\n\r\nStats\r\nHealth: 30\r\n\r\nAttack:
+    10\r\n\r\nSpeed: 4\r\n\r\nMove range: 2\r\n\r\nDefense: 1\r\n\r\nSkirmisher\r\nDescription\r\nSkirmishers
+    are the masters of hit-and-run tactics. They carry a multitude of throwable spears
+    and a light shield, allowing them to barrage the enemy with a hail of javelins
+    before slipping away. Their lack of armor is compensated by their speed and agility.
+    Skirmishers are perfect for harassing enemy formations and disrupting their plans.\r\n\r\nStats\r\nHealth:
+    20\r\n\r\nAttack: 10\r\n\r\nSpeed: 4\r\n\r\nMove range: 3\r\n\r\nDefense: 0\r\n\r\nHoplite\r\nDescription\r\nThe
+    backbone of any ancient army, the Hoplite is a heavily armored warrior. Equipped
+    with a long spear, a large shield, and a full suit of armor, they are a formidable
+    presence on the battlefield. Their helmets, often with crests, provide both protection
+    and intimidation. Hoplites are the stalwarts of defense and a powerful force
+    in a phalanx formation.\r\n\r\nStats\r\nHealth: 40\r\n\r\nAttack: 15\r\n\r\nSpeed:
+    3\r\n\r\nMove range: 2\r\n\r\nDefense: 3\r\n\r\nArcher\r\n\nDescription\r\nArchers
+    are the long-range specialists. Wearing no armor to ensure freedom of movement,
+    they are equipped with a sturdy bow and a quiver full of arrows. Their helmets
+    are designed for visibility and protection. Skilled in targeting foes from a
+    distance, archers provide essential support by weakening enemy lines before the
+    main assault.\r\n\r\n \r\n\r\nStats\r\nHealth: 30\r\n\r\nAttack: 10\r\n\r\nSpeed:
+    4\r\n\r\nMove range: 2\r\n\r\nDefense: 2\r\n\r\nChariot\r\nDescription\r\nThe
+    Chariot is a symbol of power and prestige. Drawn by two strong horses, it carries
+    a single warrior who commands this swift and deadly vehicle. The rider, protected
+    by a helmet, wields either a bow or a spear. Chariots are used for rapid assaults,
+    breaking through enemy lines or chasing down fleeing foes.\r\n\r\nStats\r\nHealth:
+    40\r\n\r\nAttack: 20\r\n\r\nSpeed: 5\r\n\r\nMove range: 4\r\n\r\nDefense: 4\r\n\r\nCatapult\r\nDescription\r\nOperated
+    by a team of two, the Catapult is a siege engine capable of hurling large projectiles
+    over great distances. The crew, skilled in mechanics and trajectory calculations,
+    work in unison to load, aim, and fire the catapult. They play a crucial role
+    in besieging fortifications and providing artillery support.\r\n\r\nStats\r\nHealth:
+    50\r\n\r\nAttack: 20\r\n\r\nSpeed: 2\r\n\r\nMove range: 1\r\n\r\nDefense: 4\r\n\r\nElephant\r\nDescription\r\nThe
+    War Elephant is a towering beast clad in armor, carrying two warriors on its
+    back. One driver steers this mighty creature while the other, often armed with
+    a bow or javelin, attacks from this elevated position. War Elephants are used
+    to cause chaos in enemy ranks, trampling soldiers and breaking through barriers.\r\n\r\nStats\r\nHealth:
+    70\r\n\r\nAttack: 20\r\n\r\nSpeed: 5\r\n\r\nMove range: 3\r\n\r\nDefense: 6\r\n\r\nUnit
+    level\r\nObtaining experience\r\nEvery unit starts with level 1. In order to
+    level up and become stronger, unit must kill enemy units.\r\n\r\nExperience obtained
+    after killing = level of killed unit.\r\n\r\nFor example: after killing an unit
+    with level 1, killer gets 1 point of experience and after killing an unit with
+    level 3, killer gets 3 points of experience.\r\n\r\nLevel-uping\r\nTo level up
+    unit needs to obtain certain amount of experience.\r\n\r\nTo level up from level
+    1 to 2 unit need 2 points of experience, to level up from level 2 to 3 unit needs
+    4 points of experience, etc.\r\r\n\r\nMaximum level\r\nMaximum level unit can
+    reach is 5. After that, there is no possibility to level up.\r\n\r\nWhat happens
+    after level up\r\nAfter unit reaches a certain amount of experience, that allows
+    it to level up, a player can choose what statistics he wants to upgrade in given
+    unit.\r\n\r\nThere are 3 options:\r\n\r\nStatistics\r                   /Amount
+    added to current value  / Additional info\r\n\r\n\r\nHealth / 5 /  When increasing
+    this statistics, unit increases its maximum health, as well as current health.
+    Good for every unit, but especially those that are easy to kill or are very important
+    to a player.\r\n\r\n\r\nAttack\r             /  5  /  Good for those units that
+    are usually used as main fighters in a battle.\r\n\r\n\r\nDefense\r               
+    / 2 /  Good for more defensive or strategic units. \r\n\r\n\r\nSo lets say we
+    have a hoplite that got injured in a battle but finally won and can level up.
+    He has currently a 23 points of health and maximum 40. Player has decided that
+    he wants this unit to live longer because he is very strong and has a good strategic
+    position. So he decided to upgrade health statistic. After that hoplite has maximum
+    health of 45 and current health 28. \r\n\r\nFight\r\nAfter clicking on an enemy
+    unit in range of movement, the unit will attack the enemy. The damage is calculated:\r\n\r\nDamage
+    = [attack stat of attacker] - [defense of unit attacked]\r\n\r\nAfter the units
+    health reaches 0, the unit dies. After that the money and experience is being
+    given for the attacker."
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 25
+  m_fontSizeBase: 25
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}

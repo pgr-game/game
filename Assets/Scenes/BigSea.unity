@@ -59361,6 +59361,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5918970003185900430, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
   m_PrefabInstance: {fileID: 1985123544}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1985123546 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5992977343491240005, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
+  m_PrefabInstance: {fileID: 1985123544}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1985123547 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8698468300345917908, guid: 896e30a008094bc4989d9ca0f25f5ae6, type: 3}
@@ -59621,6 +59626,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 1985123548}
   optionMenu: {fileID: 1985123547}
   cityMenu: {fileID: 1985123550}
+  wikiMenu: {fileID: 1985123546}
   unitList: {fileID: 1280359851}
   saveNameInputWindow: {fileID: 1985123551}
 --- !u!114 &1991390628

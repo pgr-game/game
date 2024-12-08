@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2967414963689428650}
   - component: {fileID: 7106840000770435251}
   m_Layer: 5
-  m_Name: Chapter 3
+  m_Name: Cities
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -85.13}
-  m_SizeDelta: {x: 682.1, y: 170.26}
+  m_AnchoredPosition: {x: 0, y: -1097.5}
+  m_SizeDelta: {x: 682.1, y: 2195}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2967414963689428650
 CanvasRenderer:
@@ -65,7 +65,33 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MIAU 1MIAU 1MIAU 1MIAU 1MIAU 1MIAU 1MIAU 1MIAU 1MIAU 1M331223132121332113232131321213321132321313212133211323213132121332113232131321213321132321313212133211323213132121332113232131321213321132321313212133211323213132121332113232131321213321132321313212133211323213132121332113232131321213321132321313212133211323213132121332113232131321213321132321313212133211323213132121332113232131321213321132321313212133211323213132121332113232131321213321132321313212133211323213132121332113232131321213321132321313212133211323213132121332113232131321213321132321
+  m_text: "Description\r\nCities are pivotal elements in the strategic landscape
+    of the game, serving as vital hubs for the production of units and the sustenance
+    of your military and economic power. Unlike forts, cities cannot be manually
+    placed on the map; they must be obtained. Once under your control, a city becomes
+    a cornerstone of your empire, contributing significantly to your capabilities.
+    The primary function of a city within the game is to produce units. Moreover,
+    cities play a critical role in resource management and economic development.
+    They generate revenue. Efficient management of cities can lead to a flourishing
+    economy, providing the financial backing needed to support large-scale military
+    campaigns. Similar to forts, unit can serve a defensive position.\r\n\r\nFunctionality\r\nObtaining
+    a City\r\nCities can be attacked by other players and conquered. City\u2019s
+    health is equal to the sum of remaining health points of all friendly units that
+    are garrisoned in the city (standing on one of city tiles). Enemy units can target
+    cities just like other units, but damage dealt is divided equally between defenders.
+    When all defending units are defeated, the city is taken over by attacking player.\r\n\r\nIn
+    order to attack a city, the attacking player needs to place at least one Catapult
+    unit next to the city\r\n\r\nUnit production\r\nAfter clicking on a city owned
+    by a current player, the production menu is shown. A player can then choose what
+    unit they want produced. After waiting a few rounds, the unit should be produced
+    and be ready to fight. Keep in mind that after that, another unit of the same
+    type is going to be produced.\r\n\r\nDefense\r\nWhen unit is standing in a city,
+    they get a defense bonus. When units default defense is 0 - their defense in
+    city (or fort) is equal to 1. In any other case the defense is doubled.\r\n\r\nCity\u2019s
+    health is the sum of health bars of all units that are inside of it at a given
+    moment (they defend the city).\r\n\r\nHealing\r\nHealing of units is possible
+    only in one's own cities and forts. It happens automatically. The unit heals
+    by 20% of their maximum health at the start of every players round."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
