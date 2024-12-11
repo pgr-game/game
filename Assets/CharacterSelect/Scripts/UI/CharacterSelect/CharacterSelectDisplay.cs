@@ -16,6 +16,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
     [SerializeField] private Transform introSpawnPoint;
     [SerializeField] private TMP_Text joinCodeText;
     [SerializeField] private Button lockInButton;
+    [SerializeField] private TMP_Text lockInButtonText;
 
     private GameObject introInstance;
     private List<CharacterSelectButton> characterButtons = new List<CharacterSelectButton>();
@@ -137,6 +138,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
 
     public void LockIn()
     {
+        joinCodeText.text = "WAITING FOR OTHERS...";
         LockInServerRpc();
     }
 
