@@ -152,7 +152,14 @@ public class UnitMove : NetworkBehaviour
         {
             // this is automatic movement at the end of turn
             var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
-            tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
+            if (path.Count > 0)
+            {
+                tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
+            }
+            else
+            {
+                tile = null;
+            }
             HideLongPath();
         }
         if (tile == null) return;
