@@ -57,7 +57,12 @@ PrefabInstance:
       value: Erika
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 205264445719448523, guid: 4f52f003eca24b843924f016ea500470, type: 3}
+    - {fileID: -6153458435004094520, guid: 4f52f003eca24b843924f016ea500470, type: 3}
+    - {fileID: -298872764833787496, guid: 4f52f003eca24b843924f016ea500470, type: 3}
+    - {fileID: 4936884950917866777, guid: 4f52f003eca24b843924f016ea500470, type: 3}
+    - {fileID: 1082271958561512970, guid: 4f52f003eca24b843924f016ea500470, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4f52f003eca24b843924f016ea500470, type: 3}
@@ -85,6 +90,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 638232703
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -92,6 +100,8 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &-5768503410584157811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,8 +114,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e17ae83844be3149ae4d869150b7624, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 0
-  color:
-    serializedVersion: 2
-    rgba: 0
-  name: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  networkIndex:
+    m_InternalValue: 0
+  networkColor:
+    m_InternalValue:
+      serializedVersion: 2
+      rgba: 0
+  networkName:
+    m_InternalValue:
+      utf8LengthInBytes: 0
+      bytes:
+        offset0000:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0016:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0032:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        byte0048: 0
+        byte0049: 0
+        byte0050: 0
+        byte0051: 0
+        byte0052: 0
+        byte0053: 0
+        byte0054: 0
+        byte0055: 0
+        byte0056: 0
+        byte0057: 0
+        byte0058: 0
+        byte0059: 0
+        byte0060: 0
+        byte0061: 0

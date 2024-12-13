@@ -13,6 +13,10 @@ public class GameSettings : MonoBehaviour
     public bool[] isComputer;
     public bool isMultiplayer;
 
+    // Multiplayer lobby setup only
+    public bool isPrivate = true;
+    public string lobbyName;
+
     public void SetMapName(string name)
     {
         mapName = name.Replace(" ", "");

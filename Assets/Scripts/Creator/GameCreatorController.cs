@@ -20,6 +20,13 @@ public class GameCreatorController : MonoBehaviour
     public TMP_Dropdown[] colorDropdowns = new TMP_Dropdown[4];
     public Toggle[] IsComputerToggles = new Toggle[4];
     public TMP_Text colorDuplicateText;
+
+    //Multiplayer section
+    public GameObject multiplayerSection;
+    public GameObject lobbyInputFieldWrapper;
+    public TMP_Text lobbyInputField;
+    public Toggle publicGameToggle;
+
     void Start()
     {
         gameSettings = GameObject.Find("GameSettings").GetComponent<GameSettings>();
@@ -27,6 +34,11 @@ public class GameCreatorController : MonoBehaviour
         numberOfPlayersSlider.onValueChanged.AddListener(delegate {
             NumberOfPlayersSliderValueChanged(numberOfPlayersSlider);
         });
+
+        if (IsMultiplayer)
+        {
+            multiplayerSection.SetActive(true);
+        }
     }
 
     void NumberOfPlayersSliderValueChanged(Slider change)
@@ -141,6 +153,9 @@ public class GameCreatorController : MonoBehaviour
 
         gameSettings.isMultiplayer = IsMultiplayer;
 
+        gameSettings.isPrivate = !publicGameToggle.isOn;
+        gameSettings.lobbyName = lobbyInputField.text;
+
         // validation and starting game if valid
         ValidateGameSettings();
     }
@@ -192,5 +207,10 @@ public class GameCreatorController : MonoBehaviour
     private bool GetIsComputer(int index)
     {
         return IsComputerToggles[index].isOn;
+    }
+
+    public void TogglePublicLobbySection()
+    {
+        lobbyInputFieldWrapper.SetActive(publicGameToggle.isOn);
     }
 }
