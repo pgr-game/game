@@ -30,6 +30,29 @@ namespace RedBjorn.ProtoTiles
                 {
                     return true;
                 }
+
+                //if (GameManager.Instance == null || GameManager.Instance?.activePlayer == null)
+                //{
+                    // anything is available for move when game manager has not been initialized yet
+                    //return true;
+                //}
+
+                if (CityTilePresent != null)
+                {
+                    if (GameManager.Instance?.activePlayer != CityTilePresent.owner)
+                    {
+                        return false;
+                    }
+                }
+
+                if (UnitPresent != null)
+                {
+                    if (GameManager.Instance?.activePlayer != UnitPresent.owner)
+                    {
+                        return false;
+                    }
+                }
+
                 return Rules.IsMovable.IsMet(this) && ObstacleCount == 0;
             }
         }

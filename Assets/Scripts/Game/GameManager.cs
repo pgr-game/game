@@ -27,6 +27,7 @@ public enum UnitTypes {
 [GenerateSerializationForType(typeof(StartingResources))]
 public class GameManager : NetworkBehaviour
 {
+    public static GameManager Instance;
     public MapManager mapManager;
     public SaveManager saveManager;
     public LoadManager loadManager;
@@ -74,7 +75,9 @@ public class GameManager : NetworkBehaviour
 
     void Start()
     {
-	    if (!isInit)
+        Instance = this;
+
+        if (!isInit)
 	    {
 		    Init();
 	    }
