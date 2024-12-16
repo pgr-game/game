@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -22,6 +23,11 @@ public class PauseMenu : MonoBehaviour
     {
         if(SaveRoot.saveRoot == null) {
             DisableQuickSave();
+        }
+
+        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
+        {
+            DisableBackToMenu();
         }
         pauseMenu.SetActive(false);
         saveNameInputWindow.SetActive(false);
@@ -79,6 +85,11 @@ public class PauseMenu : MonoBehaviour
         ResumeGame();
     }
 
+    private void DisableBackToMenu()
+    {
+        GameObject button = pauseMenu.transform.Find("Buttons/MenuButton").gameObject;
+        button.SetActive(false);
+    }
     private void DisableQuickSave() {
         Button button = pauseMenu.transform.Find("Buttons/QuickSaveButton/Button_1 Gray").GetComponent<Button>();
         button.interactable = false;
