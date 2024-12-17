@@ -245,36 +245,33 @@ public class UnitController : NetworkBehaviour, INetworkSerializable
             {
                 // instantiating at level 2 as some units will die before it
                 // and not need the instantiated menu
-                unitUI.InitUpgradeUnitMenu(UpgradeAttack(), UpgradeHealth(), UpgradeDefence());
+                unitUI.InitUpgradeUnitMenu(UpgradeAttack, UpgradeHealth, UpgradeDefence);
             }
             unitUI.ShowUpgradeUnitMenu();
         }
     }
 
-    public Action UpgradeAttack()
+    public void UpgradeAttack()
     {
         attack += 5;
         unitUI.HideUpgradeUnitMenu();
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
         unitStatsMenuController.UpdateUnitStatisticsWindow(this);
-        return null;
     }
-    public Action UpgradeHealth()
+    public void UpgradeHealth()
     {
         maxHealth += 5;
         currentHealth += 5;
         unitUI.HideUpgradeUnitMenu();
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
         unitStatsMenuController.UpdateUnitStatisticsWindow(this);
-        return null;
     }
-    public Action UpgradeDefence()
+    public void UpgradeDefence()
     {
         defense += 2;
         unitUI.HideUpgradeUnitMenu();
         unitUI.UpdateUnitUI(currentHealth, maxHealth);
         unitStatsMenuController.UpdateUnitStatisticsWindow(this);
-        return null;
     }
 
     public int CalculateGoldValue()
