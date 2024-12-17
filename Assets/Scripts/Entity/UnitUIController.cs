@@ -88,7 +88,7 @@ public class UnitUI : MonoBehaviour
 
     public void HideUpgradeUnitMenu()
     {
-        lvlUpMenu.SetActive(true);
+        lvlUpMenu.SetActive(false);
     }
 
     public void InitUpgradeUnitMenu(Action UpgradeDefence, Action UpgradeHealth, Action UpgradeAttack)
