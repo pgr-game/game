@@ -48,8 +48,8 @@ public class PlayerCitiesManager : NetworkBehaviour
         return cities.Count*10;
     }
 
-    public List<City> GetCities() {
-        return cities;
+    public bool Contains(City city) {
+        return cities.Contains(city);
     }
 
     public int GetNumberOfCities() {

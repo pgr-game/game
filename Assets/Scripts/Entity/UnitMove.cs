@@ -114,15 +114,36 @@ public class UnitMove : NetworkBehaviour
 
     public void ClickedToMoveToPosition(Vector3 clickPos)
     {
-	    var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
+        TileEntity tile;
+        bool isAttackMove = false;
+
+        var path = mapManager.MapEntity.PathTiles(transform.position, clickPos, float.MaxValue);
 	    if (path.Count == 0)
 	    {
-		    //clicked on impassable tile
-		    isAutoMove = false;
-		    return;
+            //clicked on impassable tile or enemy
+            isAutoMove = false;
+            tile = mapManager.MapEntity.Tile(clickPos);
+            var currentlyOccupiedTile = mapManager.MapEntity.Tile(transform.position);
+            if ((tile?.UnitPresent != this 
+                 || (tile?.CityTilePresent != null && !unitController.owner.playerCitiesManager.Contains(tile?.CityTilePresent?.city))
+                ) && mapManager.GetTilesSurroundingArea(new List<TileEntity>() { tile }, 1, false)
+                .Contains(currentlyOccupiedTile))
+            {
+                //attack
+                isAttackMove = true;
+            }
+            else
+            {
+                //impassable tile
+                isAutoMove = false;
+                return;
+            }
 	    }
-	    TileEntity tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
-	    if (path.Count - 1 > RangeLeft)
+        else
+        {
+            tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
+        }
+        if (path.Count - 1 > RangeLeft)
 	    {
 		    // clicked out of range, set long path
 		    longPathTile = path.Last();
@@ -137,10 +158,10 @@ public class UnitMove : NetworkBehaviour
 		    isAutoMove = false;
 	    }
 
-	    DetermineMoveType(tile, clickPos);
+	    DetermineMoveType(tile, clickPos, isAttackMove);
 	}
 
-    private void DetermineMoveType(TileEntity tile, Vector3 clickPos)
+    private void DetermineMoveType(TileEntity tile, Vector3 clickPos, bool isAttackMove)
     {
         if (RangeLeft == 0)
         {
@@ -156,7 +177,7 @@ public class UnitMove : NetworkBehaviour
             {
                 tile = path[Math.Min((int)RangeLeft, path.Count - 1)];
             }
-            else
+            else if(!isAttackMove)
             {
                 tile = null;
             }
@@ -214,6 +235,11 @@ public class UnitMove : NetworkBehaviour
         else
         {
             path = mapManager.MapEntity.PathTilesNextTo(transform.position, clickPos, RangeLeft);
+        }
+
+        if (path.Count == 0 && attackMove)
+        {
+            path = new List<TileEntity>() { mapManager.MapEntity.Tile(transform.position) };
         }
 
         var numberOfSteps = (int)Math.Ceiling((double)path.Count / 2);
@@ -298,7 +324,7 @@ public class UnitMove : NetworkBehaviour
     {
         if (!isAutoMove || longPathTile == null || longPathClickPosition == null) return;
 
-        DetermineMoveType(longPathTile, longPathClickPosition);
+        DetermineMoveType(longPathTile, longPathClickPosition, false);
     }
 
     private void DestroyFortsOnTheWay(List<TileEntity> tiles)

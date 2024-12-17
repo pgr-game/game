@@ -297,6 +297,14 @@ public class PlayerManager : NetworkBehaviour
         {
             return;
         }
+        if (selected && newSelected && selected != newSelected)
+        {
+            Vector3Int hexPosition = newSelected.GetComponent<UnitController>().unitMove.hexPosition;
+            if (this.mapManager.MapEntity.Tile(hexPosition).FortPresent)
+            {
+                return;
+            }
+        }
         if (currentUnit && newSelected == selected)
         {
             //unselect
