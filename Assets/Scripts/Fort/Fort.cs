@@ -50,7 +50,7 @@ public class Fort : MonoBehaviour
         this.owner = owner;
         this.hexPosition = hexPosition;
         this.isBuilt = false;
-        this.turnsUntilBuilt = 10;
+        this.turnsUntilBuilt = 5;
 
         Area = Spawner.Spawn(AreaPrefab, Vector3.zero, Quaternion.identity);
         AreaHide();
@@ -131,7 +131,7 @@ public class Fort : MonoBehaviour
     public void ProgressBuild(TileEntity tile)
     {
         this.turnsUntilBuilt--;
-        float fillAmm = (10.0f - turnsUntilBuilt) / 10.0f;
+        float fillAmm = (5.0f - turnsUntilBuilt) / 5.0f;
         barFiller.GetComponent<Image>().fillAmount = fillAmm;
         barText.GetComponent<Text>().text = ("TURNS LEFT: " + this.turnsUntilBuilt); 
         if (this.turnsUntilBuilt == 0)

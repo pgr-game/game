@@ -333,7 +333,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'TURNS LEFT: 10'
+  m_Text: 'TURNS LEFT: 5'
 --- !u!1 &5305574477655205512
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,6 +505,8 @@ MonoBehaviour:
   barFiller: {fileID: 8881829324312870796}
   barText: {fileID: 4113927065540514405}
   wholeBar: {fileID: 2769450823555717496}
+  Area: {fileID: 0}
+  AreaPrefab: {fileID: 0}
 --- !u!1 &8881829324312870796
 GameObject:
   m_ObjectHideFlags: 0
